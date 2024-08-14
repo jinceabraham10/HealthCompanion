@@ -1,0 +1,56 @@
+.outer-login-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.login-block {
+  border: medium outset black;
+  padding: 30px;
+  border-radius: 10px;
+}
+
+.login-block input {
+  margin: 40px;
+  display: block;
+  padding: 5px 10px;
+  text-align: center;
+  border-radius: 4px;
+}
+
+.login-block button {
+  
+  padding: 10px;
+  border-radius: 2px 10px;
+  background-color: rgb(68, 255, 0);
+  transition: all 600ms ease-out;
+  margin-right: 20px;
+}
+
+.login-block button:hover {
+  
+  cursor: pointer;
+  background-color: red;
+  border-radius: 10px 2px;
+  padding: 20px;
+  text-size-adjust: inherit;
+  
+}
+
+.login-block a{
+  text-decoration: none;
+
+}
+
+.bottom-login-click-layer{
+  display: flex;
+  justify-content: center; /* Centers items horizontally */
+  align-items: center; /* Centers items vertically */
+  gap: 10px; /* Optional: Space between items */
+  width: 100%; /* Optional: Adjust width as needed */
+
+
+}
+
