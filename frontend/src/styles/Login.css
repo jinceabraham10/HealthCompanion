@@ -4,13 +4,20 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
+  
 }
 
 .login-block {
-  border: medium outset black;
+  background-color: rgba(57, 98, 221, 0.236);
+  /* border: medium outset black; */
   padding: 30px;
   border-radius: 10px;
+  box-shadow: 2px 2px 3cqh rgb(117, 9, 159); 
+  backdrop-filter: blur(30px);
+  /* backdrop-filter: blur(5px); */
+  
 }
+
 
 .login-block input {
   margin: 40px;
@@ -27,6 +34,7 @@
   background-color: rgb(68, 255, 0);
   transition: all 600ms ease-out;
   margin-right: 20px;
+  border-color:  red yellow blue orange ;
 }
 
 .login-block button:hover {
@@ -52,5 +60,15 @@
   width: 100%; /* Optional: Adjust width as needed */
 
 
+}
+
+img{
+  height: 6em;
+  width: 6em;
+  display: block;
+  margin: 0px auto;
+  padding: 20px;
+  background-color: rgba(23, 133, 170, 0.155);
+  border-radius: 20px;
 }
 

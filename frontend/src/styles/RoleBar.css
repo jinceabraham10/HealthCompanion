@@ -1,0 +1,38 @@
+.role{
+    display: block;
+    padding: 10px;
+    width: 150px;
+    border-radius: 10px;
+    background-color: rgb(10, 238, 10);
+    cursor: pointer;
+    margin-left: 0 auto;
+    margin-right: 0 auto;
+    margin-bottom: 20px;
+    transition: all 600ms ease-in;
+}
+
+.outer-role-bar{
+    position: absolute;
+    right: 10%;
+    margin-left: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.role:hover, .role:focus {
+
+    background-color: red;
+    padding: 20px 
+}
+
+
+.outer-role-bar:hover .role:not(:hover){
+    opacity: 0.5;
+    visibility: hidden;
+
+}
+
+
