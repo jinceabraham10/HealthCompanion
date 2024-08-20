@@ -16,10 +16,23 @@ exports.createUser=async (req,res)=>{
 
     try {
         const newUser=new User(req.body)
-        await newUser.save()
+        const fetchedData=await newUser.save()
+        res.status(200).json({"message":"Created Successfully"})
         
     } catch (error) {
         console.log("Error",error)
+    }
+
+}
+
+exports.getUserById=async (req,res)=>{
+    try {
+        
+        const fetchedData=await User.find({
+            "address.city":req.params.city})
+        res.status(200).json({"Users":fetchedData})
+    } catch (error) {
+        console.log(error)
     }
 
 }

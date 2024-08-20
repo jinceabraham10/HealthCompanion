@@ -12,6 +12,7 @@ app.use(express.json())
 port=process.env.PORT
 connectToMongoDB()
 app.use('/api/login',authRoutes)
+app.use('/api/user',userRoutes)
 app.listen(port,()=>{
     console.log("server is running at ",port)
 })
