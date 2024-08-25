@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Address = require("./addressModel");
+const {AddressSchema} = require("./addressModel");
 // const Address = require("./addressModel.js");
 
 
@@ -8,7 +8,6 @@ const addressJson={
     "state":"",
     "country":"",
     "pincode":""
-
 }
 
 
@@ -29,21 +28,27 @@ const UserSchema = new mongoose.Schema({
   phone: {
     type: String,
     require: true,
-    unique: true,
+    default:" "
   },
   role: {
     type: String,
     required: true,
+    default:" "
   },
-  address: {
-    type: JSON,
-    required:true,
-    default:addressJson
-  },
+  address: AddressSchema,
   profile: {
     type: String,
+    default:" ",
     required: true,
   },
+  createdAt:{
+    type:String,
+    required: true
+  },
+  status:{
+    type:Number,
+    
+  }
 });
 
 

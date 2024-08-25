@@ -23,5 +23,5 @@ const AddressSchema=mongoose.Schema({
     }
 })
 
-const Address=mongoose.model('address',AddressSchema)
-module.exports=Address
+// const Address=mongoose.model('addressn',AddressSchema)
+module.exports={AddressSchema}

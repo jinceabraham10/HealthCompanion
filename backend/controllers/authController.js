@@ -4,14 +4,13 @@ exports.checkUser=async (req,res)=>{
     try {
         console.log(req.body)
         const data=req.body
-        const fetchedData= await User.findOne({username:data.name})
+        const fetchedData= await User.findOne({username:data.username})
         console.log(fetchedData)
         if(!fetchedData){
-            console.log("helooo")
-            res.status(200).json({'message':'login unsuccessfull'})
+            res.status(400).json({'message':'login unsuccessfull'})
         }
         else{
-            res.json(fetchedData)
+            res.status(200).json({"message":"Login successfull"})
         }
     
 

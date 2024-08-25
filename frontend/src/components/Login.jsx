@@ -36,7 +36,7 @@ function Login() {
 function LoginInputBlock({ handleClick, ref_username, ref_password }) {
   return (
     <div className="login-block">
-      <img src={"../public/logo/Logo.png"} alt="logo" />
+      <img src={"/logo/Logo.png"} alt="logo" />
       <input
         type="text"
         name="userName"

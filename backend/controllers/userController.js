@@ -15,12 +15,15 @@ exports.getAllUsers=async (req,res)=>{
 exports.createUser=async (req,res)=>{
 
     try {
+        await console.log(req.body)
         const newUser=new User(req.body)
         const fetchedData=await newUser.save()
-        res.status(200).json({"message":"Created Successfully"})
+        res.status(200).json({"message":`Created Successfully ${fetchedData}`})
         
     } catch (error) {
+        console.log(req.body)
         console.log("Error",error)
+        res.status("400").json({"message":`Error Occured while Creating the Account`})
     }
 
 }
