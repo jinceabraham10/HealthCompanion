@@ -1,0 +1,28 @@
+@import url("https://fonts.googleapis.com/css2?family=New+Amsterdam&display=swap");
+
+.logo-parent {
+    position: relative;
+    flex-wrap: wrap;
+    width: 30vh;
+}
+
+.logo-image-container{
+    display:flex;
+    flex-direction: column;
+   
+
+}
+
+.logo-parent .logo-image-container .logo-image {
+ position: relative;
+}
+
+
+/* .logo-parent .logo-image-container .logo-under-slogan {
+  font-family: "New Amsterdam", sans-serif;
+  font-weight: bold;
+  font-size: 1rem;
+  position: relative;
+  transform: translate(6vh,-10vh);
+  
+} */

@@ -1,0 +1,32 @@
+
+.nav-bar-parent{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    background:radial-gradient(rgb(240, 241, 244),rgba(227, 244, 80, 0.932));
+    z-index: 8rem;
+    
+    
+}
+
+.nav-bar-navigation-options {
+    
+}
+
+.navigation-option-list{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    flex-wrap:wrap ;
+    gap: 10px;
+    
+
+}
+
+.nav-item{
+   all:unset;
+
+   
+    
+}
+

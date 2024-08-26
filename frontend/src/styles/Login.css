@@ -62,13 +62,20 @@
 
 }
 
-img{
-  height: 6em;
-  width: 6em;
+.login-block img{
+  height:7rem;
+  width: 7rem;
+  position: relative;
   display: block;
   margin: 0px auto;
-  padding: 20px;
-  background-color: rgba(23, 133, 170, 0.155);
+  padding: 2px;
+  background: linear-gradient(to right,rgb(255, 128, 0),yellow);
+  background-blend-mode: overlay;
   border-radius: 20px;
+  backdrop-filter: blur(60px);
+  transform: scaleZ(10px);
+  
+  
+  
 }
 
