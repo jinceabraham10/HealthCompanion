@@ -1,0 +1,25 @@
+.profileContainer {
+    display: flex;
+    flex-direction: column;
+    padding: 2px;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+
+
+  .image {
+    width: 5em;
+    height: 5em;
+    border-radius: 50%;
+    background-color: gray;
+  }
+
+  .profileStatus{
+    text-decoration: none;
+  }
+
+  a{
+    text-decoration: none;
+  }
+
+}

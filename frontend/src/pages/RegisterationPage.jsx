@@ -3,12 +3,15 @@ import "../styles/registeration/RegisterationPageStyle.css";
 import { createUser } from "../services/userService";
 
 function RegisterationPage() {
+  const currentDate=new Date()
+  console.log(currentDate)
   const [userData, setUserdata] = useState({
     username: "",
     password: "",
     email: "",
     phone: "",
     role:"patient",
+  
   });
 
   const handleSignUp = (e) => {
@@ -33,6 +36,14 @@ function RegisterationPage() {
     <div className="registeration-parent">
       <div className="registeration-container">
         <form onSubmit={handleSignUp}>
+          <div className="titleContainer" style={{
+            display:'flex',
+            flexDirection:'row',
+            alignContent:'center',
+            justifyContent:'center'
+          }}>
+            <h2>Create Account</h2>
+          </div>
           <RoleBlock handleOnChange={handleOnChange}/>
           <CommonUserDetails handleOnChange={handleOnChange} />
         </form>

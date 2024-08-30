@@ -24,13 +24,13 @@ function NavigationOptions() {
           <Link className="nav-item doctor" to="/patient">Home</Link>
         </li>
         <li className="nav-item" id="id_doctor">
-          <Link className="nav-item doctor" to="/doctor">Doctor</Link>
+          <Link className="nav-item doctor" to="/doctor">Consult Doctor</Link>
         </li>
         <li className="nav-item" id="id_pharmacy">
-          <Link className="nav-item doctor" to="/doctor">Pharmacy</Link>
+          <Link className="nav-item doctor" to="/doctor">Medicines</Link>
         </li>
         <li className="nav-item laboratory" id="id_laboratory">
-          <Link className="nav-item doctor" to="/doctor">Laboratory</Link>
+          <Link className="nav-item doctor" to="/doctor">Lab Tests</Link>
         </li>
       </ul>
     </div>

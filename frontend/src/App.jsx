@@ -9,9 +9,9 @@ function App() {
     <>
       <Router>
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={<PatientDashboard/>} />
           <Route path="/register" element={<RegisterationPage />} />
-          <Route path="/patient" element={<PatientDashboard />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </Router>
     </>
