@@ -2,12 +2,15 @@ import "./NavBarStyle.css";
 import React from "react";
 import Logo from "../../app_logo/Logo";
 import { Link } from "react-router-dom";
+import Navbar_ProfileIcon from "../../navbar_profile_icon/Navbar_ProfileIcon";
 
 function NavBar() {
   return (
     <div className="nav-bar-parent">
       <Logo />
       <NavigationOptions />
+      <Navbar_ProfileIcon/>
+      
     </div>
   );
 }
