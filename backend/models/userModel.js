@@ -4,10 +4,10 @@ const {AddressSchema} = require("./addressModel");
 
 
 const addressJson={
-    "city":"",
-    "state":"",
-    "country":"",
-    "pincode":""
+    city:"",
+    state:"",
+    country:"",
+    pincode:""
 }
 
 
@@ -15,31 +15,30 @@ const UserSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
+    unique:true
   },
   password: {
     type: String,
-    require: true,
+    required: true,
   },
   email: {
     type: String,
-    require: true,
+    required: true,
     unique: true,
   },
   phone: {
-    type: String,
-    require: true,
-    default:" "
+    type: Array,
+    required: true,
+    default:[""]
   },
   role: {
     type: String,
     required: true,
     default:" "
   },
-  address: AddressSchema,
-  profile: {
-    type: String,
-    default:" ",
-    required: true,
+  address: {
+    type:JSON,
+    default:addressJson
   },
   createdAt:{
     type:String,
@@ -47,6 +46,7 @@ const UserSchema = new mongoose.Schema({
   },
   status:{
     type:Number,
+    default:"0"
     
   }
 });

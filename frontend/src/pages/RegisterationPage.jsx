@@ -1,32 +1,92 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/registeration/RegisterationPageStyle.css";
 import { createUser } from "../services/userService";
 
 function RegisterationPage() {
-  const currentDate=new Date()
-  console.log(currentDate)
+  const date = new Date();
+
+  //Current Date object Details
+
+  const CreatedDate = {
+    year: date.getFullYear() + 1,
+    month: date.getMonth() + 1,
+    day: date.getDay() + 1,
+    hour: date.getHours() % 12 ? date.getHours() % 12 : 12,
+    minute:
+      date.getMinutes() % 60
+        ? date.getMinutes() % 60 < 10
+          ? "0" + (date.getMinutes() % 60)
+          : date.getMinutes() % 60
+        : "00",
+    second:
+      date.getSeconds() % 60
+        ? date.getSeconds() % 60 < 10
+          ? "0" + (date.getSeconds() % 60)
+          : date.getSeconds() % 60
+        : "00",
+    milliseconds: date.getMilliseconds(),
+    ampm: date.getHours() > 12 ? "pm" : "am",
+  };
+
+
+  const accountCreatedat = `${CreatedDate.year}/${CreatedDate.month}/${CreatedDate.day} ${CreatedDate.hour}:${CreatedDate.minute}:${CreatedDate.second} ${CreatedDate.ampm}`;
+
+  // console.log(accountCreatedat);
+
+  //Hooks-> UseSate
+
+  const[isFormvalid,setIsFormvalid]=useState(false)
+
   const [userData, setUserdata] = useState({
     username: "",
     password: "",
     email: "",
     phone: "",
-    role:"patient",
-  
+    role: "0",
+    createdAt:accountCreatedat
   });
+
+
+  const[errorMsg,setErrorMsg]=useState({
+    confirmPassword:"",
+    emptyField:"",
+    roleNotSelected:""
+  })
+
+  const[confirmPassword,setConfirmPassword]=useState("")
+
+
+//useEffects
+
+useEffect(()=>{
+  //console.log(userData);
+},[userData])
+
+//useEffect for password
+
+useEffect(()=>{
+  
+  setErrorMsg({...errorMsg,confirmPassword:userData.password!=confirmPassword? "Password Not Matching":"" })
+  //console.log(userData.password!=confirmPassword,userData.password,confirmPassword)
+
+},[confirmPassword,errorMsg.confirmPassword,userData.password])
+
+
 
   const handleSignUp = (e) => {
     try {
       e.preventDefault();
+      // console.log(userData)
       createUser(userData);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
-  const handleOnChange =(e) => {
+  const handleOnChange = async (e) => {
     try {
-      setUserdata({...userData,[e.target.name]:e.target.value})
-      console.log(userData);
+      setUserdata({ ...userData, [e.target.name]: e.target.value });
+      
     } catch (error) {
       console.log(error);
     }
@@ -36,23 +96,26 @@ function RegisterationPage() {
     <div className="registeration-parent">
       <div className="registeration-container">
         <form onSubmit={handleSignUp}>
-          <div className="titleContainer" style={{
-            display:'flex',
-            flexDirection:'row',
-            alignContent:'center',
-            justifyContent:'center'
-          }}>
+          <div
+            className="titleContainer"
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignContent: "center",
+              justifyContent: "center",
+            }}
+          >
             <h2>Create Account</h2>
           </div>
-          <RoleBlock handleOnChange={handleOnChange}/>
-          <CommonUserDetails handleOnChange={handleOnChange} />
+          <RoleBlock handleOnChange={handleOnChange} />
+          <CommonUserDetails handleOnChange={handleOnChange} errorMsg={errorMsg} setConfirmPassword={setConfirmPassword} />
         </form>
       </div>
     </div>
   );
 }
 
-function CommonUserDetails({handleOnChange}) {
+function CommonUserDetails({ handleOnChange ,errorMsg,setConfirmPassword}) {
   return (
     <div className="form-registeration-user-details">
       <input
@@ -62,6 +125,7 @@ function CommonUserDetails({handleOnChange}) {
         placeholder="Enter a Username"
         onChange={handleOnChange}
       />
+      
       <input
         type="password"
         name="password"
@@ -74,7 +138,9 @@ function CommonUserDetails({handleOnChange}) {
         name="confirmPassword"
         id="id_confirmPassword"
         placeholder="Confirm Password"
+        onChange={(e)=>setConfirmPassword(e.target.value)}
       />
+      <span className="error">{errorMsg.confirmPassword}</span>
       <input
         type="text"
         name="email"
@@ -89,17 +155,12 @@ function CommonUserDetails({handleOnChange}) {
         placeholder="Phone"
         onChange={handleOnChange}
       />
-      <input
-        type="submit"
-        value="Sign Up"
-        name="signUp"
-        id="id_signUp"
-      />
+      <input type="submit" value="Sign Up" name="signUp" id="id_signUp" />
     </div>
   );
 }
 
-function RoleBlock({handleOnChange}) {
+function RoleBlock({ handleOnChange }) {
   return (
     <div className="role-block-parent">
       <div className="role-image-container">
@@ -111,10 +172,10 @@ function RoleBlock({handleOnChange}) {
           Select a Role to proceed
         </span>
         <select name="role" id="id_role" onChange={handleOnChange}>
-          <option value="patient">Patient</option>
-          <option value="doctor">Doctor</option>
-          <option value="pharmacy">Patient</option>
-          <option value="laboratory">Laboratory</option>
+          <option value="0">Patient</option>
+          <option value="1">Doctor</option>
+          <option value="2">Pharmacy</option>
+          <option value="3">Laboratory</option>
         </select>
       </div>
     </div>

@@ -13,8 +13,9 @@ const alert=(message)=>{
 
 export async function createUser(userData){
     try {
-        console.log("recieved from RegisterationPage",userData)
+        // console.log("recieved from RegisterationPage",userData)
         const response=await axios.post("http://localhost:5000/api/user/register",userData)
+        console.log(response)
         alert(message)
     } catch (error) {
         console.log(error)
