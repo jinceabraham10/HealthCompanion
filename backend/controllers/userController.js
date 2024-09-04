@@ -1,6 +1,6 @@
 const User = require("../models/userModel.js");
 const { handlehashedPassword } = require("../utils/crypting.js");
-const {mailOnSuccessfullRegisteration} =require('../utils/mailService.js')
+const { mailOnSuccessfullRegisteration } = require("../utils/mailService.js");
 
 //get all users
 exports.getAllUsers = async (req, res) => {
@@ -14,8 +14,6 @@ exports.getAllUsers = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
-
 
 //api to create User
 
@@ -32,33 +30,29 @@ exports.createUser = async (req, res) => {
       phone,
       createdAt,
     });
-    //const fetchedData = await newUser.save();
+    const fetchedData = await newUser.save();
     mailOnSuccessfullRegisteration({
       username,
       email,
       role,
       phone,
       createdAt,
-    })
-    res.status(200).json({ message: `Created Successfully ` });
-    // ${fetchedData}
+    });
+    res.status(200).json({ message: `Created Successfully ${fetchedData}` });
   } catch (error) {
-    console.log(req.body);
-    console.log("Error", error);
+    // console.log(req.body);
+    // console.log("Error", error);
     res
       .status("400")
-      .json({ message: `Error Occured while Creating the Account` });
+      .json({ message: `Error Occured while Creating the Account, ${error}` });
   }
 };
-
-
-
 
 exports.getUserById = async (req, res) => {
   try {
     const fetchedData = await User.find({
-     $and:{username:req.params.usrname,password:req.params.pwd
-    }});
+      $and: { username: req.params.usrname, password: req.params.pwd },
+    });
     res.status(200).json({ Users: fetchedData });
   } catch (error) {
     console.log(error);

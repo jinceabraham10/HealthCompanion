@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../styles/registeration/RegisterationPageStyle.css";
 import { createUser } from "../services/userService";
+import {Link} from "react-router-dom"
 
 function RegisterationPage() {
   const date = new Date();
@@ -156,6 +157,9 @@ function CommonUserDetails({ handleOnChange ,errorMsg,setConfirmPassword}) {
         onChange={handleOnChange}
       />
       <input type="submit" value="Sign Up" name="signUp" id="id_signUp" />
+      <span>Already have an account ?  <Link to='/login' style={{
+        "textDecoration":"none"
+      }}>Login</Link></span>
     </div>
   );
 }
