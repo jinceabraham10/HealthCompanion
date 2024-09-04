@@ -32,9 +32,16 @@ exports.createUser = async (req, res) => {
       phone,
       createdAt,
     });
-    const fetchedData = await newUser.save();
-    mailOnSuccessfullRegisteration(email)
-    res.status(200).json({ message: `Created Successfully ${fetchedData}` });
+    //const fetchedData = await newUser.save();
+    mailOnSuccessfullRegisteration({
+      username,
+      email,
+      role,
+      phone,
+      createdAt,
+    })
+    res.status(200).json({ message: `Created Successfully ` });
+    // ${fetchedData}
   } catch (error) {
     console.log(req.body);
     console.log("Error", error);
