@@ -1,5 +1,6 @@
 const User = require("../models/userModel.js");
 const { handlehashedPassword } = require("../utils/crypting.js");
+const {mailOnSuccessfullRegisteration} =require('../utils/mailService.js')
 
 //get all users
 exports.getAllUsers = async (req, res) => {
@@ -13,6 +14,8 @@ exports.getAllUsers = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+
 
 //api to create User
 
@@ -30,6 +33,7 @@ exports.createUser = async (req, res) => {
       createdAt,
     });
     const fetchedData = await newUser.save();
+    mailOnSuccessfullRegisteration(email)
     res.status(200).json({ message: `Created Successfully ${fetchedData}` });
   } catch (error) {
     console.log(req.body);
@@ -39,6 +43,9 @@ exports.createUser = async (req, res) => {
       .json({ message: `Error Occured while Creating the Account` });
   }
 };
+
+
+
 
 exports.getUserById = async (req, res) => {
   try {

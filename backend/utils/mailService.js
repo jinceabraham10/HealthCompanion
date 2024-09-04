@@ -8,16 +8,23 @@ const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: "jinceabraham2025@mca.ajce.in",
-    pass: "Jince@11",
+    pass: process.send.MAIL_PASSWORD,
   },
 });
 
-exports.mailOnSuccessfullRegisteration = async (receiverMail, text) => {
-  transporter.sendMail({
+exports.mailOnSuccessfullRegisteration = async (receiverMail) => {
+try {
+  
+  const info=await transporter.sendMail({
     from: from,
     to: receiverMail,
     subject: "Successfull Registeration",
     text: `Hi,
-              You have been successfully Registered in the HealthCompanion. Hope you will be getting the required experience to the fullest `,
+              You have been successfully Created Account in the HealthCompanion. Hope you will be getting the required experience to the fullest `
   });
+
+  console.log(`Email sent ${info.response}`)
+} catch (error) {
+  console.log(error)
+}
 };
