@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../styles/registeration/RegisterationPageStyle.css";
-import { createUser } from "../services/userService";
+import { createUser,generateOtp } from "../services/userService";
 import {Link} from "react-router-dom"
 
 function RegisterationPage() {
@@ -36,7 +36,9 @@ function RegisterationPage() {
 
   //Hooks-> UseSate
 
-  const[isFormvalid,setIsFormvalid]=useState(false)
+  const[isFormvalid,setIsFormvalid]=useState(true)
+  const[isOtpSet,setIsOtpSet]=useState(false)
+  const[otp,setOtp]=useState('')
 
   const [userData, setUserdata] = useState({
     username: "",
@@ -60,13 +62,35 @@ function RegisterationPage() {
 //useEffects
 
 useEffect(()=>{
-  //console.log(userData);
-},[userData])
+  console.log(userData)
+  errorMsg.emptyField=""
+      for(const key in userData)
+      {
+        userData[key]=userData[key].trim()
+        if(!userData[key]){
+          errorMsg.emptyField=errorMsg.emptyField+`<br>** ${key} is empty `
+        }
+      }
+      if(!(confirmPassword.trim())){
+         console.log(`confirm password is  ${!(confirmPassword.trim())}`)
+        errorMsg.emptyField=errorMsg.emptyField+`<br>** Confirm password box is empty`
+      }
+      if(errorMsg.emptyField)
+      {
+        console.log("heyyyyy")
+        document.getElementById('id_emptyField').innerHTML=`${errorMsg.emptyField}`
+        setIsFormvalid(true)
+      }
+      else{
+        console.log("heloooo")
+        setIsFormvalid(false);
+      }
+  
+},[userData,confirmPassword])
 
 //useEffect for password
 
 useEffect(()=>{
-  
   setErrorMsg({...errorMsg,confirmPassword:userData.password!=confirmPassword? "Password Not Matching":"" })
   //console.log(userData.password!=confirmPassword,userData.password,confirmPassword)
 
@@ -77,12 +101,26 @@ useEffect(()=>{
   const handleSignUp = (e) => {
     try {
       e.preventDefault();
-      // console.log(userData)
-      createUser(userData);
+      // setIsOtpSet(generateOtp(userData.email))
+      
+        
+      
     } catch (error) {
       console.log(error);
     }
   };
+
+  const handleOtpSubmit=async (e)=>{
+    try {
+      const submitStatus=await createUser({user:userData,otp:otp})
+      console.log(submitStatus)
+      setIsOtpSet(!submitStatus)
+     
+    } catch (error) {
+      console.log(`error on otp submit ${error}`);
+      
+    }
+  }
 
   const handleOnChange = async (e) => {
     try {
@@ -109,14 +147,17 @@ useEffect(()=>{
             <h2>Create Account</h2>
           </div>
           <RoleBlock handleOnChange={handleOnChange} />
-          <CommonUserDetails handleOnChange={handleOnChange} errorMsg={errorMsg} setConfirmPassword={setConfirmPassword} />
+          <CommonUserDetails handleOnChange={handleOnChange} isFormvalid={isFormvalid} errorMsg={errorMsg} setConfirmPassword={setConfirmPassword} />
+          <span className="error" id='id_emptyField'></span>
+
         </form>
+        {isOtpSet && <OtpBlock setOtp={setOtp} handleOtpSubmit={handleOtpSubmit}/>}
       </div>
     </div>
   );
 }
 
-function CommonUserDetails({ handleOnChange ,errorMsg,setConfirmPassword}) {
+function CommonUserDetails({ handleOnChange ,errorMsg,setConfirmPassword,isFormvalid}) {
   return (
     <div className="form-registeration-user-details">
       <input
@@ -156,7 +197,7 @@ function CommonUserDetails({ handleOnChange ,errorMsg,setConfirmPassword}) {
         placeholder="Phone"
         onChange={handleOnChange}
       />
-      <input type="submit" value="Sign Up" name="signUp" id="id_signUp" />
+      <input type="submit" value="Sign Up" disabled={isFormvalid} name="signUp" id="id_signUp" />
       <span>Already have an account ?  <Link to='/login' style={{
         "textDecoration":"none"
       }}>Login</Link></span>
@@ -184,6 +225,20 @@ function RoleBlock({ handleOnChange }) {
       </div>
     </div>
   );
+}
+
+function OtpBlock({setOtp,handleOtpSubmit}){
+  return(
+    <div className="otpBlockParent">
+      <h2>Enter Otp</h2>
+      <input type="text" name="txtOtp" onChange={(e)=>{
+        setOtp(e.target.value)
+
+      }} id="txtOtp" />
+      <input type="button" value="Submit" id="btnOtp" name="btnOtp" onClick={handleOtpSubmit} />
+
+    </div>
+  )
 }
 
 export default RegisterationPage;

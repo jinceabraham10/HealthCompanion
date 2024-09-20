@@ -19,8 +19,8 @@ exports.getAllUsers = async (req, res) => {
 
 exports.createUser = async (req, res) => {
   try {
-    // await console.log(req.body)
-    const { username, password, email, role, phone, createdAt } = req.body;
+    await console.log(req.body);
+    const { username, password, email, role, phone, createdAt } = req.body.user;
     let hashedPassword = await handlehashedPassword().setPassword(password);
     const newUser = new User({
       username,
@@ -30,6 +30,7 @@ exports.createUser = async (req, res) => {
       phone,
       createdAt,
     });
+
     const fetchedData = await newUser.save();
     mailOnSuccessfullRegisteration({
       username,
@@ -38,15 +39,17 @@ exports.createUser = async (req, res) => {
       phone,
       createdAt,
     });
-    res.status(200).json({ message: `Created Successfully ${fetchedData}` });
+    res.status(200).json({ message: `Created Successfully ${fetchedData}`});
   } catch (error) {
     // console.log(req.body);
     // console.log("Error", error);
     res
-      .status("400")
+      .status(400)
       .json({ message: `Error Occured while Creating the Account, ${error}` });
   }
 };
+
+
 
 exports.getUserById = async (req, res) => {
   try {
@@ -58,3 +61,5 @@ exports.getUserById = async (req, res) => {
     console.log(error);
   }
 };
+
+
