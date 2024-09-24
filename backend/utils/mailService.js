@@ -26,6 +26,7 @@ exports.mailOnSuccessfullRegisteration = async (ReceiverData) => {
     console.log(`Email sent ${info.response}`);
   } catch (error) {
     console.log(`error ${error}`);
+    
   }
 };
 
@@ -40,8 +41,10 @@ exports.mailWithOtp = async (email, otp) => {
       subject: "Otp Verification",
       text: `Hi ,\n\nYour OTP for the verification is ${otp} and its valid only for 1 min`,
     });
-    console.log(`OTP has been to ${email} info response : ${info}`);
+    console.log(`OTP has been to ${email} info response : ${info.response}`);
+    return true
   } catch (error) {
     console.log(`error on senting Otp mail ${error}`);
+    return false
   }
 };

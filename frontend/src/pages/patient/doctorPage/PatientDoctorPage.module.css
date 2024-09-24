@@ -1,0 +1,4 @@
+.doctorCardListParent{
+    display: flex;
+    flex-direction: row;
+}

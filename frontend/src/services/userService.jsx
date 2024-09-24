@@ -65,6 +65,12 @@ export async function generateOtp(email) {
     console.log(response.data);
     return response.data.otpStatus;
   } catch (error) {
+    if (error.response.data.otpMailNotsend) {
+      message.icon = "error";
+      message.title = "Otp mail couldn't be send";
+      message.text = error.response.data.message;
+      alert(message);
+    }
     console.log(`error on the front end while clicking Otp ${error}`);
   }
 }

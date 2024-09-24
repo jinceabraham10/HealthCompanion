@@ -3,14 +3,67 @@ import swal from "sweetalert2";
 
 async function LoginUser(loginData) {
   try {
-    
-    const resp = await axios.post("http://localhost:5000/api/login", loginData)
-    const User = resp.data;
-    console.log("response is great ",resp)
- 
+    const resp=await axios.post('http://localhost:5000/api/auth/login',loginData)
+    console.log(resp)
+    swal.fire({
+      icon:"success",
+      title:"Login Successfull",
+      text:"Credentials have been verified and welcoming you to HealthCompanion"
+
+    })
+
+    localStorage.setItem('token',resp.data.token)
+
+    return true
+
   } catch (error) {
-    console.log("response is supper",error);
+    
+    const resp=error.response.data
+    if(resp.errorStatus== "1"){
+      swal.fire({
+        icon:"error",
+        title:"Login Unsuccessfull",
+        text:"Invalid password"
+      })
+      return false
+    }
+    else if(resp.errorStatus== "0"){
+      swal.fire({
+        icon:"error",
+        title:"Login Unsuccessfull",
+        text:"User doesn't exist"
+      })
+      return false
+    }
+    else{
+      console.log("response is supper",error);
+    }
+    return false
   }
 }
 
-export { LoginUser };
+
+async function DataOnPageLoad(token) {
+  try {
+    const resp=await axios.get("http://localhost:5000/api/auth/loadData",{
+      headers:{
+        'authorization':`${token}`
+      }
+    })
+    return resp.data.fetchedData
+    
+    
+  } catch (error) {
+    if(error.response.data.message="invalid token"){
+      swal.fire({
+        icon:"warning",
+        title:"Login Again",
+        text:"Session has been out"
+      })
+
+    }
+    
+  }
+  
+}
+export { LoginUser,DataOnPageLoad };

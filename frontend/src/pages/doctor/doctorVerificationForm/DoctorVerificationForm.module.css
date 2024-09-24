@@ -1,0 +1,66 @@
+.verificationFormParent{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: scroll;
+
+    .heading{
+        color:red;
+        align-items: center;
+    }
+   
+   form{
+    display: flex;
+    flex-direction:column;
+    gap: 1em;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+
+    .error{
+        color: red;
+
+    }
+
+    input[type='submit']{
+        margin: 20px;
+        padding: 10px 30px;
+        font-size: medium;
+        font-family:'Times New Roman', Times, serif;
+        border-radius: 10px;
+        border: none;
+        box-shadow: 3px 2px rgb(221, 206, 206);
+   }
+    
+
+    input[type='text']{
+        width: 30em;
+        height: 4vh;
+        border-radius: 10px;
+        box-shadow: black 1px;
+        text-align: center;
+        
+    }
+   }
+   .genderBlock,.fileUpload{
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+   }
+
+   
+
+
+}
+
+
+.educationalDetailsParent{
+    display: flex;
+    flex-direction:column;
+    gap: 1em;
+    align-items: center;
+    justify-content: center;
+    
+
+}

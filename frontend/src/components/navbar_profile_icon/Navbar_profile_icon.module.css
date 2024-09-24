@@ -23,3 +23,16 @@
   }
 
 }
+
+.userProfileParent{
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  align-items: center;
+  
+  button{
+    border: none;
+    color: blue;
+    background-color: inherit;
+  }
+}

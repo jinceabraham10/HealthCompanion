@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "../styles/registeration/RegisterationPageStyle.css";
-import { createUser,generateOtp } from "../services/userService";
-import {Link} from "react-router-dom"
+import { createUser, generateOtp } from "../services/userService";
+import { Link } from "react-router-dom";
+import emailCheck from "../validations/login/emailValidation";
 
 function RegisterationPage() {
   const date = new Date();
+  let canBeSubmitted=false
 
   //Current Date object Details
 
@@ -29,6 +31,36 @@ function RegisterationPage() {
     ampm: date.getHours() > 12 ? "pm" : "am",
   };
 
+  const validate = () => {
+    const error = {};
+
+    if (!userData.username.trim()) {
+      error.username = `* username is empty`;
+    }
+    if (!userData.password.trim()) {
+      error.password = `* password is empty`;
+    } else if (userData.password.trim().length < 6) {
+      error.password = `* password should be at least 6`;
+    }
+    if (!confirmPassword.trim()) {
+      error.confirmPassword = `* confirm password is empty`;
+    } else if (userData.phone.trim().length < 6) {
+      error.confirmPassword = `* password should be atleast 6`;
+    }else if(userData.password.trim()!=confirmPassword.trim()){
+      error.confirmPassword = `* passwords are not matching`;
+    }
+    if (!userData.email.trim()) {
+      error.email = `* email is empty`;
+    } else if (!emailCheck(userData.email.trim())) {
+      error.email = `email is not valid`;
+    }
+    if (!userData.phone.trim()) {
+      error.phone = `* phone is empty`;
+    } else if (userData.phone.trim().length !=10) {
+      error.phone = `* phone number is incorrect`;
+    }
+    return error;
+  };
 
   const accountCreatedat = `${CreatedDate.year}/${CreatedDate.month}/${CreatedDate.day} ${CreatedDate.hour}:${CreatedDate.minute}:${CreatedDate.second} ${CreatedDate.ampm}`;
 
@@ -36,9 +68,10 @@ function RegisterationPage() {
 
   //Hooks-> UseSate
 
-  const[isFormvalid,setIsFormvalid]=useState(true)
-  const[isOtpSet,setIsOtpSet]=useState(false)
-  const[otp,setOtp]=useState('')
+  const [isFormvalid, setIsFormvalid] = useState(false);
+  const [isOtpSet, setIsOtpSet] = useState(false);
+  const [otp, setOtp] = useState("");
+  const formRef=useRef(null)
 
   const [userData, setUserdata] = useState({
     username: "",
@@ -46,86 +79,58 @@ function RegisterationPage() {
     email: "",
     phone: "",
     role: "0",
-    createdAt:accountCreatedat
+    createdAt: accountCreatedat,
   });
 
+  const [errorMsg, setErrorMsg] = useState({});
 
-  const[errorMsg,setErrorMsg]=useState({
-    confirmPassword:"",
-    emptyField:"",
-    roleNotSelected:""
-  })
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const[confirmPassword,setConfirmPassword]=useState("")
+  //useEffects
 
-
-//useEffects
-
-useEffect(()=>{
-  console.log(userData)
-  errorMsg.emptyField=""
-      for(const key in userData)
-      {
-        userData[key]=userData[key].trim()
-        if(!userData[key]){
-          errorMsg.emptyField=errorMsg.emptyField+`<br>** ${key} is empty `
-        }
-      }
-      if(!(confirmPassword.trim())){
-         console.log(`confirm password is  ${!(confirmPassword.trim())}`)
-        errorMsg.emptyField=errorMsg.emptyField+`<br>** Confirm password box is empty`
-      }
-      if(errorMsg.emptyField)
-      {
-        console.log("heyyyyy")
-        document.getElementById('id_emptyField').innerHTML=`${errorMsg.emptyField}`
-        setIsFormvalid(true)
-      }
-      else{
-        console.log("heloooo")
-        setIsFormvalid(false);
-      }
+  useEffect(() => {
+    //console.log(userData);
+  }, [userData, confirmPassword]);
   
-},[userData,confirmPassword])
 
-//useEffect for password
-
-useEffect(()=>{
-  setErrorMsg({...errorMsg,confirmPassword:userData.password!=confirmPassword? "Password Not Matching":"" })
-  //console.log(userData.password!=confirmPassword,userData.password,confirmPassword)
-
-},[confirmPassword,errorMsg.confirmPassword,userData.password])
+ 
 
 
-
-  const handleSignUp = (e) => {
+  const handleSignUp =async (e) => {
     try {
       e.preventDefault();
-      // setIsOtpSet(generateOtp(userData.email))
-      
-        
-      
+      setErrorMsg(validate());
+      console.log(Object.keys(errorMsg).length == 0)
+      if (Object.keys(errorMsg).length == 0)
+        canBeSubmitted=true
+      else
+        canBeSubmitted=false
+      console.log(isFormvalid)
+     
+      if (canBeSubmitted) {
+        console.log("otp function ")
+        setIsOtpSet(generateOtp(userData.email))
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleOtpSubmit=async (e)=>{
+  const handleOtpSubmit = async (e) => {
     try {
-      const submitStatus=await createUser({user:userData,otp:otp})
-      console.log(submitStatus)
-      setIsOtpSet(!submitStatus)
-     
+      const submitStatus = await createUser({ user: userData, otp: otp.trim() });
+      console.log(submitStatus);
+      setIsOtpSet(!submitStatus);
+      if(submitStatus)
+        formRef.current.reset()
     } catch (error) {
       console.log(`error on otp submit ${error}`);
-      
     }
-  }
+  };
 
   const handleOnChange = async (e) => {
     try {
       setUserdata({ ...userData, [e.target.name]: e.target.value });
-      
     } catch (error) {
       console.log(error);
     }
@@ -134,7 +139,7 @@ useEffect(()=>{
   return (
     <div className="registeration-parent">
       <div className="registeration-container">
-        <form onSubmit={handleSignUp}>
+        <form ref={formRef} onSubmit={handleSignUp}>
           <div
             className="titleContainer"
             style={{
@@ -147,17 +152,28 @@ useEffect(()=>{
             <h2>Create Account</h2>
           </div>
           <RoleBlock handleOnChange={handleOnChange} />
-          <CommonUserDetails handleOnChange={handleOnChange} isFormvalid={isFormvalid} errorMsg={errorMsg} setConfirmPassword={setConfirmPassword} />
-          <span className="error" id='id_emptyField'></span>
-
+          <CommonUserDetails
+            handleOnChange={handleOnChange}
+            isFormvalid={isFormvalid}
+            errorMsg={errorMsg}
+            setConfirmPassword={setConfirmPassword}
+          />
+          <span className="error" id="id_emptyField"></span>
         </form>
-        {isOtpSet && <OtpBlock setOtp={setOtp} handleOtpSubmit={handleOtpSubmit}/>}
+        {isOtpSet && (
+          <OtpBlock setOtp={setOtp} handleOtpSubmit={handleOtpSubmit} />
+        )}
       </div>
     </div>
   );
 }
 
-function CommonUserDetails({ handleOnChange ,errorMsg,setConfirmPassword,isFormvalid}) {
+function CommonUserDetails({
+  handleOnChange,
+  errorMsg,
+  setConfirmPassword,
+  isFormvalid,
+}) {
   return (
     <div className="form-registeration-user-details">
       <input
@@ -167,7 +183,8 @@ function CommonUserDetails({ handleOnChange ,errorMsg,setConfirmPassword,isFormv
         placeholder="Enter a Username"
         onChange={handleOnChange}
       />
-      
+      <span className="error">{errorMsg.username}</span>
+
       <input
         type="password"
         name="password"
@@ -175,12 +192,13 @@ function CommonUserDetails({ handleOnChange ,errorMsg,setConfirmPassword,isFormv
         placeholder="Enter the Password"
         onChange={handleOnChange}
       />
+      <span className="error">{errorMsg.password}</span>
       <input
         type="password"
         name="confirmPassword"
         id="id_confirmPassword"
         placeholder="Confirm Password"
-        onChange={(e)=>setConfirmPassword(e.target.value)}
+        onChange={(e) => setConfirmPassword(e.target.value)}
       />
       <span className="error">{errorMsg.confirmPassword}</span>
       <input
@@ -190,6 +208,7 @@ function CommonUserDetails({ handleOnChange ,errorMsg,setConfirmPassword,isFormv
         placeholder="Email"
         onChange={handleOnChange}
       />
+      <span className="error">{errorMsg.email}</span>
       <input
         type="text"
         name="phone"
@@ -197,10 +216,19 @@ function CommonUserDetails({ handleOnChange ,errorMsg,setConfirmPassword,isFormv
         placeholder="Phone"
         onChange={handleOnChange}
       />
-      <input type="submit" value="Sign Up" disabled={isFormvalid} name="signUp" id="id_signUp" />
-      <span>Already have an account ?  <Link to='/login' style={{
-        "textDecoration":"none"
-      }}>Login</Link></span>
+      <span className="error">{errorMsg.phone}</span>
+      <input type="submit" value="Sign Up" name="signUp" id="id_signUp" />
+      <span>
+        Already have an account ?{" "}
+        <Link
+          to="/login"
+          style={{
+            textDecoration: "none",
+          }}
+        >
+          Login
+        </Link>
+      </span>
     </div>
   );
 }
@@ -227,18 +255,27 @@ function RoleBlock({ handleOnChange }) {
   );
 }
 
-function OtpBlock({setOtp,handleOtpSubmit}){
-  return(
+function OtpBlock({ setOtp, handleOtpSubmit }) {
+  return (
     <div className="otpBlockParent">
       <h2>Enter Otp</h2>
-      <input type="text" name="txtOtp" onChange={(e)=>{
-        setOtp(e.target.value)
-
-      }} id="txtOtp" />
-      <input type="button" value="Submit" id="btnOtp" name="btnOtp" onClick={handleOtpSubmit} />
-
+      <input
+        type="text"
+        name="txtOtp"
+        onChange={(e) => {
+          setOtp(e.target.value);
+        }}
+        id="txtOtp"
+      />
+      <input
+        type="button"
+        value="Submit"
+        id="btnOtp"
+        name="btnOtp"
+        onClick={handleOtpSubmit}
+      />
     </div>
-  )
+  );
 }
 
 export default RegisterationPage;

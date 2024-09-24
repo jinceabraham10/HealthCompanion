@@ -1,0 +1,43 @@
+import React from 'react'
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import CardActionArea from '@mui/material/CardActionArea';
+import CardActions from '@mui/material/CardActions';
+
+
+function DoctorCardView({doctor}) {
+
+  return (
+    <Card sx={{ maxWidth: 240, margin: "20px", borderRadius: 3, padding: 5 , boxShadow:"4px 3px 10px black"}}>
+    <CardActionArea sx={{height:"fit"}}>
+      <CardMedia
+        component="img"
+        height="fit"
+        image="logo/doctor.png"
+        alt="green iguana"
+        sx={{
+            borderRadius: 3
+        }}
+      />
+      <CardContent sx={{padding:5}}>
+        <Typography gutterBottom variant="h6" component="div">
+          {`${doctor.firstName} ${doctor.lastName}`}
+        </Typography>
+        <Typography variant="h6" >
+          {`Specialization : ${doctor.specialization}`}
+        </Typography>
+      </CardContent>
+    </CardActionArea>
+    <CardActions>
+      <Button variant="contained" sx={{ padding:2}} size="small" >
+        Proceed to Book
+      </Button>
+    </CardActions>
+  </Card>
+  )
+}
+
+export default DoctorCardView

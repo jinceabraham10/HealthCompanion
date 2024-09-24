@@ -31,6 +31,8 @@ exports.createUser = async (req, res) => {
       createdAt,
     });
 
+    // const fetchedData = "save"
+
     const fetchedData = await newUser.save();
     mailOnSuccessfullRegisteration({
       username,
@@ -39,7 +41,8 @@ exports.createUser = async (req, res) => {
       phone,
       createdAt,
     });
-    res.status(200).json({ message: `Created Successfully ${fetchedData}`});
+    req.session.destroy()
+    res.status(200).clearCookie('connect.sid').json({ message: `Created Successfully ${fetchedData}`});
   } catch (error) {
     // console.log(req.body);
     // console.log("Error", error);

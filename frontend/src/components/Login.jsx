@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import "../styles/Login.css";
 import RoleBar from "./RoleBar";
 import { LoginUser } from "../services/authService";
+import {useNavigate} from "react-router-dom"
 
 function Login() {
   const [userName, setUserName] = useState("");
@@ -10,13 +11,18 @@ function Login() {
   const [role,setRole]=useState("")
   const ref_username = useRef(null);
   const ref_password = useRef(null);
-  const handleClick = () => {
-    const result = {
-      name: ref_username.current.value,
-      password: ref_password.current.value,
-    };
+  const navigate=useNavigate()
 
-    LoginUser(result)
+
+  const handleClick =async () => {
+    const user = {
+      username: ref_username.current.value.trim(),
+      password: ref_password.current.value.trim(),
+    };
+    
+    if(await LoginUser(user)){
+      navigate("/")
+    }
 
     
   };
