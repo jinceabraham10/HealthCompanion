@@ -37,4 +37,21 @@ exports.loadOnPageLoad=async (req,res)=>{
     }
 }
 
+exports.checkUserPresent=async (req,res)=>{
+    try {
+        const {username,email}=req.body
+        console.log(req.body)
+        const fetchedData=await User.findOne({$or: [{username:username},{email:email}]})
+        console.log(fetchedData)
+        if(fetchedData)
+            return res.status(200).json({message:"User Already Present",isPresent:true})
+        res.status(200).json({message:"User not present ",isPresent:false})
+  
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({message:"User Already Present",error:error})
+    }
+
+}
+
 

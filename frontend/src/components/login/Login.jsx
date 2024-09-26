@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
-import "../styles/Login.css";
-import RoleBar from "./RoleBar";
-import { LoginUser } from "../services/authService";
+import "./Login.css";
+import RoleBar from "../altSignInBar/RoleBar";
+import { LoginUser } from "../../services/authService";
 import {useNavigate} from "react-router-dom"
 
 function Login() {
@@ -48,10 +48,11 @@ function LoginInputBlock({ handleClick, ref_username, ref_password }) {
         name="userName"
         id="id_userName"
         placeholder="Email /Username"
+        pattern=""
         ref={ref_username}
       />
       <input
-        type="text"
+        type="password"
         name="password"
         id="id_password"
         placeholder="password"
@@ -63,6 +64,11 @@ function LoginInputBlock({ handleClick, ref_username, ref_password }) {
         </button>
         <a href="http://">forgot Password</a>
       </span>
+      <span className="registerLink">
+        New User ?
+        <a href="http://localhost:5173/register">Register</a>
+      </span>
+      
     </div>
   );
 }

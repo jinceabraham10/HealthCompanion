@@ -10,7 +10,7 @@
       useEffect(()=>{
         const onLoad=async ()=>{
           await setDoctors(await getAllDoctors())
-          console.log(doctors) 
+          await console.log(doctors) 
         }
         onLoad()
         

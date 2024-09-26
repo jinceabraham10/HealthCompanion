@@ -34,3 +34,16 @@ exports.getAllDoctors=async (req,res)=>{
     }
 }
 
+
+exports.getDoctorDetails=async (res,req)=>{
+    try {
+
+        const doctorDetails=await Doctor.find({_id:id})
+        console.log(doctorDetails)
+        res.status(200).json({message:"fetched Successfully",doctorDetails:doctorDetails})
+        
+    } catch (error) {
+        
+    }
+}
+

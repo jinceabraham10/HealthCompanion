@@ -9,12 +9,12 @@ import CardActions from '@mui/material/CardActions';
 
 function MedicineCardView({medicine}) {
   return (
-    <Card sx={{ maxWidth: 350, margin: "20px", borderRadius: 3, padding: 5 , boxShadow:"4px 3px 10px black"}}>
+    <Card sx={{ maxWidth:500, flexGrow:1,margin: "20px", borderRadius: 3 , boxShadow:"4px 3px 10px black"}}>
     <CardActionArea sx={{height:"fit"}}>
       <CardMedia
         component="img"
         height="fit"
-        image="logo/doctor.png"
+        image="logo/medicine1.png"
         alt="green iguana"
         sx={{
             borderRadius: 3
@@ -29,7 +29,7 @@ function MedicineCardView({medicine}) {
         </Typography>
       </CardContent>
     </CardActionArea>
-    <CardActions>
+    <CardActions  sx={{padding:5}}>
       <Button variant="contained" sx={{ padding:2}} size="small" >
         {`Proceed to Book  PRICE: rs  ${medicine.price}` }
       </Button>

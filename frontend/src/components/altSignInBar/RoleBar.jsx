@@ -1,5 +1,5 @@
 import React from "react";
-import '../styles/RoleBar.css'
+import './RoleBar.css'
 
 const handleRoleClick=(e)=>{
     setRole(e.target.value)

@@ -66,4 +66,32 @@ async function DataOnPageLoad(token) {
   }
   
 }
-export { LoginUser,DataOnPageLoad };
+
+
+async function CheckUserPresent(data) {
+  try {
+    console.log(data)
+    const resp=await axios.post('http://localhost:5000/api/auth/checkUserPresent',data)
+    console.log(resp)
+    if(resp.data.isPresent){
+      swal.fire({
+        icon:"warning",
+        title:"User Exist",
+        text:"User with below username or email is already present"
+      })
+    return true
+    }else{
+      return false
+    }
+
+  } catch (error) {
+    
+    const resp=error.response.data
+    return false
+  }
+}
+
+
+
+
+export { LoginUser,DataOnPageLoad, CheckUserPresent };

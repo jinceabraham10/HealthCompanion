@@ -1,12 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
-import "../styles/registeration/RegisterationPageStyle.css";
-import { createUser, generateOtp } from "../services/userService";
+import "./RegisterationPageStyle.css";
+import { createUser, generateOtp } from "../../services/userService";
 import { Link } from "react-router-dom";
-import emailCheck from "../validations/login/emailValidation";
+import emailCheck from "../../validations/login/emailValidation";
+import { CheckUserPresent } from "../../services/authService";
+
 
 function RegisterationPage() {
   const date = new Date();
-  let canBeSubmitted=false
+  let canBeSubmitted = false;
 
   //Current Date object Details
 
@@ -42,11 +44,11 @@ function RegisterationPage() {
     } else if (userData.password.trim().length < 6) {
       error.password = `* password should be at least 6`;
     }
-    if (!confirmPassword.trim()) {
+    if (!confirmPassword) {
       error.confirmPassword = `* confirm password is empty`;
     } else if (userData.phone.trim().length < 6) {
       error.confirmPassword = `* password should be atleast 6`;
-    }else if(userData.password.trim()!=confirmPassword.trim()){
+    } else if (userData.password.trim() != confirmPassword.trim()) {
       error.confirmPassword = `* passwords are not matching`;
     }
     if (!userData.email.trim()) {
@@ -54,11 +56,15 @@ function RegisterationPage() {
     } else if (!emailCheck(userData.email.trim())) {
       error.email = `email is not valid`;
     }
+    const phoneRegex = /^[0-9]{10}$/;
     if (!userData.phone.trim()) {
       error.phone = `* phone is empty`;
-    } else if (userData.phone.trim().length !=10) {
+    } else if (userData.phone.trim().length != 10) {
       error.phone = `* phone number is incorrect`;
+    }else if(isNaN(userData.phone.trim())){
+      error.phone = `* enter valid characters`;
     }
+
     return error;
   };
 
@@ -69,9 +75,9 @@ function RegisterationPage() {
   //Hooks-> UseSate
 
   const [isFormvalid, setIsFormvalid] = useState(false);
-  const [isOtpSet, setIsOtpSet] = useState(false);
+  const [isOtpSet, setIsOtpSet] = useState(undefined);
   const [otp, setOtp] = useState("");
-  const formRef=useRef(null)
+  const formRef = useRef(null);
 
   const [userData, setUserdata] = useState({
     username: "",
@@ -83,34 +89,46 @@ function RegisterationPage() {
   });
 
   const [errorMsg, setErrorMsg] = useState({});
+  const [isPresent,setIsPresent]=useState(undefined)
 
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState(undefined);
 
   //useEffects
+  useEffect(() => { }, [userData,isPresent]);
 
   useEffect(() => {
-    //console.log(userData);
-  }, [userData, confirmPassword]);
-  
+    console.log("Errors:", errorMsg);
+  }, [errorMsg]);
 
- 
-
-
-  const handleSignUp =async (e) => {
+  const handleSignUp = async (e) => {
     try {
       e.preventDefault();
-      setErrorMsg(validate());
-      console.log(Object.keys(errorMsg).length == 0)
-      if (Object.keys(errorMsg).length == 0)
-        canBeSubmitted=true
-      else
-        canBeSubmitted=false
-      console.log(isFormvalid)
-     
-      if (canBeSubmitted) {
-        console.log("otp function ")
-        setIsOtpSet(generateOtp(userData.email))
+      const error = validate();
+      setErrorMsg(error);
+      
+      if (Object.keys(error).length === 0) {
+        canBeSubmitted = true;
+        
+        const isP = await CheckUserPresent({
+          email: userData.email,
+          username: userData.username
+        });
+        
+        setIsPresent(isP);
+        console.log(isP); 
+  
+        if (isP) {
+          setIsOtpSet(false);
+        } else {
+ 
+          setIsOtpSet(generateOtp(userData.email));
+        }
+      } else {
+        canBeSubmitted = false;
+        setIsOtpSet(false);
       }
+  
+      console.log("Form Valid:", canBeSubmitted);
     } catch (error) {
       console.log(error);
     }
@@ -118,11 +136,13 @@ function RegisterationPage() {
 
   const handleOtpSubmit = async (e) => {
     try {
-      const submitStatus = await createUser({ user: userData, otp: otp.trim() });
+      const submitStatus = await createUser({
+        user: userData,
+        otp: otp.trim(),
+      });
       console.log(submitStatus);
-      setIsOtpSet(!submitStatus);
-      if(submitStatus)
-        formRef.current.reset()
+      await setIsOtpSet(!submitStatus);
+      if (submitStatus) formRef.current.reset();
     } catch (error) {
       console.log(`error on otp submit ${error}`);
     }
@@ -130,7 +150,7 @@ function RegisterationPage() {
 
   const handleOnChange = async (e) => {
     try {
-      setUserdata({ ...userData, [e.target.name]: e.target.value });
+      await setUserdata({ ...userData, [e.target.name]: e.target.value });
     } catch (error) {
       console.log(error);
     }
@@ -138,8 +158,12 @@ function RegisterationPage() {
 
   return (
     <div className="registeration-parent">
+      <div className="companyName">
+        <img src="logo/LogoPlain.png" height="300px" width="500px" alt="logo" />
+      </div>
+
       <div className="registeration-container">
-        <form ref={formRef} onSubmit={handleSignUp}>
+        <form ref={formRef}>
           <div
             className="titleContainer"
             style={{
@@ -157,6 +181,7 @@ function RegisterationPage() {
             isFormvalid={isFormvalid}
             errorMsg={errorMsg}
             setConfirmPassword={setConfirmPassword}
+            handleSignUp={handleSignUp}
           />
           <span className="error" id="id_emptyField"></span>
         </form>
@@ -173,6 +198,7 @@ function CommonUserDetails({
   errorMsg,
   setConfirmPassword,
   isFormvalid,
+  handleSignUp,
 }) {
   return (
     <div className="form-registeration-user-details">
@@ -217,7 +243,13 @@ function CommonUserDetails({
         onChange={handleOnChange}
       />
       <span className="error">{errorMsg.phone}</span>
-      <input type="submit" value="Sign Up" name="signUp" id="id_signUp" />
+      <input
+        type="submit"
+        value="Sign Up"
+        name="signUp"
+        onClick={handleSignUp}
+        id="id_signUp"
+      />
       <span>
         Already have an account ?{" "}
         <Link

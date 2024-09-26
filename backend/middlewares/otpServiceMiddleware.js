@@ -9,7 +9,7 @@ exports.generateOTPForRegisteration = async (req, res) => {
     req.session.otp=otpGenerated
     console.log(`otp generated is ${req.session.otp} and id ${req.sessionID}`)
     if(!(await mailWithOtp(email, otpGenerated))){
-      res.status(400).json({'message':`couldn't send the Otp to the specified mail`,otpMailNotSend:true})
+      return res.status(400).json({'message':`couldn't send the Otp to the specified mail`,otpMailNotSend:true})
     }
     res.status(200).json({'message':`Otp generated successfully and is sent to the mail ${email}`,'otpStatus':(otpGenerated)?true:false})
   } catch (error) {

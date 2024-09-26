@@ -11,7 +11,7 @@ import CardActions from '@mui/material/CardActions';
 function DoctorCardView({doctor}) {
 
   return (
-    <Card sx={{ maxWidth: 240, margin: "20px", borderRadius: 3, padding: 5 , boxShadow:"4px 3px 10px black"}}>
+    <Card sx={{ maxWidth: 240, margin: "20px", borderRadius: 3, boxShadow:"4px 3px 10px black"}}>
     <CardActionArea sx={{height:"fit"}}>
       <CardMedia
         component="img"
@@ -22,17 +22,17 @@ function DoctorCardView({doctor}) {
             borderRadius: 3
         }}
       />
-      <CardContent sx={{padding:5}}>
+      <CardContent sx={{padding:1}}>
         <Typography gutterBottom variant="h6" component="div">
           {`${doctor.firstName} ${doctor.lastName}`}
         </Typography>
-        <Typography variant="h6" >
+        <Typography variant="h7" >
           {`Specialization : ${doctor.specialization}`}
         </Typography>
       </CardContent>
     </CardActionArea>
     <CardActions>
-      <Button variant="contained" sx={{ padding:2}} size="small" >
+      <Button variant="contained" sx={{ margin:1}} size="small" >
         Proceed to Book
       </Button>
     </CardActions>

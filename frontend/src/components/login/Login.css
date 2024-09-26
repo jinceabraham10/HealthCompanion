@@ -14,17 +14,31 @@
   border-radius: 10px;
   box-shadow: 2px 2px 3cqh rgb(117, 9, 159); 
   backdrop-filter: blur(30px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   /* backdrop-filter: blur(5px); */
   
 }
 
 
-.login-block input {
-  margin: 40px;
-  display: block;
+.login-block input[type="text"] {
+  margin: 20px 0; /* Adjust margin to prevent overflow */
   padding: 5px 10px;
   text-align: center;
   border-radius: 4px;
+  width: 30em; /* Set width to a consistent value */
+  box-sizing: border-box;
+}
+
+.login-block input[type="password"] {
+  margin: 20px 0; /* Adjust margin to prevent overflow */
+  padding: 5px 10px;
+  text-align: center;
+  border-radius: 4px;
+  width: 20em; /* Set width to a consistent value */
+  box-sizing: border-box;
 }
 
 .login-block button {
@@ -77,5 +91,15 @@
   
   
   
+}
+
+.registerLink{
+  display: flex;
+  margin-top: 2em;
+  justify-content: center; /* Centers items horizontally */
+  align-items: center; /* Centers items vertically */
+  gap: 10px; /* Optional: Space between items */
+  width: 100%; /* Optional: Adjust width as needed */
+
 }
 
