@@ -1,3 +1,4 @@
+const { mongoose } = require('mongoose')
 const Doctor=require('../models/doctorModel.js')
 
 
@@ -21,7 +22,7 @@ exports.submitForVerification=async (req,res)=>{
 
 exports.getAllDoctors=async (req,res)=>{
     try {
-        const allDoctors=await Doctor.find({})
+        const allDoctors=await Doctor.find({}).populate('userId')
         await console.log(allDoctors)
         if(allDoctors.length==0){
             return res.status(404).json({message:`No Doctors Available`})
@@ -35,7 +36,7 @@ exports.getAllDoctors=async (req,res)=>{
 }
 
 
-exports.getDoctorDetails=async (res,req)=>{
+exports.getDoctorDetails=async (req,res)=>{
     try {
 
         const doctorDetails=await Doctor.find({_id:id})
@@ -46,4 +47,24 @@ exports.getDoctorDetails=async (res,req)=>{
         
     }
 }
+
+exports.createDoctor=async (doctorData)=>{
+    try {
+        const {userId,createdAt}=doctorData
+        await console.log(`doctorData ${userId}`)
+        const doctor=new Doctor({
+            userId,
+            createdAt ,
+            updatedAt:createdAt 
+        })
+        const fetchedData=await doctor.save()
+        console.log(`fetched data from doctors ${fetchedData}`)
+        
+    } catch (error) {
+        console.log(error)
+    }
+
+}
+
+
 

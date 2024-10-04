@@ -7,5 +7,6 @@ const {generateOTPForRegisteration,verifyOtpForRegisteration}=require('../middle
 
 router.post('/generateOtp',generateOTPForRegisteration)
 router.post('/verifyOtp',verifyOtpForRegisteration,createUser)
+router.post('/create',createUser)
 router.get('/:city',getUserById)
 module.exports=router

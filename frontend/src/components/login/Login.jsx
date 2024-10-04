@@ -19,9 +19,16 @@ function Login() {
       username: ref_username.current.value.trim(),
       password: ref_password.current.value.trim(),
     };
-    
-    if(await LoginUser(user)){
-      navigate("/")
+
+    const userData=await LoginUser(user)
+    if(userData){
+      switch(userData.role){
+        case "0":
+          navigate('/')
+          break;
+        case "1":
+          navigate('/doctorDashboard')
+      }
     }
 
     

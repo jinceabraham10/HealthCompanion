@@ -16,11 +16,13 @@
     "@mui/material": "^6.1.1",
     "axios": "^1.7.3",
     "flowbite-react": "^0.10.1",
+    "formik": "^2.4.6",
     "jwt-decode": "^4.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.0",
-    "sweetalert2": "^11.12.4"
+    "sweetalert2": "^11.12.4",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.8.0",

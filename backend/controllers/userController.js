@@ -1,6 +1,8 @@
+const { default: mongoose } = require("mongoose");
 const User = require("../models/userModel.js");
 const { handlehashedPassword } = require("../utils/crypting.js");
 const { mailOnSuccessfullRegisteration } = require("../utils/mailService.js");
+const {createDoctor}=require('./doctorController.js')
 
 //get all users
 exports.getAllUsers = async (req, res) => {
@@ -19,7 +21,7 @@ exports.getAllUsers = async (req, res) => {
 
 exports.createUser = async (req, res) => {
   try {
-    await console.log(req.body);
+    await console.log(`received data ${req.body}`);
     const { username, password, email, role, phone, createdAt } = req.body.user;
     let hashedPassword = await handlehashedPassword().setPassword(password);
     const newUser = new User({
@@ -41,11 +43,18 @@ exports.createUser = async (req, res) => {
       phone,
       createdAt,
     });
+
+
+    if(role==1){
+      let validId=new mongoose.Types.ObjectId(fetchedData._id)
+      await createDoctor({userId: validId,"createdAt":createdAt})
+    }
+
     req.session.destroy()
     res.status(200).clearCookie('connect.sid').json({ message: `Created Successfully ${fetchedData}`});
   } catch (error) {
     // console.log(req.body);
-    // console.log("Error", error);
+     console.log("Error", error);
     res
       .status(400)
       .json({ message: `Error Occured while Creating the Account, ${error}` });

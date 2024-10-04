@@ -9,12 +9,11 @@ async function LoginUser(loginData) {
       icon:"success",
       title:"Login Successfull",
       text:"Credentials have been verified and welcoming you to HealthCompanion"
-
     })
 
     localStorage.setItem('token',resp.data.token)
 
-    return true
+    return resp.data.userData
 
   } catch (error) {
     

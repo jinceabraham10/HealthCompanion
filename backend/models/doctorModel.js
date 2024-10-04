@@ -1,5 +1,6 @@
 const { json } = require('body-parser')
 const mongoose=require('mongoose')
+const User = require('./userModel')
 
 const educationalDetails={
     school:"",
@@ -11,24 +12,31 @@ const educationalDetails={
 const doctorSchema=new mongoose.Schema({
     firstName:{
         type:String,
+        default:""
     },
     lastName:{
-        type:String
+        type:String,
+        default:""
     },
     bloodGroup:{
-        type:String
+        type:String,
+        default:""
     },
     height:{
-        type:String
+        type:String,
+        default:""
     },
     weight:{
-        type:String
+        type:String,
+        default:""
     },
     gender:{
-        type:String
+        type:String,
+        default:""
     },
     specialization:{
-        type:String
+        type:String,
+        default:""
     },
     educationalDetails:{
         type:JSON,
@@ -42,9 +50,27 @@ const doctorSchema=new mongoose.Schema({
         type:Array,
         default:[]
     },
-    status:{
+    createdAt:{
+        type:String,
+        default:""
+        
+      },
+    updatedAt:{
+        type:String,
+        default:""
+      },
+    verificationStatus:{
         type:String,
         default:3
+    },
+    status:{
+        type:String,
+        default:0
+    },
+    userId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users",
+        default:null
     }
 
 

@@ -11,11 +11,12 @@ exports.checkUser=async (req,res)=>{
         const fetchedData=await User.findOne({$or: [{username:username},{email:username}]})
         console.log(fetchedData)
         if(!fetchedData)
-            res.status(400).json({message:"User Doesn't Exist",errorStatus:0})
+           return res.status(400).json({message:"User Doesn't Exist",errorStatus:0})
         else if(!await bcrypt.compare(password,fetchedData.password))
-            res.status(400).json({message:"Invalid Password",errorStatus:1})
+           return res.status(400).json({message:"Invalid Password",errorStatus:1})
         const token=jwt.sign({id:fetchedData._id,username:fetchedData.username},process.env.JWT_KEY,{expiresIn:'1h'})
-        res.status(200).json({message:`successfully logged in`,token:token})
+        const {role,email,phone}=fetchedData
+        res.status(200).json({message:`successfully logged in`,token:token,userData:{username:fetchedData.username,role,email,phone}})
 
         
     } catch (error) {

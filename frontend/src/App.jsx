@@ -6,6 +6,8 @@ import RegisterationPage from "./pages/registeration/RegisterationPage";
 import DoctorVerificationForm from "./pages/doctor/doctorVerificationForm/DoctorVerificationForm";
 import BookingPage from "./pages/patient/bookingPage/BookingPage";
 import DoctorVerificationForm1 from "./pages/doctor/doctorVerificationForm1/DoctorVerificationForm1";
+import DoctorDashboard from "./pages/doctor/mainPage/DoctorDashboard";
+import DoctorVer from "./pages/doctor/doctorVerificationForm1/DoctorVer";
 
 function App() {
   return (
@@ -15,8 +17,12 @@ function App() {
           <Route path="/" element={<PatientDashboard/>} />
           <Route path="/register" element={<RegisterationPage />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/doctorVerificationForm" element={<DoctorVerificationForm1/>}/>
           <Route path="/bookPage" element={<BookingPage />} />
+
+
+          <Route path="/doctor" element={<BookingPage />} />
+          <Route path="/doctorVerificationForm" element={<DoctorVerificationForm1/>}/>
+          <Route path="/doctorDashboard" element={<DoctorDashboard/>}/>
         </Routes>
       </Router>
     </>
