@@ -5,6 +5,7 @@ import { Accordion, FloatingLabel, FileInput, TextInput } from "flowbite-react";
 import { Button as CustomButton } from "flowbite-react";
 import { useFormik } from "formik";
 import { DoctorVerificationFormValidationSchema } from "../../../validations/yupValidations/DoctorVerificationValidation";
+import { verificationFormSubmit } from "../../../services/doctorService";
 
 function DoctorVerificationForm1() {
   const formik = useFormik({
@@ -30,17 +31,17 @@ function DoctorVerificationForm1() {
     },
     validationSchema: DoctorVerificationFormValidationSchema,
     onSubmit: (values, actions) => {
-      const file = values.certificateMbbs;
-      if (file) {
-        console.log(file);
-        const reader = new FileReader();
-        reader.onload = () => {
-          console.log("File Content Read Successfully");
-          console.log("File Content Preview:", reader.result);
-          reader.readAsText(file);
-        };
-      }
-      console.log(values);
+      const formData =new FormData()
+      Object.keys(values).forEach(key => {
+        formData.append(key,values[key])
+      });
+
+      // for (let [key,value] of formData.entries()){
+      //   console.log(key,value)
+      // }
+
+      verificationFormSubmit(formik.values)
+
     },
   });
 
@@ -204,6 +205,7 @@ function EducationDetails(props) {
               <FileInput
                 id={`certificate${props.level}`}
                 name={`certificate${props.level}`}
+                accept=".pdf"
                 onChange={(e) =>
                   props.formik.setFieldValue(
                     `certificate${props.level}`,

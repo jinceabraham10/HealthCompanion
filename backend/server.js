@@ -2,6 +2,8 @@ const express=require('express')
 const dotenv=require('dotenv')
 const path=require('path')
 const cors=require('cors')
+const bodyParser=require('body-parser')
+const multer=require('multer')
 
 const connectToMongoDB=require('./config/db.js')
 const {sessionSetUp}=require('./config/sessionSetup.js')
@@ -26,9 +28,12 @@ app.use(cors(
         credentials:true
     }
 ))
-app.use(express.json())
+app.use(bodyParser.json())
 port=process.env.PORT
 connectToMongoDB()
+
+
+
 app.use('/api/auth',authRoutes)
 app.use('/api/user',userRoutes)
 app.use('/api/doctor',doctorRoutes)

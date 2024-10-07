@@ -21,6 +21,7 @@ function Login() {
     };
 
     const userData=await LoginUser(user)
+    console.log(userData)
     if(userData){
       switch(userData.role){
         case "0":
@@ -28,6 +29,7 @@ function Login() {
           break;
         case "1":
           navigate('/doctorDashboard')
+          break;
       }
     }
 

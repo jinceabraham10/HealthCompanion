@@ -66,5 +66,22 @@ exports.createDoctor=async (doctorData)=>{
 
 }
 
+exports.submitVerificationData=async (req,res)=>{
+    try {
+
+        // await console.log("File mimetype received:", req.files)
+        if(!req.files){
+            return res.status(400).json({message:"no files received"})
+        }
+        res.status(200).json({message:"successfull"}) 
+        
+        
+    } catch (error) {
+
+        console.log(error)
+        
+    }
+}
+
 
 

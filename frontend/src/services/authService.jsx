@@ -49,6 +49,7 @@ async function DataOnPageLoad(token) {
         'authorization':`${token}`
       }
     })
+    console.log(resp.data.fetchedData)
     return resp.data.fetchedData
     
     

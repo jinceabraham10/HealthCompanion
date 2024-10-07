@@ -10,3 +10,20 @@ export async function getAllDoctors(){
         
     }
 }
+
+
+export async function verificationFormSubmit(verificationData){
+   try {
+
+    const resp=await axios.post('http://localhost:5000/api/doctor/verificationSubmit',verificationData,{
+        headers:{
+            'Content-Type': 'multipart/form-data' 
+        }
+    })
+    console.log(resp.data)
+    
+   } catch (error) {
+    console.log(`${error}`)
+    
+   }
+}

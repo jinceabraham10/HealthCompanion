@@ -22,9 +22,9 @@
       return (
        <div className={styles.doctorCardListParent}>
           {
-            doctors.map(doctor=>(
+            (doctors) ? doctors.map(doctor=>(
               <DoctorCardView key={doctor._id} doctor={doctor}/>
-            ))
+            )): "no doctors"
           }
 
        </div>
