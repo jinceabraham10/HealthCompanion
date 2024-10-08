@@ -7,7 +7,6 @@ import DoctorVerificationForm from "./pages/doctor/doctorVerificationForm/Doctor
 import BookingPage from "./pages/patient/bookingPage/BookingPage";
 import DoctorVerificationForm1 from "./pages/doctor/doctorVerificationForm1/DoctorVerificationForm1";
 import DoctorDashboard from "./pages/doctor/mainPage/DoctorDashboard";
-import DoctorVer from "./pages/doctor/doctorVerificationForm1/DoctorVer";
 
 function App() {
   return (

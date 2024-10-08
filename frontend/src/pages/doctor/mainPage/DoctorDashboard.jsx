@@ -5,14 +5,7 @@ import { Sidebar } from "flowbite-react";
 import { Avatar } from "flowbite-react";
 import LockIcon from "@mui/icons-material/Lock";
 import { DataOnPageLoad } from "../../../services/authService";
-import {
-  HiArrowSmRight,
-  HiChartPie,
-  HiInbox,
-  HiShoppingBag,
-  HiTable,
-  HiUser,
-} from "react-icons/hi";
+import { loadDoctorData } from "../../../services/doctorService";
 
 import Login from "../../../components/login/Login";
 
@@ -26,6 +19,7 @@ function DoctorDashboard() {
     console.log(verified);
   };
   const [fetchedData,setFetchedData]=useState(undefined)
+  const [fetchedDoctorDetails,setFetchedDoctorDetails]=useState(null)
   // console.log(fetchedData)
 
   let userName;
@@ -34,15 +28,23 @@ function DoctorDashboard() {
     const token=localStorage.getItem('token')
     const fet=await DataOnPageLoad(token)
     await setFetchedData(fet)
+    await setFetchedDoctorDetails(await loadDoctorData({userId:fet._id}))
     
   }
-
-  console.log(fetchedData)
 
   useEffect(()=>{
     load()
   },[])
 
+
+
+  useEffect(()=>{
+    if(fetchedDoctorDetails){
+      if(fetchedDoctorDetails.verificationStatus=="3")
+        setIsVerified(true)
+    }
+ 
+   },[fetchedDoctorDetails])
 
 
 
@@ -78,7 +80,7 @@ function DoctorDashboard() {
         <HeaderBar fetchedData={fetchedData}  />
         </div>
         <div >
-        {opened == "verificationForm" && <DoctorVerificationForm1 />}
+        {opened == "verificationForm" && (fetchedData) &&<DoctorVerificationForm1 fetchedData={fetchedData}/>}
         {opened == "loginPage" && <Login />}
         </div>
       </div>

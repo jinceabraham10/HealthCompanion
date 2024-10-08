@@ -50,6 +50,10 @@ const doctorSchema=new mongoose.Schema({
         type:Array,
         default:[]
     },
+    profileImage:{
+        type:String,
+        default:""
+    },
     createdAt:{
         type:String,
         default:""
@@ -71,8 +75,7 @@ const doctorSchema=new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "users",
         default:null
-    }
-
+    },
 
 })
 

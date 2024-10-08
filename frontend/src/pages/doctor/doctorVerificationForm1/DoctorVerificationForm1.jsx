@@ -7,9 +7,10 @@ import { useFormik } from "formik";
 import { DoctorVerificationFormValidationSchema } from "../../../validations/yupValidations/DoctorVerificationValidation";
 import { verificationFormSubmit } from "../../../services/doctorService";
 
-function DoctorVerificationForm1() {
+function DoctorVerificationForm1(props) {
   const formik = useFormik({
     initialValues: {
+      _id:(props.fetchedData)? props.fetchedData._id:"",
       firstName: "",
       lastName: "",
       bloodGroup: "",
@@ -27,20 +28,18 @@ function DoctorVerificationForm1() {
       certificateTwelth: "",
       schoolMbbs: "",
       marksMbbs: "",
-      certificateMbbs: "",
+      certificateMbbs: ""
     },
     validationSchema: DoctorVerificationFormValidationSchema,
-    onSubmit: (values, actions) => {
+    onSubmit: async (values, actions) => {
       const formData =new FormData()
       Object.keys(values).forEach(key => {
         formData.append(key,values[key])
       });
-
-      // for (let [key,value] of formData.entries()){
-      //   console.log(key,value)
-      // }
-
-      verificationFormSubmit(formik.values)
+      formData.append("_id",props.fetchedData._id)
+      await verificationFormSubmit(formik.values)
+      actions.resetForm()
+      
 
     },
   });

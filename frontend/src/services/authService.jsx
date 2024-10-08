@@ -49,9 +49,7 @@ async function DataOnPageLoad(token) {
         'authorization':`${token}`
       }
     })
-    console.log(resp.data.fetchedData)
-    return resp.data.fetchedData
-    
+    return resp.data.fetchedData 
     
   } catch (error) {
     if(error.response.data.message="invalid token"){
@@ -90,8 +88,6 @@ async function CheckUserPresent(data) {
     return false
   }
 }
-
-
 
 
 export { LoginUser,DataOnPageLoad, CheckUserPresent };
