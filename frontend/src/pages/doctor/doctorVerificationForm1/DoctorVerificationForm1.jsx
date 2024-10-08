@@ -11,23 +11,23 @@ function DoctorVerificationForm1(props) {
   const formik = useFormik({
     initialValues: {
       _id:(props.fetchedData)? props.fetchedData._id:"",
-      firstName: "",
-      lastName: "",
-      bloodGroup: "",
-      height: "",
-      weight: "",
-      gender: "",
-      specialization: "",
+      firstName: JSON.stringify(props.fetchedDoctorDetails.firstName).replace(/"/g,''),
+      lastName: JSON.stringify(props.fetchedDoctorDetails.lastName).replace(/"/g,''),
+      bloodGroup: JSON.stringify(props.fetchedDoctorDetails.bloodGroup).replace(/"/g,''),
+      height: JSON.stringify(props.fetchedDoctorDetails.height).replace(/"/g,''),
+      weight: JSON.stringify(props.fetchedDoctorDetails.weight).replace(/"/g,''),
+      gender: JSON.stringify(props.fetchedDoctorDetails.gender).replace(/"/g,''),
+      specialization: JSON.stringify(props.fetchedDoctorDetails.specialization).replace(/"/g,''),
       license: "",
       profileImage: "",
-      schoolTen: "",
-      marksTen: "",
+      schoolTen: JSON.stringify(props.fetchedDoctorDetails.educationalDetails.ten.school).replace(/"/g,''),
+      marksTen: JSON.stringify(props.fetchedDoctorDetails.educationalDetails.ten.marks).replace(/"/g,''),
       certificateTen: "",
-      schoolTwelth: "",
-      marksTwelth: "",
+      schoolTwelth: JSON.stringify(props.fetchedDoctorDetails.educationalDetails.twelth.school).replace(/"/g,''),
+      marksTwelth: JSON.stringify(props.fetchedDoctorDetails.educationalDetails.twelth.marks).replace(/"/g,''),
       certificateTwelth: "",
-      schoolMbbs: "",
-      marksMbbs: "",
+      schoolMbbs: JSON.stringify(props.fetchedDoctorDetails.educationalDetails.mbbs.school).replace(/"/g,''),
+      marksMbbs: JSON.stringify(props.fetchedDoctorDetails.educationalDetails.mbbs.marks).replace(/"/g,''),
       certificateMbbs: ""
     },
     validationSchema: DoctorVerificationFormValidationSchema,
@@ -70,6 +70,7 @@ function DoctorVerificationForm1(props) {
           name="firstName"
           value={formik.values.firstName}
           onChange={formik.handleChange}
+          disabled={(props.fetchedDoctorDetails.verificationStatus)? (props.fetchedDoctorDetails.verificationStatus=="1") &&  true :false}
           required
         />
         <TextField
@@ -79,6 +80,7 @@ function DoctorVerificationForm1(props) {
           value={formik.lastName}
           onChange={formik.handleChange}
           label="Last Name"
+          disabled={(props.fetchedDoctorDetails.verificationStatus)? (props.fetchedDoctorDetails.verificationStatus=="1") &&  true :false}
           required
         />
       </div>
@@ -92,6 +94,7 @@ function DoctorVerificationForm1(props) {
           error={formik.errors.height && formik.touched.height ? true: false}
           helperText={formik.errors.height && formik.touched.height ? formik.errors.height:"in Feet"}
           onChange={formik.handleChange}
+          disabled={(props.fetchedDoctorDetails.verificationStatus)? (props.fetchedDoctorDetails.verificationStatus=="1") &&  true :false}
           onBlur={formik.handleBlur}
         />
         <TextField
@@ -102,6 +105,7 @@ function DoctorVerificationForm1(props) {
           value={formik.values.weight}
           error={formik.errors.weight && formik.touched.weight ? true: false}
           helperText={formik.errors.weight && formik.touched.weight ? formik.errors.weight:"in Kg"}
+          disabled={(props.fetchedDoctorDetails.verificationStatus)? (props.fetchedDoctorDetails.verificationStatus=="1") &&  true :false}
           onBlur={formik.handleBlur}
           onChange={formik.handleChange}
         />
@@ -114,6 +118,7 @@ function DoctorVerificationForm1(props) {
           error={formik.errors.bloodGroup && formik.touched.bloodGroup ? true: false}
           helperText={formik.errors.bloodGroup && formik.touched.bloodGroup ? formik.errors.bloodGroup:""}
           onBlur={formik.handleBlur}
+          disabled={(props.fetchedDoctorDetails.verificationStatus)? (props.fetchedDoctorDetails.verificationStatus=="1") &&  true :false}
           onChange={formik.handleChange}
         />
         <TextField
@@ -125,6 +130,7 @@ function DoctorVerificationForm1(props) {
           onChange={formik.handleChange}
           error={formik.errors.specialization && formik.touched.specialization ? true: false}
           helperText={formik.errors.specialization && formik.touched.specialization ? formik.errors.specialization:""}
+          disabled={(props.fetchedDoctorDetails.verificationStatus)? (props.fetchedDoctorDetails.verificationStatus=="1") &&  true :false}
           required
         />
       </div>
@@ -135,6 +141,7 @@ function DoctorVerificationForm1(props) {
         <FileInput
           name="license"
           onChange={(e) => handleFileChange(e, "license")}
+          disabled={(props.fetchedDoctorDetails.verificationStatus)? (props.fetchedDoctorDetails.verificationStatus=="1") &&  true :false}
           required
         />
       </div>
@@ -147,6 +154,7 @@ function DoctorVerificationForm1(props) {
           name="profileImage"
           onChange={(e) => handleFileChange(e, "profileImage")}
           accept=".jpg, .png"
+          disabled={(props.fetchedDoctorDetails.verificationStatus)? (props.fetchedDoctorDetails.verificationStatus=="1") &&  true :false}
           required
         />
       </div>
@@ -159,7 +167,7 @@ function DoctorVerificationForm1(props) {
         type="submit"
         gradientDuoTone="greenToBlue"
         isProcessing={isSpinner}
-        disabled={formik.is}
+        disabled={formik.is || (props.fetchedDoctorDetails.verificationStatus)? (props.fetchedDoctorDetails.verificationStatus=="1") &&  true :false}
         className="w-1/4 relative left-1/2 -translate-x-1/2 active:bg-violet-700"
       >
         Submit

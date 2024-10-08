@@ -16,10 +16,10 @@ function DoctorDashboard() {
 
   const handleItemClick = (option) => {
     setOpened(option);
-    console.log(verified);
   };
   const [fetchedData,setFetchedData]=useState(undefined)
   const [fetchedDoctorDetails,setFetchedDoctorDetails]=useState(null)
+  const [profileImage,setProfileImage]=useState(null)
   // console.log(fetchedData)
 
   let userName;
@@ -28,7 +28,10 @@ function DoctorDashboard() {
     const token=localStorage.getItem('token')
     const fet=await DataOnPageLoad(token)
     await setFetchedData(fet)
-    await setFetchedDoctorDetails(await loadDoctorData({userId:fet._id}))
+    const doctorFet=await loadDoctorData({userId:fet._id})
+    // console.log(`doctor fet ${JSON.stringify(doctorFet.profileImage)}`)
+    await setFetchedDoctorDetails(doctorFet.doctorDetails)
+    await setProfileImage(`data:image/jpeg;base64,${doctorFet.profileImage}`)
     
   }
 
@@ -36,13 +39,17 @@ function DoctorDashboard() {
     load()
   },[])
 
+  useEffect(()=>{
+    console.log(`image ${profileImage}`)
+  },[profileImage])
 
 
   useEffect(()=>{
     if(fetchedDoctorDetails){
-      if(fetchedDoctorDetails.verificationStatus=="3")
+      if(fetchedDoctorDetails.verificationStatus=="2")
         setIsVerified(true)
     }
+    console.log(fetchedDoctorDetails)
  
    },[fetchedDoctorDetails])
 
@@ -50,22 +57,22 @@ function DoctorDashboard() {
 
   return (
     <>
-      <div className="h-screen w-64 fixed top-0 left-0 ">
-        <Sidebar className="h-screen flex flex-col ">
+      <div className="h-screen w-64 fixed top-0 left-0 bg-slate-700 ">
+        <Sidebar className="h-screen flex flex-col bg-slate-700 justify-evenly ">
           <Sidebar.Items className="flex-grow h-full">
-            <Sidebar.ItemGroup className="space-y-10 flex flex-col justify-evenly   ">
-              <Sidebar.Item>
-                <button onClick={() => handleItemClick("verificationForm")}>
+            <Sidebar.ItemGroup className="space-y-10 flex flex-col justify-evenly bg-yellow-300 ">
+              <Sidebar.Item className="flex-grow text-center outline-blue ">
+                <button onClick={() => handleItemClick("verificationForm")} >
                   verification form
                 </button>
               </Sidebar.Item>
-              <Sidebar.Item>
-                <div className="flex flex-row space-x-4">
+              <Sidebar.Item className="flex-grow ">
+                <div className="flex flex-row space-x-4 justify-center">
                   <button
                     onClick={() => handleItemClick("loginPage")}
                     disabled={!isVerified}
                   >
-                    DashBoard
+                    Patients
                   </button>
                   <span>{!isVerified && <LockIcon />}</span>
                 </div>
@@ -77,10 +84,16 @@ function DoctorDashboard() {
 
       <div className="relative ml-64 fixed overflow-x-hidden">
         <div className="ml-2 mt-2">
-        <HeaderBar fetchedData={fetchedData}  />
+        {(profileImage)&&<HeaderBar fetchedData={fetchedData}  profileImage={profileImage}/>}
         </div>
+        {
+          (fetchedDoctorDetails) && (fetchedDoctorDetails.verificationStatus=="1") && <p className="relative left-20 text-red-600 font-bold">
+          *&emsp;Form has been Submitted for verification...Will be notified through the email the successfull verification
+        </p>
+        }
+        
         <div >
-        {opened == "verificationForm" && (fetchedData) &&<DoctorVerificationForm1 fetchedData={fetchedData}/>}
+        {opened == "verificationForm" && (fetchedData) && (fetchedDoctorDetails)&& <DoctorVerificationForm1 fetchedData={fetchedData} fetchedDoctorDetails={fetchedDoctorDetails}/>}
         {opened == "loginPage" && <Login />}
         </div>
       </div>
@@ -101,7 +114,7 @@ function HeaderBar(props) {
           color="pink"
           status="online"
           statusPosition="bottom-right"
-          img="logo/doctor.png"
+          img={props.profileImage}
           size="lg"
         />
         {<p className="text-red-600 text-center">{(props.fetchedData)?props.fetchedData.username:""}</p>}
@@ -109,5 +122,6 @@ function HeaderBar(props) {
     </div>
   );
 }
+
 
 export default DoctorDashboard;

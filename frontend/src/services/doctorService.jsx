@@ -34,10 +34,10 @@ export async function loadDoctorData({ userId }) {
       { userId }
     );
 
-    // console.log(fetchedDoctorData.data.doctorDetails)
+    console.log(`doctor Details fetchedDoctorData.data.doctorDetails`)
 
     return fetchedDoctorData.data.doctorDetails;
   } catch (error) {
-    console.log(error);
+    console.log(`error ${error}`);
   }
 }

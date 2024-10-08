@@ -1,6 +1,8 @@
 const { mongoose } = require("mongoose");
 const Doctor = require("../models/doctorModel.js");
-const { updateOne } = require("../models/userModel.js");
+const { updateOne, base } = require("../models/userModel.js");
+const fs=require('fs')
+const path=require('path')
 
 exports.submitForVerification = async (req, res) => {
   try {
@@ -33,13 +35,21 @@ exports.getAllDoctors = async (req, res) => {
 exports.getDoctorDetails = async (req, res) => {
   try {
     const doctorDetails = await Doctor.findOne({ userId: req.body.userId });
-    console.log(doctorDetails);
     if(!doctorDetails){
       return res.status(400).json({message:"no doctor exist"})
     }
+    console.log(doctorDetails);
+    let profileImage="",profileImageBuffer,profileImagePath
+    if(doctorDetails.profileImage){
+      profileImagePath=doctorDetails.profileImage
+      profileImageBuffer=fs.readFileSync(profileImagePath)
+      profileImage=profileImageBuffer.toString('base64')
+
+    }
+    
     res
       .status(200)
-      .json({ message: "fetched Successfully", doctorDetails: doctorDetails });
+      .json({ message: "fetched Successfully", doctorDetails:{doctorDetails,profileImage:profileImage }});
   } catch (error) {
     console.log(error)
   }
@@ -103,19 +113,19 @@ exports.submitVerificationData = async (req, res) => {
         license,
         educationalDetails: {
           ten: {
-            schoolTen,
-            marksTen,
-            certificateTen
+            school:schoolTen,
+            marks:marksTen,
+            certificate:certificateTen
           },
           twelth: {
-            schoolTwelth,
-            marksTwelth,
-            certificateTwelth
+            school:schoolTwelth,
+            marks:marksTwelth,
+            certificate:certificateTwelth
           },
           mbbs: {
-            schoolMbbs,
-            marksMbbs,
-            certificateMbbs
+            school:schoolMbbs,
+            marks:marksMbbs,
+            certificate:certificateMbbs
           }
         },
         verificationStatus: 1
