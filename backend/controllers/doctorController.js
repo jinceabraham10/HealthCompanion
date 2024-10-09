@@ -19,7 +19,7 @@ exports.submitForVerification = async (req, res) => {
 
 exports.getAllDoctors = async (req, res) => {
   try {
-    const allDoctors = await Doctor.find({}).populate("userId");
+    const allDoctors = await Doctor.find({verificationStatus:"0"}).populate("userId");
     await console.log(allDoctors);
     if (allDoctors.length == 0) {
       return res.status(404).json({ message: `No Doctors Available` });

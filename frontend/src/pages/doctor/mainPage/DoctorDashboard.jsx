@@ -17,43 +17,37 @@ function DoctorDashboard() {
   const handleItemClick = (option) => {
     setOpened(option);
   };
-  const [fetchedData,setFetchedData]=useState(undefined)
-  const [fetchedDoctorDetails,setFetchedDoctorDetails]=useState(null)
-  const [profileImage,setProfileImage]=useState(null)
+  const [fetchedData, setFetchedData] = useState(undefined);
+  const [fetchedDoctorDetails, setFetchedDoctorDetails] = useState(null);
+  const [profileImage, setProfileImage] = useState(null);
   // console.log(fetchedData)
 
   let userName;
 
-  const load=async ()=>{
-    const token=localStorage.getItem('token')
-    const fet=await DataOnPageLoad(token)
-    await setFetchedData(fet)
-    const doctorFet=await loadDoctorData({userId:fet._id})
+  const load = async () => {
+    const token = localStorage.getItem("token");
+    const fet = await DataOnPageLoad(token);
+    await setFetchedData(fet);
+    const doctorFet = await loadDoctorData({ userId: fet._id });
     // console.log(`doctor fet ${JSON.stringify(doctorFet.profileImage)}`)
-    await setFetchedDoctorDetails(doctorFet.doctorDetails)
-    await setProfileImage(`data:image/jpeg;base64,${doctorFet.profileImage}`)
-    
-  }
+    await setFetchedDoctorDetails(doctorFet.doctorDetails);
+    await setProfileImage(`data:image/jpeg;base64,${doctorFet.profileImage}`);
+  };
 
-  useEffect(()=>{
-    load()
-  },[])
+  useEffect(() => {
+    load();
+  }, []);
 
-  useEffect(()=>{
-    console.log(`image ${profileImage}`)
-  },[profileImage])
+  useEffect(() => {
+    console.log(`image ${profileImage}`);
+  }, [profileImage]);
 
-
-  useEffect(()=>{
-    if(fetchedDoctorDetails){
-      if(fetchedDoctorDetails.verificationStatus=="2")
-        setIsVerified(true)
+  useEffect(() => {
+    if (fetchedDoctorDetails) {
+      if (fetchedDoctorDetails.verificationStatus == "0") setIsVerified(true);
     }
-    console.log(fetchedDoctorDetails)
- 
-   },[fetchedDoctorDetails])
-
-
+    console.log(fetchedDoctorDetails);
+  }, [fetchedDoctorDetails]);
 
   return (
     <>
@@ -61,11 +55,15 @@ function DoctorDashboard() {
         <Sidebar className="h-screen flex flex-col bg-slate-700 justify-evenly ">
           <Sidebar.Items className="flex-grow h-full">
             <Sidebar.ItemGroup className="space-y-10 flex flex-col justify-evenly bg-yellow-300 ">
-              <Sidebar.Item className="flex-grow text-center outline-blue ">
-                <button onClick={() => handleItemClick("verificationForm")} >
-                  verification form
-                </button>
-              </Sidebar.Item>
+              {fetchedDoctorDetails &&
+                fetchedDoctorDetails.verificationStatus == "1" && (
+                  <Sidebar.Item className="flex-grow text-center outline-blue ">
+                    <button onClick={() => handleItemClick("verificationForm")}>
+                      verification form
+                    </button>
+                  </Sidebar.Item>
+                )}
+
               <Sidebar.Item className="flex-grow ">
                 <div className="flex flex-row space-x-4 justify-center">
                   <button
@@ -84,17 +82,30 @@ function DoctorDashboard() {
 
       <div className="relative ml-64 fixed overflow-x-hidden">
         <div className="ml-2 mt-2">
-        {(profileImage)&&<HeaderBar fetchedData={fetchedData}  profileImage={profileImage}/>}
+          {profileImage && (
+            <HeaderBar fetchedData={fetchedData} profileImage={profileImage} />
+          )}
         </div>
-        {
-          (fetchedDoctorDetails) && (fetchedDoctorDetails.verificationStatus=="1") && <p className="relative left-20 text-red-600 font-bold">
-          *&emsp;Form has been Submitted for verification...Will be notified through the email the successfull verification
-        </p>
-        }
-        
-        <div >
-        {opened == "verificationForm" && (fetchedData) && (fetchedDoctorDetails)&& <DoctorVerificationForm1 fetchedData={fetchedData} fetchedDoctorDetails={fetchedDoctorDetails}/>}
-        {opened == "loginPage" && <Login />}
+        {fetchedDoctorDetails &&
+          fetchedDoctorDetails.verificationStatus == "1" && (
+            <p className="relative left-20 text-red-600 font-bold">
+              *&emsp;Form has been Submitted for verification...Will be notified
+              through the email the successfull verification
+            </p>
+          )}
+
+        <div>
+          {opened == "verificationForm" &&
+            fetchedData &&
+            fetchedDoctorDetails &&
+            fetchedDoctorDetails.verificationStatus != "0" &&
+            fetchedDoctorDetails.verificationStatus != "3" && (
+              <DoctorVerificationForm1
+                fetchedData={fetchedData}
+                fetchedDoctorDetails={fetchedDoctorDetails}
+              />
+            )}
+          {opened == "loginPage" && <Login />}
         </div>
       </div>
     </>
@@ -117,11 +128,14 @@ function HeaderBar(props) {
           img={props.profileImage}
           size="lg"
         />
-        {<p className="text-red-600 text-center">{(props.fetchedData)?props.fetchedData.username:""}</p>}
+        {
+          <p className="text-red-600 text-center">
+            {props.fetchedData ? props.fetchedData.username : ""}
+          </p>
+        }
       </div>
     </div>
   );
 }
-
 
 export default DoctorDashboard;

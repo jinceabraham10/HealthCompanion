@@ -41,10 +41,6 @@ const UserSchema = new mongoose.Schema({
     type:JSON,
     default:addressJson
   },
-  profilePic:{
-    type:String,
-    default:""
-  },
   createdAt:{
     type:String,
     required: true
@@ -57,7 +53,7 @@ const UserSchema = new mongoose.Schema({
     type:Number,
     default:"0"
     
-  },
+  }
   
 });
 

@@ -30,6 +30,9 @@ function Login() {
         case "1":
           navigate('/doctorDashboard')
           break;
+        case "4":
+          navigate('/adminDashboard')
+          break;
       }
     }
 

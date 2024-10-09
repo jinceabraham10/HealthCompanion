@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { getAdminDetails } from "../../../services/adminService"
+import { DataOnPageLoad } from "../../../services/authService";
 import { CSidebar, CNavItem, CSidebarNav, CNavGroup } from "@coreui/react";
 import { CIcon } from "@coreui/icons-react";
 import { Avatar } from "flowbite-react";
+import DoctorVerificationRequests from "../verifications/doctor/DoctorVerificationRequests";
 import {
   cilSpeedometer,
   cilPuzzle,
@@ -15,18 +18,33 @@ function AdminDashboard() {
   const[fetchedData,setFetchedData]=useState(null)
   const[fetchedAdminData,setFetchedAdminData]=useState(null)
   const[profileImage,setProfileImage]=useState(null)
+  const [opened,setOpened]=useState(null)
+
+  const load=async ()=>{
+    await setFetchedData(await DataOnPageLoad(localStorage.getItem('token')))
+  }
+
+  
+
+useEffect(()=>{
+  load()
+  console.log(fetchedData)
+},[])
+
+
   return (
     <div className="flex h-screen">
-      <SidenavBar />
+      <SidenavBar setOpened={setOpened} />
       <div className="p-5 w-full">
       <h1 className="text-xl font-bold">Welcome to the Admin Dashboard</h1>
         <Header/>
+        {(opened=="verificationRequests") && <DoctorVerificationRequests/>}
       </div>
     </div>
   );
 }
 
-function SidenavBar() {
+function SidenavBar(props) {
   // State to handle the dropdown visibility
   const [showMoreOptions, setShowMoreOptions] = useState(false);
 
@@ -45,7 +63,7 @@ function SidenavBar() {
         </CNavItem>
         {showMoreOptions && (
           <div className="relative flex flex-col gap-4 m-2">
-            <CNavItem ><button className="hover:bg-red-600">Verification Requests</button></CNavItem>
+            <CNavItem ><button className="hover:bg-red-600" onClick={()=>props.setOpened('verificationRequests')} >Verification Requests</button></CNavItem>
             <CNavItem ><button className="hover:bg-red-600">All Doctors</button></CNavItem>
           </div>
         )}
