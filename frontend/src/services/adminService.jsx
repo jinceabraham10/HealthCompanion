@@ -27,7 +27,7 @@ export async function ApproveDoctor(toBeApprovedData) {
 
 export async function rejectDoctor(toBeApprovedData) {
     try {
-        const resp=axios.post('http://localhost:5000/api/admin/approveDoctor',toBeApprovedData)
+        const resp=await axios.post('http://localhost:5000/api/admin/rejectDoctor',toBeApprovedData)
         console.log(resp.data)
         
     } catch (error) {

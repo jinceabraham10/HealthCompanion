@@ -13,15 +13,24 @@ import {
   cilChevronBottom,
   cilChevronTop,
 } from "@coreui/icons";
+import { useNavigate } from "react-router-dom";
 
 function AdminDashboard() {
+
+  const navigate=useNavigate()
+
+
   const[fetchedData,setFetchedData]=useState(null)
   const[fetchedAdminData,setFetchedAdminData]=useState(null)
   const[profileImage,setProfileImage]=useState(null)
   const [opened,setOpened]=useState(null)
 
   const load=async ()=>{
-    await setFetchedData(await DataOnPageLoad(localStorage.getItem('token')))
+    await setFetchedData(await DataOnPageLoad(localStorage.getItem('token'),4))
+    if(!fetchedData){
+      navigate('/login')
+    }
+  
   }
 
   

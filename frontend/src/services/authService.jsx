@@ -42,13 +42,34 @@ async function LoginUser(loginData) {
 }
 
 
-async function DataOnPageLoad(token) {
+async function DataOnPageLoad(token,role) {
   try {
-    const resp=await axios.get("http://localhost:5000/api/auth/loadData",{
-      headers:{
-        'authorization':`${token}`
-      }
-    })
+    let resp=''
+    if(role==0){
+      resp=await axios.get("http://localhost:5000/api/auth/loadData/patient",{
+        headers:{
+          'authorization':`${token}`
+        }
+      })
+
+    }
+    else if(role==1){
+      resp=await axios.get("http://localhost:5000/api/auth/loadData/doctor",{
+        headers:{
+          'authorization':`${token}`
+        }
+      })
+      console.log(`doctor resp ${resp.data}`)
+    }
+    else if(role==4){
+      resp=await axios.get("http://localhost:5000/api/auth/loadData/admin",{
+        headers:{
+          'authorization':`${token}`
+        }
+      })
+      console.log(`doctor resp ${resp.data}`)
+    }
+   
     return resp.data.fetchedData 
     
   } catch (error) {

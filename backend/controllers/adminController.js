@@ -48,7 +48,7 @@ exports.approveDoctor=async (req,res)=>{
 exports.rejectDoctor=async (req,res)=>{
     try {
         const {doctorId}=req.body
-        const fetchedApprovedStatus=Doctor.updateOne({_id:doctorId},{verificationStatus:"3"},{
+        const fetchedApprovedStatus=await Doctor.updateOne({_id:doctorId},{verificationStatus:"3"},{
             new:true
         })
         if(!fetchedApprovedStatus){
@@ -71,7 +71,7 @@ exports.getAllToBeApprovedDoctors=async (req,res)=>{
         for(doctor of fetchedDoctors){
             profileImagePath=doctor.profileImage
             profileImageBuffer=fs.readFileSync(profileImagePath)
-            profileImage[doctor._id]=profileImageBuffer.toString('base64')
+            profileImage[doctor._id]=`data:image/jpeg;base64,${profileImageBuffer.toString('base64')}`
         }
         // console.log(profileImage)
         res.status(200).json({message:"Fetched Successfully",doctors:{details:fetchedDoctors,profileImage:profileImage}})

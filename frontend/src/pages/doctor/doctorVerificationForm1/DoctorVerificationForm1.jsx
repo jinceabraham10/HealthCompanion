@@ -60,7 +60,7 @@ function DoctorVerificationForm1(props) {
   return (
     <form
       onSubmit={formik.handleSubmit}
-      className="flex flex-col min-h-screen  justify-center space-y-10 m-10 "
+      className="flex flex-col h-full justify-center space-y-10 m-10 "
     >
       <div className="flex flex-row space-x-10">
         <TextField

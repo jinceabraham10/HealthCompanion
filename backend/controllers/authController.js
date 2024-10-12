@@ -28,8 +28,11 @@ exports.checkUser=async (req,res)=>{
 exports.loadOnPageLoad=async (req,res)=>{
     try {
         const {id,username}=req.user
-        const fetchedData=await User.findOne({_id:id})
+        const fetchedData=await User.findOne({_id:id,role:"0"})
         console.log(fetchedData)
+        if(!fetchedData){
+            return res.status(404).json({message:"No user Found"})
+        }
         res.status(200).json({message:"data fetched for the loaded page",fetchedData})
         
     } catch (error) {
@@ -55,4 +58,67 @@ exports.checkUserPresent=async (req,res)=>{
 
 }
 
+exports.doctorOnPageLoad=async (req,res)=>{
+    try {
+        const {id,username}=req.user
+        const fetchedData=await User.findOne({_id:id,role:1})
+        console.log(fetchedData)
+        if(!fetchedData){
+            return res.status(404).json({message:"No user Found"})
+        }
+        res.status(200).json({message:"data fetched for the loaded page",fetchedData})
+        
+    } catch (error) {
+        console.log(error)
+        
+    }
+}
+
+exports.laboratoryOnPageLoad=async (req,res)=>{
+    try {
+        const {id,username}=req.user
+        const fetchedData=await User.findOne({_id:id,role:2})
+        console.log(fetchedData)
+        if(!fetchedData){
+            return res.status(404).json({message:"No user Found"})
+        }
+        res.status(200).json({message:"data fetched for the loaded page",fetchedData})
+        
+    } catch (error) {
+        console.log(error)
+        
+    }
+}
+
+exports.pharmacyOnPageLoad=async (req,res)=>{
+    try {
+        const {id,username}=req.user
+        const fetchedData=await User.findOne({_id:id,role:2})
+        console.log(fetchedData)
+        if(!fetchedData){
+            return res.status(404).json({message:"No user Found"})
+        }
+        res.status(200).json({message:"data fetched for the loaded page",fetchedData})
+        
+    } catch (error) {
+        console.log(error)
+        
+    }
+}
+
+exports.adminOnPageLoad=async (req,res)=>{
+    try {
+        const {id,username}=req.user
+        const fetchedData=await User.findOne({_id:id,role:3})
+        console.log(fetchedData)
+        if(!fetchedData){
+            return res.status(404).json({message:"No user Found"})
+        }
+        res.status(200).json({message:"data fetched for the loaded page",fetchedData})
+        
+    } catch (error) {
+        console.log(error)
+        
+    }
+}
 
