@@ -1,5 +1,6 @@
 import axios from "axios";
 import swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 async function LoginUser(loginData) {
   try {
@@ -51,7 +52,6 @@ async function DataOnPageLoad(token,role) {
           'authorization':`${token}`
         }
       })
-
     }
     else if(role==1){
       resp=await axios.get("http://localhost:5000/api/auth/loadData/doctor",{
@@ -59,7 +59,6 @@ async function DataOnPageLoad(token,role) {
           'authorization':`${token}`
         }
       })
-      console.log(`doctor resp ${resp.data}`)
     }
     else if(role==4){
       resp=await axios.get("http://localhost:5000/api/auth/loadData/admin",{
@@ -67,12 +66,16 @@ async function DataOnPageLoad(token,role) {
           'authorization':`${token}`
         }
       })
-      console.log(`doctor resp ${resp.data}`)
+      
     }
+
+    console.log(`doctor resp ${resp.data}`)
    
     return resp.data.fetchedData 
     
   } catch (error) {
+
+    console.log(`${error}`)
     if(error.response.data.message="invalid token"){
       swal.fire({
         icon:"warning",

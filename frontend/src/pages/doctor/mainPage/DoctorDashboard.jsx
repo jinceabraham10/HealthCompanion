@@ -6,6 +6,7 @@ import { Avatar } from "flowbite-react";
 import LockIcon from "@mui/icons-material/Lock";
 import { DataOnPageLoad } from "../../../services/authService";
 import { loadDoctorData } from "../../../services/doctorService";
+import BookingSlots from "../slot/BookingSlots";
 import Modal from "react-modal";
 
 import Login from "../../../components/login/Login";
@@ -29,7 +30,7 @@ function DoctorDashboard() {
 
   const load = async () => {
     const token = localStorage.getItem("token");
-    const fet = await DataOnPageLoad(token,1);
+    const fet = await DataOnPageLoad(token, 1);
     await setFetchedData(fet);
     const doctorFet = await loadDoctorData({ userId: fet._id });
     // console.log(`doctor fet ${JSON.stringify(doctorFet.profileImage)}`)
@@ -65,6 +66,7 @@ function DoctorDashboard() {
             <Sidebar.ItemGroup className="space-y-10 h-full flex flex-col justify-center  p-2 bg-yellow-300">
               {fetchedDoctorDetails &&
                 (fetchedDoctorDetails.verificationStatus == "1" ||
+                  fetchedDoctorDetails.verificationStatus == "2"||
                   fetchedDoctorDetails.verificationStatus == "3") && (
                   <Sidebar.Item className="flex-grow text-center outline-blue mt-2 ">
                     <button onClick={() => handleItemClick("verificationForm")}>
@@ -72,10 +74,10 @@ function DoctorDashboard() {
                     </button>
                   </Sidebar.Item>
                 )}
-                <Sidebar.Item className="flex-grow">
-                <div className="flex flex-row space-x-4 justify-center">
+              <Sidebar.Item className="flex-grow">
+                <div className="flex flex-row space-x-4 justify-center bg-slate-200">
                   <button
-                    onClick={() => navigate("/adminDashboard")}
+                    onClick={() => navigate("/doctorDashboard")}
                     disabled={!isVerified}
                   >
                     Home
@@ -83,7 +85,19 @@ function DoctorDashboard() {
                   <span>{!isVerified && <LockIcon />}</span>
                 </div>
               </Sidebar.Item>
-              <Sidebar.Collapse label="Patients">
+              <Sidebar.Item className="flex-grow">
+                <div className="flex flex-row space-x-4 justify-center bg-slate-200">
+                  <button
+                    onClick={() => handleItemClick("slots")}
+                    disabled={!isVerified}
+                  >
+                    Booking Slot
+                  </button>
+                  <span>{!isVerified && <LockIcon />}</span>
+                </div>
+              </Sidebar.Item>
+
+              <Sidebar.Collapse label="Patients" className="bg-slate-300">
                 <Sidebar.Item className="flex-grow">
                   <div className="flex flex-row space-x-4 justify-center">
                     <button
@@ -98,7 +112,7 @@ function DoctorDashboard() {
               </Sidebar.Collapse>
 
               <Sidebar.Item className="flex-grow">
-                <div className="flex flex-row space-x-4 justify-center">
+                <div className="flex flex-row space-x-4 justify-center bg-slate-200">
                   <button
                     onClick={() => handleItemClick("loginPage")}
                     disabled={!isVerified}
@@ -159,6 +173,10 @@ function DoctorDashboard() {
                 fetchedDoctorDetails={fetchedDoctorDetails}
               />
             )}
+          {opened == "slots" &&
+            fetchedData &&
+            fetchedDoctorDetails &&
+            fetchedDoctorDetails.verificationStatus == "0" && <BookingSlots fetchedDoctorDetails={fetchedDoctorDetails} fetchedData={fetchedData} />}
           {opened == "loginPage" && <Login />}
         </div>
       </div>

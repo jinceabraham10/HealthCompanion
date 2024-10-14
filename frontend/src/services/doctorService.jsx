@@ -41,3 +41,15 @@ export async function loadDoctorData({ userId }) {
     console.log(`error ${error}`);
   }
 }
+
+export async function AddSlot(slot) {
+  try {
+
+    const resp=axios.post('http://localhost:5000/api/doctor/addSlot',slot)
+    console.log(`resp ${resp}`)
+    
+  } catch (error) {
+    console.log(error)
+  }
+  
+}

@@ -17,9 +17,6 @@ function PatientDashboard() {
 
   const load=async ()=>{
     await setUserData(await DataOnPageLoad(localStorage.getItem('token'),0))
-    if(!userData){
-      navigate('/login')
-    }
   }
 
   useEffect(()=>{

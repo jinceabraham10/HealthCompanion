@@ -3,7 +3,7 @@ const multer=require('multer')
 const router=express.Router()
 const fs=require('fs')
 const path=require('path')
-const {submitForVerification,getAllDoctors,submitVerificationData, getDoctorDetails}=require('../controllers/doctorController.js')
+const {submitForVerification,getAllDoctors,submitVerificationData, getDoctorDetails, addSlot}=require('../controllers/doctorController.js')
 const verifyToken = require("../middlewares/verifyJwt.js");
 
 
@@ -43,5 +43,6 @@ router.post('/verificationSubmit',upload.fields([
 ]),submitVerificationData)
 
 router.post('/getDoctorDetails',getDoctorDetails)
+router.post('/addSlot',addSlot)
 
 module.exports=router

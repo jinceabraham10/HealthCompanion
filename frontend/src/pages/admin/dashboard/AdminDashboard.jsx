@@ -26,10 +26,11 @@ function AdminDashboard() {
   const [opened,setOpened]=useState(null)
 
   const load=async ()=>{
-    await setFetchedData(await DataOnPageLoad(localStorage.getItem('token'),4))
-    if(!fetchedData){
+    const tempdata=await DataOnPageLoad(localStorage.getItem('token'),4);
+    if(tempdata==null){
       navigate('/login')
     }
+    await setFetchedData(tempdata)
   
   }
 
@@ -41,10 +42,12 @@ useEffect(()=>{
 },[])
 
 
+
+
   return (
     <div className="flex h-screen">
       <SidenavBar setOpened={setOpened} />
-      <div className="p-5 w-full">
+      <div className="p-5 w-full ml-64">
       <h1 className="text-xl font-bold">Welcome to the Admin Dashboard</h1>
         <Header/>
         {(opened=="verificationRequests") && <DoctorVerificationRequests/>}
@@ -58,7 +61,8 @@ function SidenavBar(props) {
   const [showMoreOptions, setShowMoreOptions] = useState(false);
 
   return (
-    <CSidebar className="w-64 bg-gray-800 text-white shadow-lg">
+    <div className="min-h-screen fixed bg-gray-800">
+    <CSidebar className="w-64 text-white shadow-lg">
       <CSidebarNav className="space-y-3 mt-20 ml-6">
         <CNavItem >
           <button className="flex flex-row gap-5 items-center" onClick={() => setShowMoreOptions(!showMoreOptions)}>
@@ -78,6 +82,7 @@ function SidenavBar(props) {
         )}
       </CSidebarNav>
     </CSidebar>
+    </div>
   );
 }
 

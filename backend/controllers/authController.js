@@ -31,7 +31,7 @@ exports.loadOnPageLoad=async (req,res)=>{
         const fetchedData=await User.findOne({_id:id,role:"0"})
         console.log(fetchedData)
         if(!fetchedData){
-            return res.status(404).json({message:"No user Found"})
+            return res.status(400).json({message:"No user Found"})
         }
         res.status(200).json({message:"data fetched for the loaded page",fetchedData})
         
@@ -109,7 +109,7 @@ exports.pharmacyOnPageLoad=async (req,res)=>{
 exports.adminOnPageLoad=async (req,res)=>{
     try {
         const {id,username}=req.user
-        const fetchedData=await User.findOne({_id:id,role:3})
+        const fetchedData=await User.findOne({_id:id,role:4})
         console.log(fetchedData)
         if(!fetchedData){
             return res.status(404).json({message:"No user Found"})

@@ -9,6 +9,11 @@ const educationalDetails={
     certificate:""
 }
 
+const slot={
+    
+}
+
+
 const doctorSchema=new mongoose.Schema({
     firstName:{
         type:String,
@@ -47,8 +52,8 @@ const doctorSchema=new mongoose.Schema({
         }
     },
     slots:{
-        type:Array,
-        default:[]
+        type:JSON,
+        default:{}
     },
     profileImage:{
         type:String,
@@ -65,7 +70,7 @@ const doctorSchema=new mongoose.Schema({
       },
     verificationStatus:{
         type:String,
-        default:3
+        default:2
     },
     status:{
         type:String,

@@ -6,9 +6,12 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardActions from '@mui/material/CardActions';
+import { useNavigate } from 'react-router-dom';
 
 
 function DoctorCardView({doctor}) {
+
+  const navigate=useNavigate()
 
   return (
     <Card sx={{ maxWidth: 240, margin: "20px", borderRadius: 3, boxShadow:"4px 3px 10px black"}}>
@@ -32,8 +35,10 @@ function DoctorCardView({doctor}) {
       </CardContent>
     </CardActionArea>
     <CardActions>
-      <Button variant="contained" sx={{ margin:1}} size="small" >
-        Proceed to Book
+      <Button variant="contained" sx={{ margin:1}} size="small" onClick={()=>{
+        navigate('/patientDoctorSlot')
+      }} >
+        Proceed to Book Slots
       </Button>
     </CardActions>
   </Card>

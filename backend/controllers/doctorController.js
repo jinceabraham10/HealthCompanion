@@ -1,8 +1,8 @@
 const { mongoose } = require("mongoose");
 const Doctor = require("../models/doctorModel.js");
 const { updateOne, base } = require("../models/userModel.js");
-const fs=require('fs')
-const path=require('path')
+const fs = require("fs");
+const path = require("path");
 
 exports.submitForVerification = async (req, res) => {
   try {
@@ -19,7 +19,9 @@ exports.submitForVerification = async (req, res) => {
 
 exports.getAllDoctors = async (req, res) => {
   try {
-    const allDoctors = await Doctor.find({verificationStatus:"0"}).populate("userId");
+    const allDoctors = await Doctor.find({ verificationStatus: "0" }).populate(
+      "userId"
+    );
     await console.log(allDoctors);
     if (allDoctors.length == 0) {
       return res.status(404).json({ message: `No Doctors Available` });
@@ -35,23 +37,27 @@ exports.getAllDoctors = async (req, res) => {
 exports.getDoctorDetails = async (req, res) => {
   try {
     const doctorDetails = await Doctor.findOne({ userId: req.body.userId });
-    if(!doctorDetails){
-      return res.status(400).json({message:"no doctor exist"})
+    if (!doctorDetails) {
+      return res.status(400).json({ message: "no doctor exist" });
     }
     console.log(doctorDetails);
-    let profileImage="",profileImageBuffer,profileImagePath
-    if(doctorDetails.profileImage){
-      profileImagePath=doctorDetails.profileImage
-      profileImageBuffer=fs.readFileSync(profileImagePath)
-      profileImage=profileImageBuffer.toString('base64')
-
+    let profileImage = "",
+      profileImageBuffer,
+      profileImagePath;
+    if (doctorDetails.profileImage) {
+      profileImagePath = doctorDetails.profileImage;
+      profileImageBuffer = fs.readFileSync(profileImagePath);
+      profileImage = profileImageBuffer.toString("base64");
     }
-    
+
     res
       .status(200)
-      .json({ message: "fetched Successfully", doctorDetails:{doctorDetails,profileImage:profileImage }});
+      .json({
+        message: "fetched Successfully",
+        doctorDetails: { doctorDetails, profileImage: profileImage },
+      });
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 };
 
@@ -73,7 +79,6 @@ exports.createDoctor = async (doctorData) => {
 
 exports.submitVerificationData = async (req, res) => {
   try {
-
     console.log("File mimetype received:", req.files);
     if (!req.files) {
       return res.status(400).json({ message: "no files received" });
@@ -98,7 +103,7 @@ exports.submitVerificationData = async (req, res) => {
     const certificateMbbs = req.files["certificateMbbs"][0].path;
     const certificateTwelth = req.files["certificateTwelth"][0].path;
     const updatedData = await Doctor.updateOne(
-      {userId:req.body._id},
+      { userId: req.body._id },
       {
         firstName,
         lastName,
@@ -113,22 +118,22 @@ exports.submitVerificationData = async (req, res) => {
         license,
         educationalDetails: {
           ten: {
-            school:schoolTen,
-            marks:marksTen,
-            certificate:certificateTen
+            school: schoolTen,
+            marks: marksTen,
+            certificate: certificateTen,
           },
           twelth: {
-            school:schoolTwelth,
-            marks:marksTwelth,
-            certificate:certificateTwelth
+            school: schoolTwelth,
+            marks: marksTwelth,
+            certificate: certificateTwelth,
           },
           mbbs: {
-            school:schoolMbbs,
-            marks:marksMbbs,
-            certificate:certificateMbbs
-          }
+            school: schoolMbbs,
+            marks: marksMbbs,
+            certificate: certificateMbbs,
+          },
         },
-        verificationStatus: 1
+        verificationStatus: 1,
       },
       { new: true }
     );
@@ -141,6 +146,25 @@ exports.submitVerificationData = async (req, res) => {
   }
 };
 
-
-
-
+exports.addSlot = async (req, res) => {
+  try {
+    console.log(req.body);
+    const { _id, date, startTimeAmPm, startTime, endTime, endTimeAmPm } =
+      req.body;
+    const addedSlot = await Doctor.updateOne(
+      { _id: _id },
+      {
+        $addToSet: {
+          [`slots.${date}`]: {
+            "startTime":`${startTime} ${startTimeAmPm}`,
+            "endTime":`${endTime} ${endTimeAmPm}`
+          },
+        },
+      }
+    );
+    // console.log(addedSlot)
+    res.status(200).json({ message: "Slot Added Successsfully" });
+  } catch (error) {
+    console.log(`error ${error}`);
+  }
+};
