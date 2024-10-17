@@ -10,37 +10,35 @@ import { verificationFormSubmit } from "../../../services/doctorService";
 function DoctorVerificationForm1(props) {
   const formik = useFormik({
     initialValues: {
-      _id:(props.fetchedData)? props.fetchedData._id:"",
-      firstName: JSON.stringify(props.fetchedDoctorDetails.firstName).replace(/"/g,''),
-      lastName: JSON.stringify(props.fetchedDoctorDetails.lastName).replace(/"/g,''),
-      bloodGroup: JSON.stringify(props.fetchedDoctorDetails.bloodGroup).replace(/"/g,''),
-      height: JSON.stringify(props.fetchedDoctorDetails.height).replace(/"/g,''),
-      weight: JSON.stringify(props.fetchedDoctorDetails.weight).replace(/"/g,''),
-      gender: JSON.stringify(props.fetchedDoctorDetails.gender).replace(/"/g,''),
-      specialization: JSON.stringify(props.fetchedDoctorDetails.specialization).replace(/"/g,''),
+      _id: props.fetchedData ? props.fetchedData._id : "",
+      firstName: JSON.stringify(props.fetchedDoctorDetails.firstName).replace(/"/g, ''),
+      lastName: JSON.stringify(props.fetchedDoctorDetails.lastName).replace(/"/g, ''),
+      bloodGroup: JSON.stringify(props.fetchedDoctorDetails.bloodGroup).replace(/"/g, ''),
+      height: JSON.stringify(props.fetchedDoctorDetails.height).replace(/"/g, ''),
+      weight: JSON.stringify(props.fetchedDoctorDetails.weight).replace(/"/g, ''),
+      gender: JSON.stringify(props.fetchedDoctorDetails.gender).replace(/"/g, ''),
+      specialization: JSON.stringify(props.fetchedDoctorDetails.specialization).replace(/"/g, ''),
       license: "",
       profileImage: "",
-      schoolTen: JSON.stringify(props.fetchedDoctorDetails.educationalDetails.ten.school).replace(/"/g,''),
-      marksTen: JSON.stringify(props.fetchedDoctorDetails.educationalDetails.ten.marks).replace(/"/g,''),
+      schoolTen: JSON.stringify(props.fetchedDoctorDetails.educationalDetails.ten.school).replace(/"/g, ''),
+      marksTen: JSON.stringify(props.fetchedDoctorDetails.educationalDetails.ten.marks).replace(/"/g, ''),
       certificateTen: "",
-      schoolTwelth: JSON.stringify(props.fetchedDoctorDetails.educationalDetails.twelth.school).replace(/"/g,''),
-      marksTwelth: JSON.stringify(props.fetchedDoctorDetails.educationalDetails.twelth.marks).replace(/"/g,''),
+      schoolTwelth: JSON.stringify(props.fetchedDoctorDetails.educationalDetails.twelth.school).replace(/"/g, ''),
+      marksTwelth: JSON.stringify(props.fetchedDoctorDetails.educationalDetails.twelth.marks).replace(/"/g, ''),
       certificateTwelth: "",
-      schoolMbbs: JSON.stringify(props.fetchedDoctorDetails.educationalDetails.mbbs.school).replace(/"/g,''),
-      marksMbbs: JSON.stringify(props.fetchedDoctorDetails.educationalDetails.mbbs.marks).replace(/"/g,''),
-      certificateMbbs: ""
+      schoolMbbs: JSON.stringify(props.fetchedDoctorDetails.educationalDetails.mbbs.school).replace(/"/g, ''),
+      marksMbbs: JSON.stringify(props.fetchedDoctorDetails.educationalDetails.mbbs.marks).replace(/"/g, ''),
+      certificateMbbs: "",
     },
     validationSchema: DoctorVerificationFormValidationSchema,
     onSubmit: async (values, actions) => {
-      const formData =new FormData()
-      Object.keys(values).forEach(key => {
-        formData.append(key,values[key])
+      const formData = new FormData();
+      Object.keys(values).forEach((key) => {
+        formData.append(key, values[key]);
       });
-      formData.append("_id",props.fetchedData._id)
-      await verificationFormSubmit(formik.values)
-      actions.resetForm()
-      
-
+      formData.append("_id", props.fetchedData._id);
+      await verificationFormSubmit(formik.values);
+      actions.resetForm();
     },
   });
 
@@ -52,8 +50,6 @@ function DoctorVerificationForm1(props) {
       console.log(error);
     }
   };
-
-  console.log(formik.errors)
 
   const [isSpinner, setisSpinner] = useState(false);
 
@@ -70,17 +66,22 @@ function DoctorVerificationForm1(props) {
           name="firstName"
           value={formik.values.firstName}
           onChange={formik.handleChange}
-          disabled={(props.fetchedDoctorDetails.verificationStatus)? (props.fetchedDoctorDetails.verificationStatus=="1") &&  true :false}
+          onBlur={formik.handleBlur}
+          error={formik.touched.firstName && Boolean(formik.errors.firstName)}
+          helperText={formik.touched.firstName && formik.errors.firstName ? "Please enter your first name" : ""}
+          disabled={props.fetchedDoctorDetails.verificationStatus === "1"}
           required
         />
         <TextField
           id="id_lastName"
           name="lastName"
           variant="outlined"
-          value={formik.lastName}
+          value={formik.values.lastName}
           onChange={formik.handleChange}
-          label="Last Name"
-          disabled={(props.fetchedDoctorDetails.verificationStatus)? (props.fetchedDoctorDetails.verificationStatus=="1") &&  true :false}
+          onBlur={formik.handleBlur}
+          error={formik.touched.lastName && Boolean(formik.errors.lastName)}
+          helperText={formik.touched.lastName && formik.errors.lastName ? "Please enter your last name" : ""}
+          disabled={props.fetchedDoctorDetails.verificationStatus === "1"}
           required
         />
       </div>
@@ -88,14 +89,14 @@ function DoctorVerificationForm1(props) {
         <TextField
           id="id_height"
           variant="filled"
-          label="height"
+          label="Height"
           name="height"
           value={formik.values.height}
-          error={formik.errors.height && formik.touched.height ? true: false}
-          helperText={formik.errors.height && formik.touched.height ? formik.errors.height:"in Feet"}
+          error={formik.touched.height && Boolean(formik.errors.height)}
+          helperText={formik.touched.height && formik.errors.height ? "Please enter height (in Feet)" : "in Feet"}
           onChange={formik.handleChange}
-          disabled={(props.fetchedDoctorDetails.verificationStatus)? (props.fetchedDoctorDetails.verificationStatus=="1") &&  true :false}
           onBlur={formik.handleBlur}
+          disabled={props.fetchedDoctorDetails.verificationStatus === "1"}
         />
         <TextField
           id="id_weight"
@@ -103,11 +104,11 @@ function DoctorVerificationForm1(props) {
           label="Weight"
           name="weight"
           value={formik.values.weight}
-          error={formik.errors.weight && formik.touched.weight ? true: false}
-          helperText={formik.errors.weight && formik.touched.weight ? formik.errors.weight:"in Kg"}
-          disabled={(props.fetchedDoctorDetails.verificationStatus)? (props.fetchedDoctorDetails.verificationStatus=="1") &&  true :false}
-          onBlur={formik.handleBlur}
+          error={formik.touched.weight && Boolean(formik.errors.weight)}
+          helperText={formik.touched.weight && formik.errors.weight ? "Please enter weight (in Kg)" : "in Kg"}
           onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          disabled={props.fetchedDoctorDetails.verificationStatus === "1"}
         />
         <TextField
           id="id_bloodGroup"
@@ -115,25 +116,27 @@ function DoctorVerificationForm1(props) {
           label="Blood Group"
           name="bloodGroup"
           value={formik.values.bloodGroup}
-          error={formik.errors.bloodGroup && formik.touched.bloodGroup ? true: false}
-          helperText={formik.errors.bloodGroup && formik.touched.bloodGroup ? formik.errors.bloodGroup:""}
-          onBlur={formik.handleBlur}
-          disabled={(props.fetchedDoctorDetails.verificationStatus)? (props.fetchedDoctorDetails.verificationStatus=="1") &&  true :false}
+          error={formik.touched.bloodGroup && Boolean(formik.errors.bloodGroup)}
+          helperText={formik.touched.bloodGroup && formik.errors.bloodGroup ? "Please enter your blood group" : ""}
           onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          disabled={props.fetchedDoctorDetails.verificationStatus === "1"}
         />
         <TextField
           id="id_specialization"
           variant="outlined"
-          label="specialization"
+          label="Specialization"
           name="specialization"
           value={formik.values.specialization}
           onChange={formik.handleChange}
-          error={formik.errors.specialization && formik.touched.specialization ? true: false}
-          helperText={formik.errors.specialization && formik.touched.specialization ? formik.errors.specialization:""}
-          disabled={(props.fetchedDoctorDetails.verificationStatus)? (props.fetchedDoctorDetails.verificationStatus=="1") &&  true :false}
+          onBlur={formik.handleBlur}
+          error={formik.touched.specialization && Boolean(formik.errors.specialization)}
+          helperText={formik.touched.specialization && formik.errors.specialization ? "Please enter your specialization" : ""}
+          disabled={props.fetchedDoctorDetails.verificationStatus === "1"}
           required
         />
       </div>
+
       <div className="flex w-full flex-row items-center gap-10">
         <label htmlFor="license " className="text-red-700">
           License
@@ -141,20 +144,20 @@ function DoctorVerificationForm1(props) {
         <FileInput
           name="license"
           onChange={(e) => handleFileChange(e, "license")}
-          disabled={(props.fetchedDoctorDetails.verificationStatus)? (props.fetchedDoctorDetails.verificationStatus=="1") &&  true :false}
+          disabled={props.fetchedDoctorDetails.verificationStatus === "1"}
           required
         />
       </div>
 
       <div className="flex w-full flex-row items-center gap-10 ">
-        <label htmlFor="license " className="text-red-700">
+        <label htmlFor="profileImage" className="text-red-700">
           Profile image
         </label>
         <FileInput
           name="profileImage"
           onChange={(e) => handleFileChange(e, "profileImage")}
           accept=".jpg, .png"
-          disabled={(props.fetchedDoctorDetails.verificationStatus)? (props.fetchedDoctorDetails.verificationStatus=="1") &&  true :false}
+          disabled={props.fetchedDoctorDetails.verificationStatus === "1"}
           required
         />
       </div>
@@ -163,11 +166,12 @@ function DoctorVerificationForm1(props) {
       <EducationDetails level={"Ten"} formik={formik} />
       <EducationDetails level={"Twelth"} formik={formik} />
       <EducationDetails level={"Mbbs"} formik={formik} />
+
       <CustomButton
         type="submit"
         gradientDuoTone="greenToBlue"
         isProcessing={isSpinner}
-        disabled={formik.is || (props.fetchedDoctorDetails.verificationStatus)? (props.fetchedDoctorDetails.verificationStatus=="1") &&  true :false}
+        disabled={formik.isSubmitting || props.fetchedDoctorDetails.verificationStatus === "1"}
         className="w-1/4 relative left-1/2 -translate-x-1/2 active:bg-violet-700"
       >
         Submit
@@ -191,7 +195,7 @@ function EducationDetails(props) {
               required
               value={props.formik.values[`school${props.level}`]}
               onChange={props.formik.handleChange}
-              
+              onBlur={props.formik.handleBlur}
             />
             <FloatingLabel
               variant="outlined"
@@ -200,25 +204,18 @@ function EducationDetails(props) {
               label="Marks"
               value={props.formik.values[`marks${props.level}`]}
               onChange={props.formik.handleChange}
-              color={props.formik.errors[`marks${props.level}`] && props.formik.touched[`marks${props.level}`] ? "error":"success"}
-              helperText={props.formik.errors[`marks${props.level}`] && props.formik.touched[`marks${props.level}`] ? props.formik.errors[`marks${props.level}`] :""  }
               onBlur={props.formik.handleBlur}
-              required
+              color={props.formik.errors[`marks${props.level}`] && props.formik.touched[`marks${props.level}`] ? "error" : "success"}
+              helperText={props.formik.errors[`marks${props.level}`] && props.formik.touched[`marks${props.level}`] ? "Please enter your marks" : ""}
             />
             <div className="flex flex-row gap-10">
               <label htmlFor="certificate" className="text-red-700">
                 Certificate
               </label>
               <FileInput
-                id={`certificate${props.level}`}
                 name={`certificate${props.level}`}
-                accept=".pdf"
-                onChange={(e) =>
-                  props.formik.setFieldValue(
-                    `certificate${props.level}`,
-                    e.target.files[0]
-                  )
-                }
+                onChange={(e) => props.handleFileChange(e, `certificate${props.level}`)}
+                disabled={props.formik.values.verificationStatus === "1"}
                 required
               />
             </div>

@@ -16,7 +16,8 @@ function PatientDashboard() {
   })
 
   const load=async ()=>{
-    await setUserData(await DataOnPageLoad(localStorage.getItem('token'),0))
+    const user=await DataOnPageLoad(localStorage.getItem('token'),0)
+    await setUserData(user)
   }
 
   useEffect(()=>{
@@ -35,11 +36,16 @@ function PatientDashboard() {
   },[])
 
   return(
-   <div className="patient-dashboard-parent">
-    <ResponsiveAppBar setOpened={setOpened} />
-    {/* <NavBar/> */}
-    {(Opened.Doctors)&&<PatientDoctorPage/>}
+   <div className="w-full h-full">
+    <div className="fixed w-full top-0">
+    <ResponsiveAppBar  setOpened={setOpened} />
+    </div>
+    <div className="mt-52 ml-10 mr-10">
+    {(Opened.Doctors)&&(userData)&&<PatientDoctorPage patient={userData}/>}
     {(Opened.Medicines)&&<MedicinePage/>}
+    {/* <NavBar/> */}
+    </div>
+   
 
 
     

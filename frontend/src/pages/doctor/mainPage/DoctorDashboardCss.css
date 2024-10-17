@@ -1,0 +1,114 @@
+/* Sidebar and general layout */
+.sidebar {
+    background-color: #2d3a4b; /* Dark Blue/Gray for Sidebar */
+    height: 100vh;
+    padding: 1rem;
+  }
+  
+  .sidebar .button {
+    color: #ffffff;
+    background-color: #337ab7;
+    border: none;
+    margin: 5px 0;
+    padding: 10px;
+    text-align: center;
+    width: 100%;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .sidebar .button:hover {
+    background-color: #286090;
+  }
+  
+  .sidebar .disabled {
+    background-color: #cccccc;
+    color: #777777;
+    cursor: not-allowed;
+  }
+  
+  .locked {
+    display: inline-block;
+    margin-left: 8px;
+    color: #ff4444; /* Highlight lock icons */
+  }
+  
+  .locked:hover {
+    cursor: not-allowed;
+  }
+  
+  .text-title {
+    font-size: 1.5rem;
+    color: #333;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  
+  .text-subtitle {
+    font-size: 1rem;
+    color: #555;
+  }
+  
+  /* Modal */
+  .modal-content {
+    background-color: #f8f9fa;
+    padding: 2rem;
+    border-radius: 8px;
+  }
+  
+  .modal-header {
+    font-size: 1.75rem;
+    color: #d9534f;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+  }
+  
+  .modal-body {
+    font-size: 1rem;
+    color: #5a5a5a;
+  }
+  
+  .modal-body h3 {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+  
+  .modal-body .warning {
+    color: #f0ad4e;
+  }
+  
+  /* Header */
+  .header-bar {
+    background-color: #ffffff;
+    border-bottom: 2px solid #dddddd;
+    padding: 1rem 2rem;
+  }
+  
+  .header-bar .avatar {
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  
+  .header-bar .avatar:hover {
+    transform: scale(1.1);
+  }
+  
+  .header-bar .options-menu {
+    background-color: #f8f9fa;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem 1rem;
+  }
+  
+  .header-bar .options-menu button {
+    padding: 0.5rem 1rem;
+    text-align: left;
+    width: 100%;
+    border: none;
+    background-color: transparent;
+    transition: background-color 0.3s ease;
+  }
+  
+  .header-bar .options-menu button:hover {
+    background-color: #eeeeee;
+  }
+  

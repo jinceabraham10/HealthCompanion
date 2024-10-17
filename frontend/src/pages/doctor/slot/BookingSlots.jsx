@@ -3,210 +3,215 @@ import { Datepicker } from "flowbite-react";
 import { CFormInput } from "@coreui/react";
 import { Formik, useFormik } from "formik";
 import { json } from "react-router-dom";
-import { AddSlot } from "../../../services/doctorService";
+import { AddSlot, getSetSlots } from "../../../services/doctorService";
+import { SlotSettingVerification } from "../../../validations/yupValidations/DoctorVerificationValidation";
 
 function BookingSlots(props) {
+  const [slots, setSlots] = useState([]);
+  const [availableSlots, setAvailableSlots] = useState([]);
+  const dateSet = new Set();
+  let tempSlots = [];
 
-  const [slots,setSlots]=useState([])
-  let tempSlots=[]
+  useEffect(() => {
+    const onLoad = async () => {
+      const tempSetSlots = await getSetSlots({
+        _id: props.fetchedDoctorDetails._id,
+      });
+      await setAvailableSlots(tempSetSlots);
+    };
+    onLoad();
+  }, []);
+
+  useEffect(() => {
+    if (availableSlots && availableSlots.length != 0) {
+      for (let data of availableSlots) {
+        dateSet.add(data.date);
+      }
+      console.log(dateSet);
+    }
+    console.log("available slots", availableSlots);
+  }, [availableSlots]);
 
   return (
     <div className="min-h-full ml-4 mb-7 flex flex-col gap-5">
+      <h1 className="font-bold "> Already set Slots</h1>
+      {
+        (availableSlots && availableSlots.length>0)?
+        <div className="grid grid-cols-5 gap-5">
+          {
+            availableSlots.map((tempslot,index)=>(
+              <ExistingSlot key={index} slot={tempslot}/>
+            ))
+          }
+
+        </div>:""
+      }
+
       <h1 className="font-bold "> Set Book Slots</h1>
       <div className="flex flex-row gap-7 w-full ml-10 mt-10 items-center">
-          <h2 className="font-bold text-blue-500">Add Slot</h2>
-          <button onClick={()=>{
-            setSlots((prevSlots) => [...prevSlots, <Slot1 key={prevSlots.length} fetchedDoctorDetails={props.fetchedDoctorDetails} />]);
-          }} className="text-red-800 font-bold text-xl">+</button>
+        <h2 className="font-bold text-blue-500">Add Slot</h2>
+        <button
+          onClick={() => {
+            setSlots((prevSlots) => [
+              ...prevSlots,
+              <Slot1
+                key={prevSlots.length}
+                fetchedDoctorDetails={props.fetchedDoctorDetails}
+                setSlots={setSlots}
+                index={prevSlots.length}
+              />,
+            ]);
+          }}
+          className="text-red-800 font-bold text-xl"
+        >
+          +
+        </button>
+      </div>
+      {slots && (
+        <div className="flex flex-col gap-10">
+          {slots.length > 0 && (
+            <div className="flex flex-col gap-10">{slots}</div>
+          )}
         </div>
-        {
-          (slots)&&
-          <div className="flex flex-col gap-10">
-            {
-              slots.length > 0 &&<div className="flex flex-col gap-10">
-                <h2 className="font-bold text-blue-500">New Slot</h2>
-
-                {slots}
-
-              </div>  
-            }
-
-
-
-          </div>
-        }
-      {/* <Slot1 fetchedDoctorDetails={props.fetchedDoctorDetails}/> */}
+      )}
     </div>
   );
 }
 
-function Slot(props) {
+function Slot1(props) {
+  const d = new Date();
 
   const formik = useFormik({
-    initialValues: {},
+    initialValues: {
+      date: "",
+      startTime: "",
+      endTime: "",
+      _id: props.fetchedDoctorDetails._id,
+      key: props.index,
+    },
+    validationSchema: SlotSettingVerification,
+    onSubmit: async (values, actions) => {
+      await AddSlot(formik.values);
+    },
   });
 
-  let formattedDate
+  console.log(`formik values ${JSON.stringify(formik.values)}`);
+  console.log(`formik errors ${JSON.stringify(formik.errors)}`);
 
-
-
-  const handleSave=(e)=>{
-
-    console.log(formattedDate)
-    formik.setFieldValue(formattedDate, {});
-    
-
-  }
-
-
-
-  const d = new Date();
-  const selectedSlotData = {};
-  let slotTimeArray = [],
-    slotNumber = 1;
-
-  for (let i = 0; i < 12; i++) {
-    slotTimeArray.push(i);
-    selectedSlotData[i] = false;
-  }
-  const [selectedSlot, setSelectedSlots] = useState(selectedSlotData);
-
-  const slotSchema = {};
+  const [clickedAddSlot, setClickedAddSlot] = useState(true);
+  const [showDateSettingOptions, setShowDateSettingOptions] = useState(false);
+  const [startTime, setStartTime] = useState(undefined);
+  const [endTime, setEndTime] = useState(undefined);
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-row gap-4">
-        <label className="font-bold text-blue-800" htmlFor="day">
-          Choose Day
-        </label>
-
-        <Datepicker
-          id="id_day"
-          name="day"
-          onSelectedDateChanged={(selectedDate) => {
-            formattedDate = `${selectedDate.getFullYear()}-${
-              selectedDate.getMonth() + 1
-            }-${selectedDate.getDate()}`;
-          }}
-          minDate={new Date(d.getFullYear(), d.getMonth(), d.getDate())}
-          title="choose the date"
-        />
-      </div>
-
-      <div className="grid grid-cols-8 gap-4 justify-items-start mt-5">
-        {slotTimeArray.map((t, index) => (
-          <div className="flex flex-col gap-4" key={index}>
-            <label
-              htmlFor="slot"
-              className="font-bold text-yellow-500"
-            >{`slot ${index + 1}`}</label>
-            <button
-              onClick={() => {
-                console.log(selectedSlot[index]);
-
-                setSelectedSlots({
-                  ...selectedSlot,
-                  [index]: !selectedSlot[index],
-                });
+    <form onSubmit={formik.handleSubmit}>
+      <div className="flex flex-col gap-4 border rounded-lg p-8 mr-10 shadow-lg z-100">
+        {clickedAddSlot == true && (
+          <div className="flex flex-row gap-4">
+            <h2 className="font-bold text-blue-500">Choose Day</h2>
+            <Datepicker
+              title="Choose the day"
+              onBlur={formik.handleBlur}
+              onChange={formik.handleSubmit}
+              minDate={new Date(d.getFullYear(), d.getMonth(), d.getDate())}
+              id="id_day"
+              name="day"
+              onSelectedDateChanged={(selectedDate) => {
+                const formattedDate = `${selectedDate.getFullYear()}-${
+                  selectedDate.getMonth() + 1
+                }-${selectedDate.getDate()}`;
+                formik.setFieldValue("date", formattedDate);
+                setShowDateSettingOptions(true);
               }}
-              className={`p-4 border rounded-lg bg-slate-300 hover:bg-red-500 text-center 
-           ${selectedSlot[index] == true ? "bg-teal-400" : " "} `}
-            >{`${t}.00 - ${t + 1}.00`}</button>
+            />
           </div>
-        ))}
-      </div>
+        )}
+        {showDateSettingOptions && (
+          <div className="w-full grid grid-cols-3 gap-5 justify-items-start mt-10">
+            <div className="flex flex-col gap-2">
+              <div className="flex flex-row gap-4">
+                <label className="font-bold text-blue-500" htmlFor="startTime">
+                  Start Time
+                </label>
+                <input
+                  type="time"
+                  id="id_startTime"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  name="startTime"
+                  value={formik.values.startTime}
+                  className="rounded text-center"
+                />
+              </div>
+              <span className="w-full flex flex-col justify-center items-center gap-4 text-red-500">
+                {formik.touched.startTime && formik.errors.startTime
+                  ? formik.errors.startTime
+                  : ""}
+              </span>
+            </div>
+            <div className="flex flex-col gap-2">
+              <div className="flex flex-row gap-4">
+                <label className="font-bold text-blue-500" htmlFor="startTime">
+                  End Time
+                </label>
+                <input
+                  type="time"
+                  id="id_endTime"
+                  name="endTime"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  value={formik.values.endTime}
+                  className="rounded text-center"
+                />
+              </div>
+              <span className="w-full flex flex-col justify-center items-center gap-4 text-red-500">
+                {formik.touched.endTime && formik.errors.endTime
+                  ? formik.errors.endTime
+                  : ""}
+              </span>
+            </div>
 
-      <div m>
-        <button onClick={(e)=>handleSave(e)} className="border p-5 rounded-lg bg-green-400">Save</button>
+            <div className="flex flex-row h-10 gap-4 ml-10">
+              <input
+                type="submit"
+                value="Add"
+                className="border rounded pl-4 pr-4 pt-2 pr-4 pb-2 bg-emerald-400"
+              />
+            </div>
+          </div>
+        )}
+      </div>
+    </form>
+  );
+}
+
+function ExistingSlot(props) {
+  return (
+    <div className="flex flex-col gap-4 border p-4 rounded-lg shadow-lg">
+      <span className="font-bold text-red-500">{props.slot.date}</span>
+       <div className="flex flex-row gap-8 ">
+        <span className="font-bold text-emerald-500">{convertTo12Hour(props.slot.startTime)}</span>
+        <span className="font-bold text-emerald-500">{convertTo12Hour(props.slot.endTime)}</span>
+      </div>
+      <div className="flex flex-row gap-2">
+        <button className="border rounded-lg p-2 bg-red-500">delete</button>
       </div>
     </div>
   );
 }
 
-function Slot1(props){
+export function convertTo12Hour(dateIn24){
+  const [hour,minute]=dateIn24.split(':')
+  let rhour;
+  if(hour>12){
+    rhour=hour-12
+    return `${rhour}:${minute} PM `
+  }
+  else if(hour==12){
+    return `${hour}:${minute} PM`
+  }
+  return `${hour}:${minute} AM`
 
-    const d=new Date()
-
-    const formik=useFormik(
-      {
-        initialValues:{
-        date:"",
-        startTime:"1",
-        startTimeAmPm:"AM",
-        endTime:"12",
-        endTimeAmPm:"PM",
-        _id:props.fetchedDoctorDetails._id
-        },
-        onSubmit:async (e)=>{
-          await AddSlot(formik.values)
-        }
-      }
-    )
-
-    console.log(formik.values)
-
-    const [clickedAddSlot,setClickedAddSlot]=useState(true)
-    const [showDateSettingOptions,setShowDateSettingOptions]=useState(false)
-    const [startTime,setStartTime]=useState(undefined)
-    const [endTime,setEndTime]=useState(undefined)
-
-
-
-    
-    return(
-      <form onSubmit={formik.handleSubmit}>
-      <div className="flex flex-col min-h-full min-w-full gap-4">
-        {(clickedAddSlot==true) &&
-          <div className="flex flex-row gap-4">
-            <h2 className="font-bold text-blue-500">Choose Day</h2>
-            <Datepicker title="Choose the day"  onChange={formik.handleSubmit} minDate={new Date(d.getFullYear(),d.getMonth(),d.getDate())} id="id_day" name="day" onSelectedDateChanged={(selectedDate)=>{
-              const formattedDate=`${selectedDate.getFullYear()}-${
-                selectedDate.getMonth() + 1
-              }-${selectedDate.getDate()}`;
-              formik.setFieldValue("date",formattedDate)
-              setShowDateSettingOptions(true)
-              
-            }}/>
-          </div>
-        }
-        {
-          (showDateSettingOptions)&&
-
-
-          <div className="w-full grid grid-cols-3 gap-5 justify-items-start mt-10">
-            <div className="flex flex-row gap-4">
-              <label className="font-bold text-blue-500" htmlFor="startTime">Start Time</label>
-              <input max={12} min={1} id="id_startTime" onChange={formik.handleChange} name="startTime" value={formik.values.startTime} className="rounded text-center" type="number"/>
-              <select  id="id_start_am/pm"  name="start_am/pm" onChange={(e)=>{
-                formik.setFieldValue("startTimeAmPm",e.target.value)
-              }} className="rounded bg-red-300" >
-                <option >AM</option>
-                <option>PM</option>
-              </select>
-
-            </div>
-            <div className="flex flex-row gap-4">
-              <label className="font-bold text-blue-500" htmlFor="startTime">End Time</label>
-              <input max={12} min={1} id="id_endTime" name="endTime" onChange={formik.handleChange} value={formik.values.endTime} className="rounded text-center" type="number"/>
-              <select  id="id_end_am/pm" name="end_am/pm" onChange={(e)=>{
-                formik.setFieldValue("endTimeAmPm",e.target.value)
-              }} className="rounded bg-red-300" >
-                <option >PM</option>
-                <option >AM</option>
-              </select>
-            </div>
-
-            <div className="flex flex-row gap-4 ml-20">
-              <input type="submit" value="Add" className="border rounded pl-4 pt-2 pr-4 pb-2 bg-emerald-400"/>
-            </div>
-
-          </div>
-        }
-        
-      </div>
-      </form>
-    
-  )
 }
 
 export default BookingSlots;

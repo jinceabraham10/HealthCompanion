@@ -24,3 +24,17 @@ export const DoctorVerificationFormValidationSchema=yup.object().shape(
 
     }
 )
+
+export const SlotSettingVerification=yup.object().shape({
+    date:yup.string().required("Date must be chosen"),
+    startTime:yup.string().required("Time must be chosen").notOneOf([yup.ref('endTime')],"Choose Timing validly"),
+    endTime:yup.string().required("End Time must be chosen").notOneOf([yup.ref('startTime')],"Choose Timing validly").test("end time should be less than start time",function(value){
+
+        const {startTime}=this.parent
+        if(startTime && value){
+            return value>startTime
+        }
+        return true
+    })
+
+})

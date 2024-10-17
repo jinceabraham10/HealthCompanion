@@ -1,12 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./RegisterationPageStyle.css";
 import { createUser, generateOtp } from "../../services/userService";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import emailCheck from "../../validations/login/emailValidation";
 import { CheckUserPresent } from "../../services/authService";
 
 
-function RegisterationPage() {
+function RegisterationPage(props) {
+
+  const navigate=useNavigate()
   const date = new Date();
   let canBeSubmitted = false;
 
@@ -142,7 +144,11 @@ function RegisterationPage() {
       });
       console.log(submitStatus);
       await setIsOtpSet(!submitStatus);
-      if (submitStatus) formRef.current.reset();
+      if (submitStatus) {
+        formRef.current.reset();
+        navigate('/login')
+        
+      }
     } catch (error) {
       console.log(`error on otp submit ${error}`);
     }
@@ -182,6 +188,7 @@ function RegisterationPage() {
             errorMsg={errorMsg}
             setConfirmPassword={setConfirmPassword}
             handleSignUp={handleSignUp}
+            setOpened={props.setOpened}
           />
           <span className="error" id="id_emptyField"></span>
         </form>
@@ -199,6 +206,7 @@ function CommonUserDetails({
   setConfirmPassword,
   isFormvalid,
   handleSignUp,
+  setOpened
 }) {
   return (
     <div className="form-registeration-user-details">
@@ -253,7 +261,9 @@ function CommonUserDetails({
       <span>
         Already have an account ?{" "}
         <Link
-          to="/login"
+          onClick={()=>{
+            setOpened('login')
+          }}
           style={{
             textDecoration: "none",
           }}
@@ -306,7 +316,7 @@ function OtpBlock({ setOtp, handleOtpSubmit }) {
         name="btnOtp"
         onClick={handleOtpSubmit}
       />
-    </div>
+    </div>  
   );
 }
 

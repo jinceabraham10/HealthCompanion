@@ -26,7 +26,6 @@ exports.mailOnSuccessfullRegisteration = async (ReceiverData) => {
     console.log(`Email sent ${info.response}`);
   } catch (error) {
     console.log(`error ${error}`);
-    
   }
 };
 
@@ -42,9 +41,38 @@ exports.mailWithOtp = async (email, otp) => {
       text: `Hi ,\n\nYour OTP for the verification is ${otp} and its valid only for 1 min`,
     });
     console.log(`OTP has been to ${email} info response : ${info.response}`);
-    return true
+    return true;
   } catch (error) {
     console.log(`error on senting Otp mail ${error}`);
-    return false
+    return false;
+  }
+};
+
+exports.mailWithSlotBookingConfirmation = async (mailDetails) => {
+  try {
+    const {
+      doctor,
+      patient,
+      slot
+    } = mailDetails;
+    // await console.log(`received patient ${patient}`)
+    // await console.log(`receievd doctor ${doctor}`)
+    // await console.log(`receieved slot ${slot}`)
+    const infoPatient = await transporter.sendMail({
+      from: from,
+      subject:"Slot Confirmation",
+      to: patient.email,
+      text: `Hi User,\nYou have successfully booked slot for consulting with the doctor ${doctor.firstName} ${doctor.lastName} during ${slot.startTime} and ${slot.endTime} on ${slot.date}`
+    });
+    const infoDoctor = await transporter.sendMail({
+      from: from,
+      subject:"Slot Confirmation",
+      to: doctor.userId.email,
+      text: `Hi Doctor,\n${patient.username} has successfully booked slot for consulting with you during ${slot.startTime} and ${slot.endTime} on ${slot.date}`
+    });
+    console.log(`info patient ${infoPatient}`)
+    console.log(`info Doctor ${infoDoctor}`)
+  } catch (error) {
+    console.log(error);
   }
 };

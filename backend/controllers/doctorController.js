@@ -3,6 +3,7 @@ const Doctor = require("../models/doctorModel.js");
 const { updateOne, base } = require("../models/userModel.js");
 const fs = require("fs");
 const path = require("path");
+const Slot = require("../models/slotModel.js");
 
 exports.submitForVerification = async (req, res) => {
   try {
@@ -22,15 +23,27 @@ exports.getAllDoctors = async (req, res) => {
     const allDoctors = await Doctor.find({ verificationStatus: "0" }).populate(
       "userId"
     );
-    await console.log(allDoctors);
     if (allDoctors.length == 0) {
       return res.status(404).json({ message: `No Doctors Available` });
     }
+    let profileImageBuffer,profileImagePath,profileImage
+    const updated=allDoctors.map((doctor)=>{
+      const plainDoctor = doctor.toObject(); 
+      profileImagePath=doctor.profileImage
+      profileImageBuffer=fs.readFileSync(profileImagePath)
+      plainDoctor.realProfileImage=profileImageBuffer.toString('base64')
+      return plainDoctor
+      
+  })
+   
+    // await console.log(updated);
     res
       .status(200)
-      .json({ allDoctors: allDoctors, message: "success fetched all doctors" });
+      .json({ allDoctors: updated, message: "success fetched all doctors" });
   } catch (error) {
+    console.log(error)
     res.status(400).json({ message: `error ${error}` });
+    
   }
 };
 
@@ -50,12 +63,10 @@ exports.getDoctorDetails = async (req, res) => {
       profileImage = profileImageBuffer.toString("base64");
     }
 
-    res
-      .status(200)
-      .json({
-        message: "fetched Successfully",
-        doctorDetails: { doctorDetails, profileImage: profileImage },
-      });
+    res.status(200).json({
+      message: "fetched Successfully",
+      doctorDetails: { doctorDetails, profileImage: profileImage },
+    });
   } catch (error) {
     console.log(error);
   }
@@ -149,22 +160,37 @@ exports.submitVerificationData = async (req, res) => {
 exports.addSlot = async (req, res) => {
   try {
     console.log(req.body);
-    const { _id, date, startTimeAmPm, startTime, endTime, endTimeAmPm } =
-      req.body;
-    const addedSlot = await Doctor.updateOne(
-      { _id: _id },
-      {
-        $addToSet: {
-          [`slots.${date}`]: {
-            "startTime":`${startTime} ${startTimeAmPm}`,
-            "endTime":`${endTime} ${endTimeAmPm}`
-          },
-        },
+    const { _id, date, startTime, endTime } = req.body;
+    const allSlots=await Slot.find({doctorId:_id,date:date})
+    for (let tempSlot of allSlots) {
+      if (startTime >= tempSlot.startTime && startTime <= tempSlot.endTime) {
+        return res.status(400).json({ message: "Dates are overlapping" });
       }
-    );
-    // console.log(addedSlot)
+      else if(endTime>=tempSlot.startTime && endTime<=tempSlot.endTime){
+        return res.status(400).json({ message: "Times are overlapping" });
+
+      }
+    }
+    console.log(allSlots)
+    const slot = new Slot({ date, startTime, endTime, doctorId: _id });
+    const addedSlot = await slot.save();
+
+    // console.log(addedSlot);
     res.status(200).json({ message: "Slot Added Successsfully" });
   } catch (error) {
     console.log(`error ${error}`);
+    return res.status(500).json({ message: "Dates are overlapping" });
   }
 };
+
+exports.existingSlots=async (req,res)=>{
+  try {
+    const { _id } = req.body;
+    const allSlots=await Slot.find({doctorId:_id})
+    allSlots.sort((a,b)=> (new Date(a.date)- new Date(b.date)))
+    res.status(200).json({message:"succesfully fetched already set slots",setSlots:allSlots})
+    
+  } catch (error) {
+    console.log(error)
+  }
+}

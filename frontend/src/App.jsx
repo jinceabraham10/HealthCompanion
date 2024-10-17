@@ -8,12 +8,17 @@ import BookingPage from "./pages/patient/bookingPage/BookingPage";
 import DoctorVerificationForm1 from "./pages/doctor/doctorVerificationForm1/DoctorVerificationForm1";
 import DoctorDashboard from "./pages/doctor/mainPage/DoctorDashboard";
 import AdminDashboard from "./pages/admin/dashboard/AdminDashboard";
+import HomePage from "./pages/home/HomePage";
 
 function App() {
   return (
     <>
       <Router>
         <Routes>
+
+        <Route path="/home" element={<HomePage/>} />
+
+
           <Route path="/" element={<PatientDashboard/>} />
           <Route path="/register" element={<RegisterationPage />} />
           <Route path="/login" element={<Login />} />
@@ -24,6 +29,7 @@ function App() {
           <Route path="/doctorVerificationForm" element={<DoctorVerificationForm1/>}/>
           <Route path="/doctorDashboard" element={<DoctorDashboard/>}/>
           <Route path="/adminDashboard" element={<AdminDashboard/>}/>
+          <Route path="/patientSlotBooking" element={<BookingPage/>}/>
         </Routes>
       </Router>
     </>

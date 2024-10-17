@@ -1,0 +1,185 @@
+commit b43ee835df708e4a4d32a6a3d1bceb5c195f6dc0
+Author: Jince Abraham <jincelearning33@gmail.com>
+Date:   Mon Oct 14 10:53:14 2024 +0530
+
+    Working on Slot setting
+
+commit 4595c4ef409295d72f822d563b8104f97299516c
+Author: Jince Abraham <jincelearning33@gmail.com>
+Date:   Sat Oct 12 13:46:15 2024 +0530
+
+    Working On creation slots
+
+commit b6ffddf4c550b1e97d57409b6d39c7f528c2b983
+Author: Jince Abraham <jincelearning33@gmail.com>
+Date:   Wed Oct 9 12:03:57 2024 +0530
+
+    admin approve finished
+
+commit 3f67f41b7fd5121c78f6e8cc062d0d861d3b3f3b
+Author: Jince Abraham <jincelearning33@gmail.com>
+Date:   Tue Oct 8 23:00:48 2024 +0530
+
+    Working On it
+
+commit 5cd450566668d83e9cef1252b3626730026a8e58
+Author: Jince Abraham <jincelearning33@gmail.com>
+Date:   Tue Oct 8 10:36:26 2024 +0530
+
+    On work
+
+commit 8a4fd6c33e82cb79ee4096210b2a2eaf84798861
+Author: Jince Abraham <jincelearning33@gmail.com>
+Date:   Mon Oct 7 22:41:52 2024 +0530
+
+    Changes made at file uploading
+
+commit 4e795943c6f34a8c83ca96cf390272865b756953
+Author: Jince Abraham <jincelearning33@gmail.com>
+Date:   Fri Oct 4 09:12:55 2024 +0530
+
+    working on the doctor dashboard
+
+commit 20913d9445a7c113e71ab84829c4f425362cd67c
+Author: Jince Abraham <jincelearning33@gmail.com>
+Date:   Fri Sep 27 20:33:37 2024 +0530
+
+    Working on UI of Verififcation For,
+
+commit ce71edd34e9ff220eccd8f1e7cb661f8987b9636
+Author: Jince Abraham <jincelearning33@gmail.com>
+Date:   Thu Sep 26 19:55:54 2024 +0530
+
+    On Validation form for Doctor
+
+commit 728279fc9f3afb0b2f051db8a4d537fcdcd15619
+Author: Jince Abraham <jincelearning33@gmail.com>
+Date:   Thu Sep 26 10:22:10 2024 +0530
+
+    ordered Pages in the structure
+
+commit 5afc20b2a49bc035bd920c4f923adcec9b805934
+Author: Jince Abraham <jincelearning33@gmail.com>
+Date:   Tue Sep 24 10:31:35 2024 +0530
+
+    completed fetching medicines and tests
+
+commit b94ed3fe334d9425390a9b5a1cc0981b6cf4d779
+Author: Jince Abraham <jincelearning33@gmail.com>
+Date:   Fri Sep 20 13:02:31 2024 +0530
+
+    fixing validation on registeration page
+
+commit 2f6abb251244c324ed42dbe4f9f9caef821723fa
+Author: Jince Abraham <jincelearning33@gmail.com>
+Date:   Wed Sep 4 21:41:33 2024 +0530
+
+    finished the setup of mail trigger on successfull registeration
+
+commit 53548e2ef2952083fdd73130f6824e2d667de3e5
+Author: Jince Abraham <jincelearning33@gmail.com>
+Date:   Wed Sep 4 15:25:56 2024 +0530
+
+    Stop tracking config.env
+
+commit 4810a274546cb63efb9286e2e2a8e400173b7fd8
+Author: Jince Abraham <jincelearning33@gmail.com>
+Date:   Wed Sep 4 15:18:01 2024 +0530
+
+    check
+
+commit e75cc9a02676449a63b3a1c377dae5b986057290
+Author: Jince Abraham <jincelearning33@gmail.com>
+Date:   Wed Sep 4 15:16:46 2024 +0530
+
+    checking
+
+commit b8887e1d7e8da03c74a4ee06ae1750fc77faf7bd
+Author: Jince Abraham <jincelearning33@gmail.com>
+Date:   Wed Sep 4 14:57:18 2024 +0530
+
+    checking
+
+commit 9dbb457897827d4718d7277f8baa0ab0a548572b
+Author: Jince Abraham <jincelearning33@gmail.com>
+Date:   Wed Sep 4 14:46:02 2024 +0530
+
+    made some changes for mail service
+
+commit d64a68d5dce11073674997d8c4f035f140205627
+Author: Jince Abraham <jincelearning33@gmail.com>
+Date:   Wed Sep 4 11:52:26 2024 +0530
+
+    Editer mail service
+
+commit 899854f2881d1507e703582ee49785349a7dee76
+Author: Jince Abraham <jincelearning33@gmail.com>
+Date:   Tue Sep 3 23:38:45 2024 +0530
+
+    Working on the mail send to the registered user on registeration
+
+commit 95ad100e1d435326c271500a1eb84ef7604aa697
+Author: Jince Abraham <jincelearning33@gmail.com>
+Date:   Tue Sep 3 00:18:30 2024 +0530
+
+    completed the backend logic for Registeration
+
+commit f9f9cebec250c3695b930e22f83b4765fac7fe30
+Author: Jince Abraham <jincelearning33@gmail.com>
+Date:   Fri Aug 30 23:41:53 2024 +0530
+
+    partially set the patient dashboard that directs to login and registeration page
+
+commit 85cfa22b13fb973728a5c4c0741a32d64d6826d6
+Author: Jince Abraham <jincelearning33@gmail.com>
+Date:   Fri Aug 30 16:41:18 2024 +0530
+
+    Working on Navbar side login icon
+
+commit c204899c9e574e930354e360028540b8895400f0
+Author: Jince Abraham <jincelearning33@gmail.com>
+Date:   Tue Aug 27 00:17:27 2024 +0530
+
+    Working on Patient Nav bar
+
+commit 38c26b91375c67cd2454bc4ced572ed409f28df2
+Author: Jince Abraham <jincelearning33@gmail.com>
+Date:   Sun Aug 25 23:05:06 2024 +0530
+
+    completed partially the registeration UI at the start
+
+commit dbf6e94d608b7e165d81fedf23957e918d1823e9
+Author: Jince Abraham <jincelearning33@gmail.com>
+Date:   Thu Aug 22 23:30:36 2024 +0530
+
+    Working on the Registeration Front
+
+commit 8474d38188756b6571398396969c38e992d5c6b2
+Author: Jince Abraham <jincelearning33@gmail.com>
+Date:   Tue Aug 20 23:20:32 2024 +0530
+
+    Checked Apis to the backend
+
+commit 182de8ee9aa48f760fd0631779aeceed6f8ce6da
+Author: Jince Abraham <jincelearning33@gmail.com>
+Date:   Tue Aug 20 17:09:03 2024 +0530
+
+    Working on Registeration Page
+
+commit 727242ded561b96b9ae609a0fd1636c6171e5260
+Author: Jince Abraham <jincelearning33@gmail.com>
+Date:   Tue Aug 20 14:57:57 2024 +0530
+
+    second commit
+
+commit 22a826e199e378fd01bb6f974e7f22a030ee2d81
+Author: Jince Abraham <jincelearning33@gmail.com>
+Date:   Wed Aug 14 23:30:14 2024 +0530
+
+    Second Commit
+
+commit 63721059a9fd11a08af51f25cdc73db285f7406f
+Author: Jince Abraham <jincelearning33@gmail.com>
+Date:   Sat Aug 10 22:58:51 2024 +0530
+
+    First Commit

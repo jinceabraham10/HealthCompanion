@@ -74,3 +74,27 @@ export async function generateOtp(email) {
     console.log(`error on the front end while clicking Otp ${error}`);
   }
 }
+
+export async function bookSlot(bookDetails){
+  try {
+
+    // console.log(bookDetails)
+    const resp=await axios.post('http://localhost:5000/api/user/bookSlot',bookDetails)
+    console.log(resp)
+    swal.fire({
+      icon:"success",
+      title:"Booked",
+      text:"Slot has been successfully booked"
+    })
+    
+  } catch (error) {
+    console.log(error)
+    if(error.response.status==400 && error.response.data.message=="slot is already confirmed"){
+      swal.fire({
+        icon:"warning",
+        title:"Slot already Booked",
+        text:"Slot has been already booked"
+      })
+    }
+  }
+}

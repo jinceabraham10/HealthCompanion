@@ -1,8 +1,10 @@
 const { default: mongoose } = require("mongoose");
 const User = require("../models/userModel.js");
 const { handlehashedPassword } = require("../utils/crypting.js");
-const { mailOnSuccessfullRegisteration } = require("../utils/mailService.js");
-const {createDoctor}=require('./doctorController.js')
+const { mailOnSuccessfullRegisteration, mailWithSlotBookingConfirmation } = require("../utils/mailService.js");
+const {createDoctor}=require('./doctorController.js');
+const Slot = require("../models/slotModel.js");
+const Doctor = require("../models/doctorModel.js");
 
 //get all users
 exports.getAllUsers = async (req, res) => {
@@ -73,5 +75,37 @@ exports.getUserById = async (req, res) => {
     console.log(error);
   }
 };
+
+exports.bookSlot=async(req,res)=>{
+  try {
+    const {patientId,slotId}=req.body
+    const fetchSlot=await Slot.findOne({_id:slotId})
+    if(fetchSlot.confirmStatus){
+      return res.status(400).json({message:"slot is already confirmed"})
+    }
+    const userBasicData=await User.findOne({_id:patientId})
+    const doctorData=await Doctor.findOne({_id:fetchSlot.doctorId}).populate("userId")
+    const confirmedSlot=await Slot.updateOne({_id:slotId},{$set:{confirmStatus:true,patientId:patientId}},{new:true})
+    if(!confirmedSlot){
+      return res.status(400).json({message:" unsuccesfull in confirming the slot booking"})
+    }
+
+    // console.log(`doctor data ${doctorData}`)
+    // console.log(`patient data ${userBasicData}`)
+    // console.log(`slot data ${fetchSlot}`)
+
+    await mailWithSlotBookingConfirmation({
+      slot:fetchSlot,
+      doctor:doctorData,
+      patient:userBasicData,
+    })
+    res.status(200).json({message:" successfully confirmed the slot booking"})
+    
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({message:`error occured while confirming the slot booking ${error}`})
+
+  }
+}
 
 

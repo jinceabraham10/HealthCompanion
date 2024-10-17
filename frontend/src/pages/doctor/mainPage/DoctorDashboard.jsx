@@ -60,22 +60,33 @@ function DoctorDashboard() {
     <div className="h-full">
       <ModalPopup isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
 
-      <div className="h-screen w-64 fixed top-0 left-0 bg-slate-700">
-        <Sidebar className="h-screen flex flex-col bg-slate-700 justify-evenly">
-          <Sidebar.Items className="flex-grow h-full ">
-            <Sidebar.ItemGroup className="space-y-10 h-full flex flex-col justify-center  p-2 bg-yellow-300">
+      <div className="fixed w-screen top-0 z-50 bg-gray-100 p-4 ">
+          {profileImage && (
+            <HeaderBar
+              fetchedData={fetchedData}
+              profileImage={profileImage}
+              setIsOptionsOpened={setIsOptionsOpened}
+              isOptionsOpened={isOptionsOpened}
+            />
+          )}
+        </div>
+
+      <div className="fixed mt-40 h-full">
+        <Sidebar className="h-full">
+          <Sidebar.Items className="h-full">
+            <Sidebar.ItemGroup className="h-full flex flex-col gap-4">
               {fetchedDoctorDetails &&
                 (fetchedDoctorDetails.verificationStatus == "1" ||
                   fetchedDoctorDetails.verificationStatus == "2"||
                   fetchedDoctorDetails.verificationStatus == "3") && (
-                  <Sidebar.Item className="flex-grow text-center outline-blue mt-2 ">
+                  <Sidebar.Item className="font-bold">
                     <button onClick={() => handleItemClick("verificationForm")}>
                       verification form
                     </button>
                   </Sidebar.Item>
                 )}
-              <Sidebar.Item className="flex-grow">
-                <div className="flex flex-row space-x-4 justify-center bg-slate-200">
+              <Sidebar.Item className="font-bold">
+                <div className="flex flex-row gap-5">
                   <button
                     onClick={() => navigate("/doctorDashboard")}
                     disabled={!isVerified}
@@ -85,8 +96,8 @@ function DoctorDashboard() {
                   <span>{!isVerified && <LockIcon />}</span>
                 </div>
               </Sidebar.Item>
-              <Sidebar.Item className="flex-grow">
-                <div className="flex flex-row space-x-4 justify-center bg-slate-200">
+              <Sidebar.Item className="font-bold">
+                <div className="flex flex-row gap-5">
                   <button
                     onClick={() => handleItemClick("slots")}
                     disabled={!isVerified}
@@ -97,9 +108,9 @@ function DoctorDashboard() {
                 </div>
               </Sidebar.Item>
 
-              <Sidebar.Collapse label="Patients" className="bg-slate-300">
-                <Sidebar.Item className="flex-grow">
-                  <div className="flex flex-row space-x-4 justify-center">
+              <Sidebar.Collapse label="Patients" className="font-bold">
+                <Sidebar.Item className="font-bold">
+                  <div className="flex flex-row gap-5">
                     <button
                       onClick={() => handleItemClick("loginPage")}
                       disabled={!isVerified}
@@ -111,8 +122,8 @@ function DoctorDashboard() {
                 </Sidebar.Item>
               </Sidebar.Collapse>
 
-              <Sidebar.Item className="flex-grow">
-                <div className="flex flex-row space-x-4 justify-center bg-slate-200">
+              <Sidebar.Item className="font-bold">
+                <div className="flex flex-row gap-5">
                   <button
                     onClick={() => handleItemClick("loginPage")}
                     disabled={!isVerified}
@@ -126,27 +137,18 @@ function DoctorDashboard() {
           </Sidebar.Items>
         </Sidebar>
       </div>
+      
 
-      <div className="relative ml-64">
-        <div className="ml-2 mt-2">
-          {profileImage && (
-            <HeaderBar
-              fetchedData={fetchedData}
-              profileImage={profileImage}
-              setIsOptionsOpened={setIsOptionsOpened}
-              isOptionsOpened={isOptionsOpened}
-            />
-          )}
-        </div>
-
-        {!opened && fetchedData && (
+      <div className="ml-72 mt-40 pl-4 pt-5">
+        
+        {/* {!opened && fetchedData && (
           <h1 className="text-center font-bold text-blue-500 weight-20 text-2xl">
             Welcome{" "}
             {fetchedDoctorDetails
               ? fetchedDoctorDetails.firstName
               : fetchedData.username}
           </h1>
-        )}
+        )} */}
 
         {fetchedDoctorDetails &&
           fetchedDoctorDetails.verificationStatus == "1" && (
@@ -187,10 +189,15 @@ function DoctorDashboard() {
 function HeaderBar(props) {
   const navigate = useNavigate();
   return (
-    <div className="flex flex-row min-w-screen p-5 bg-green-300 rounded-lg justify-between m-4 ">
+    <div className="min-w-full flex flex-row justify-between z-50 ">
       <div className="w-40">
         <img src="logo/LogoPlain.png" alt="logo" />
       </div>
+      <span className="font-bold text-2xl text-emerald-500 min-h-full flex flex-col justify-center items-center">
+        Welcome {props.fetchedData ? props.fetchedData.username : ""} 
+      </span>
+
+
       <div className="relative top-3 right-10">
         <Avatar
           bordered
@@ -216,7 +223,7 @@ function HeaderBar(props) {
               className="grow hover:bg-white"
               onClick={() => {
                 localStorage.removeItem("token");
-                navigate("/login");
+                navigate("/home");
               }}
             >
               Log out
@@ -224,6 +231,8 @@ function HeaderBar(props) {
           </div>
         )}
       </div>
+
+
     </div>
   );
 }
