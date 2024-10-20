@@ -98,3 +98,12 @@ export async function bookSlot(bookDetails){
     }
   }
 }
+
+export async function createGoogleUser(userDat){
+  try {
+    
+  } catch (error) {
+    console.log(error)
+  }
+
+}

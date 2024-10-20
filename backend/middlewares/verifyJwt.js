@@ -1,5 +1,6 @@
 const jwt=require("jsonwebtoken")
 const dotenv=require('dotenv')
+const jwtDecode=require('jwt-decode')
 
 dotenv.config()
 

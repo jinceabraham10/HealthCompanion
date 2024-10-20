@@ -5,6 +5,10 @@ const { mailOnSuccessfullRegisteration, mailWithSlotBookingConfirmation } = requ
 const {createDoctor}=require('./doctorController.js');
 const Slot = require("../models/slotModel.js");
 const Doctor = require("../models/doctorModel.js");
+const jwtDecode=require('jwt-decode')
+const jwt=require('jsonwebtoken');
+const { formattedDate } = require("../utils/dateUtil.js");
+const Patient = require("../models/patientModel.js");
 
 //get all users
 exports.getAllUsers = async (req, res) => {
@@ -46,8 +50,16 @@ exports.createUser = async (req, res) => {
       createdAt,
     });
 
-
-    if(role==1){
+    if(role==0){
+      let validId=new mongoose.Types.ObjectId(fetchedData._id)
+      const patient=new Patient({
+        userId:createdUser._id,
+        "createdAt":formattedDate(date)
+      })
+      const fetchedPatientData=await patient.save()
+      console.log(`patient data ${fetchedPatientData}`)
+    }
+    else if(role==1){
       let validId=new mongoose.Types.ObjectId(fetchedData._id)
       await createDoctor({userId: validId,"createdAt":createdAt})
     }
@@ -105,6 +117,51 @@ exports.bookSlot=async(req,res)=>{
     console.log(error)
     return res.status(500).json({message:`error occured while confirming the slot booking ${error}`})
 
+  }
+}
+
+exports.createGoogleUser=async (req,res)=>{
+  try {
+    const {token,role}=req.body
+    const details=await jwtDecode.jwtDecode(token)
+    console.log(details)
+    const date=new Date()
+    const user=new User({
+        username:details.email,
+        email:details.email,
+        createdAt:`${formattedDate(date)}` ,
+        role:role
+    })
+
+    const createdUser=await user.save()
+    await console.log(createdUser)
+    if(role==0){
+      let validId=new mongoose.Types.ObjectId(createdUser._id)
+      const patient=new Patient({
+        userId:createdUser._id,
+        "createdAt":formattedDate(date)
+      })
+      const fetchedPatientData=await patient.save()
+      console.log(`patient data ${fetchedPatientData}`)
+    }
+    else if(role==1){
+      let validId=new mongoose.Types.ObjectId(createdUser._id)
+      await createDoctor({userId: validId,"createdAt":formattedDate(date)})
+    }
+    mailOnSuccessfullRegisteration({
+      username :details.email,
+      email:details.email,
+      role:role,
+      phone:"",
+      createdAt:formattedDate(date),
+    });
+    const token2=await jwt.sign({id:createdUser._id,username:createdUser.username},process.env.JWT_KEY,{expiresIn:'1h'})
+    await console.log(`token created ${token2}`)
+    res.status(200).json({message:"google User created successfully",token:token2,userData:createdUser})
+    
+  } catch (error) {
+    console.log(error)
+    res.status(400).json({message:"Couldn't create the user"})
   }
 }
 

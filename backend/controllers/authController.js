@@ -2,6 +2,8 @@ const User=require('../models/userModel.js')
 const bcrypt=require("bcryptjs")
 const jwt=require('jsonwebtoken')
 const dotenv=require('dotenv')
+const jwtDecode=require('jwt-decode')
+const { formattedDate } = require('../utils/dateUtil.js')
 
 dotenv.config()
 
@@ -119,6 +121,23 @@ exports.adminOnPageLoad=async (req,res)=>{
     } catch (error) {
         console.log(error)
         
+    }
+}
+
+exports.googleUserPresent=async (req,res)=>{
+    try {
+        const {token}=req.body
+        console.log(`token ${token}`)
+        const details=await jwtDecode.jwtDecode(token)
+        console.log(details)
+        const fetchedData=await User.findOne({email:details.email})
+        if(fetchedData){
+            const token2=await jwt.sign({id:fetchedData._id,username:fetchedData.username},process.env.JWT_KEY,{expiresIn:'1h'})
+            return res.status(200).json({message:"google user present",token:token2,userData:fetchedData})
+        }
+        return res.status(200).json({message:"google user present",token:"",userData:fetchedData})
+    } catch (error) {
+        console.log(error)
     }
 }
 

@@ -1,0 +1,30 @@
+.navItem::before{
+
+    content: ' ';
+    position: absolute;
+    background-color: rgb(122, 168, 189);
+    top:60%;
+    height: 2px;
+    width: 0;
+    transition: all .3s;
+    
+
+}
+
+.navItem:hover::before{
+
+    content: ' ';
+    position: absolute;
+    background-color: rgb(122, 168, 189 );
+    top:60%;
+    height: 2px;
+    width: 4rem;
+    visibility: none;
+    
+
+}
+
+.userOptionsItem:hover{
+    background-color: white;
+
+}

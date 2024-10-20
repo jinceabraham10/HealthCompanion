@@ -2,11 +2,12 @@ import axios from "axios";
 import swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 
+
 async function LoginUser(loginData) {
   try {
     const resp=await axios.post('http://localhost:5000/api/auth/login',loginData)
     console.log(resp)
-    swal.fire({
+    await  swal.fire({
       icon:"success",
       title:"Login Successfull",
       text:"Credentials have been verified and welcoming you to HealthCompanion"
@@ -82,6 +83,7 @@ async function DataOnPageLoad(token,role) {
         title:"Login Again",
         text:"Session has been out"
       })
+      return false
 
     }
     
@@ -109,6 +111,57 @@ async function CheckUserPresent(data) {
   } catch (error) {
     
     const resp=error.response.data
+    return false
+  }
+}
+
+export async function GoogleSignIN(token) {
+  try {
+    console.log(token)
+    // const resp=null
+    const resp=await axios.post('http://localhost:5000/api/auth/google/checkUserPresent',{token: token})
+    if(!resp.data.userData){
+      await console.log("Reached Google Sign in")
+      const role=await swal.fire(
+        {
+          title:"Role",
+          input:"select",
+          inputOptions:{
+            0:"patient",
+            1:"doctor",
+            2:"pharmacy",
+            3:"laboratory",
+  
+          },
+          inputPlaceholder:"Select a role to proceed",
+          showCancelButton:true,
+        }
+      )
+      // console.log(`role ${JSON.stringify(role.value)}`)
+      const resp2=await axios.post("http://localhost:5000/api/user/google/createUser",{token:token,role:role.value})
+      console.log(`response after creating the user ${resp2}`)
+      if(resp2.data.userData){
+        swal.fire({
+          icon:"success",
+          title:"Successfully Signed in",
+          text:"Succesfully Siged in using Google Account"
+        })
+      }
+      await localStorage.setItem('token',resp2.data.token)
+      await console.log(`recieved jwt toke ${resp2.data.token}`)
+      return resp2.data.userData  
+        }
+    await localStorage.setItem('token',resp.data.token)
+    await console.log(resp.data.userData)
+    return resp.data.userData
+    
+  } catch (error) {
+    console.log(error)
+    swal.fire({
+      title:"Error",
+      icon:"error",
+      text:"Something went wrong"
+    })
     return false
   }
 }
