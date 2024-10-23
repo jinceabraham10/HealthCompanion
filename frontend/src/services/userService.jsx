@@ -99,11 +99,56 @@ export async function bookSlot(bookDetails){
   }
 }
 
-export async function createGoogleUser(userDat){
+export async function updatePatientProfile(patientData) {
   try {
+    await console.log(patientData)
+    const resp=await axios.post("http://localhost:5000/api/user/updateProfile/patient",patientData)
+    // console.log(resp.data)
+    await swal.fire({
+      icon:"success",
+      title:"Updated Successfull",
+      text:"New details have been updated successfully"
+    })
+    return true
+  } catch (error) {
+    console.log(error)
+    return false
+  }
+  
+}
+
+export async function getAllSlotsBooked(userData) {
+  try {
+    const {patientId}=userData
+    console.log(userData)
+    const resp=await axios.post('http://localhost:5000/api/user/getAllBookedSlots',{patientId:patientId})
+    return resp.data.bookedSlots
     
   } catch (error) {
     console.log(error)
+    return false 
   }
+  
+}
 
+export async function updatePatientProfileImage(patientData) {
+  try {
+    await console.log(patientData)
+    const resp=await axios.post("http://localhost:5000/api/user/updateProfileImage/patient",patientData,{
+      headers:{
+        'Content-Type':"multipart/form-data"
+      }
+    })
+    console.log(resp.data)
+    await swal.fire({
+      icon:"success",
+      title:"Updated Successfull",
+      text:"Profile Image has been updated successfully"
+    })
+    return true
+  } catch (error) {
+    console.log(error)
+    return false
+  }
+  
 }

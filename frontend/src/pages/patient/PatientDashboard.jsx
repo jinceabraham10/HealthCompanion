@@ -3,61 +3,86 @@ import NavBar from "../../components/patient/naviagationBar/NavBar";
 import PatientDoctorPage from "./doctorPage/PatientDoctorPage";
 import ResponsiveAppBar from "../../components/patient/responsiveNavBar/ResponsiveAppBar";
 import MedicinePage from "./medicinePage/MedicinePage";
-import {DataOnPageLoad} from "../.././services/authService"
-import swal from 'sweetalert2'
+import { DataOnPageLoad } from "../.././services/authService";
+import swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import CustomNavBar from "./navBar/CustomNavBar";
 import PatientProfile from "./profile/PatientProfile";
-
+import axios from "axios";
+import BookedSlots from "./bookedSlots/BookedSlots";
+import BookingPage from "./bookingPage/BookingPage";
 
 function PatientDashboard() {
-  const navigate=useNavigate()
-  const [userData,setUserData]=useState(undefined)
-  const [Opened,setOpened]=useState({
-    Doctors:true,
-  })
+  const navigate = useNavigate();
+  const [userData, setUserData] = useState(undefined);
+  const [patientData, setPatientData] = useState(undefined);
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
+  const [openBookingSlot, setOpenBookingSlot] = useState(false);
+  const [Opened, setOpened] = useState({
+    Doctors: true,
+  });
 
-  const load=async ()=>{
-    const user=await DataOnPageLoad(localStorage.getItem('token'),0)
-    if(!user){
-      navigate('/login')
+  const load = async () => {
+    const user = await DataOnPageLoad(localStorage.getItem("token"), 0);
+    if (!user) {
+      navigate("/login");
     }
-    await setUserData(user)
-  }
+    const resp = await axios.post(
+      "http://localhost:5000/api/user/loadData/profile/patient",
+      { userId: user._id }
+    );
+    const fetchedPatientData = resp.data.fetchedPatientData;
+    await setPatientData(fetchedPatientData);
+    await setUserData(user);
+  };
 
-  useEffect(()=>{
-    const token =localStorage.getItem('token')
-    if(token){
-     load()
-   }
-   else{
-    navigate('/login')
-    swal.fire({
-      'icon':'error',
-      'title':'Please  Login',
-      'text':'Please Login to use the services offered'
-    })
-   }
-  },[])
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      load();
+    } else {
+      navigate("/login");
+      swal.fire({
+        icon: "error",
+        title: "Please  Login",
+        text: "Please Login to use the services offered",
+      });
+    }
+  }, []);
 
-  return(
-   <div className="w-full h-full overflow-hidden">
-    <div className="fixed border shadow-lg w-full top-0 bg-gray-100 border-b-red-900  ">
-    {/* <ResponsiveAppBar  setOpened={setOpened} /> */}
-    <CustomNavBar setOpened={setOpened}/>
+  return (
+    <div className="w-full h-full overflow-hidden">
+      <div className="fixed border shadow-lg w-full h-[20%] bg-gray-100 border-b-red-900 z-50">
+        {/* <ResponsiveAppBar  setOpened={setOpened} /> */}
+        {patientData && (
+          <CustomNavBar setOpened={setOpened} patientData={patientData} setOpenBookingSlot={setOpenBookingSlot} />
+        )}
+      </div>
+      <div className="mt-40 overflow-y-auto px-10 py-5 h-[calc(100vh - 80px)]">
+        {Opened.Doctors && userData && (!openBookingSlot)&& (
+          <PatientDoctorPage
+            patient={userData}
+            patientData={patientData}
+            setSelectedDoctor={setSelectedDoctor}
+            setOpenBookingSlot={setOpenBookingSlot}
+          />
+        )}
+        {Opened.Doctors && userData && openBookingSlot && selectedDoctor && (
+          <BookingPage
+            doctor={selectedDoctor}
+            patient={userData}
+            setOpenBookingSlot={setOpenBookingSlot}
+          />
+        )}
+        {Opened.Medicines && <MedicinePage />}
+        {/* <NavBar/> */}
+        {Opened.profile && <PatientProfile patient={userData} />}
+        {Opened.bookedSlots && userData && (
+          <BookedSlots patient={userData} patientData={patientData} />
+        )}
+      </div>
     </div>
-    <div className="mt-56 ml-10 mr-10 h-full">
-    {(Opened.Doctors)&&(userData)&&<PatientDoctorPage patient={userData}/>}
-    {(Opened.Medicines)&&<MedicinePage/>}
-    {/* <NavBar/> */}
-    {(Opened.profile) && <PatientProfile/>}
-    </div>
-   
-
-
-    
-   </div>
-  )
+  );
 }
 
 export default PatientDashboard;

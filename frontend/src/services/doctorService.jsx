@@ -8,7 +8,7 @@ export async function getAllDoctors() {
     // console.log(resp.data.allDoctors)
     return resp.data.allDoctors;
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 }
 
@@ -36,7 +36,7 @@ export async function loadDoctorData({ userId }) {
       { userId }
     );
 
-    console.log(`doctor Details fetchedDoctorData.data.doctorDetails`)
+    console.log(`doctor Details fetchedDoctorData.data.doctorDetails`);
 
     return fetchedDoctorData.data.doctorDetails;
   } catch (error) {
@@ -46,44 +46,52 @@ export async function loadDoctorData({ userId }) {
 
 export async function AddSlot(slot) {
   try {
-
-    const resp=await axios.post('http://localhost:5000/api/doctor/addSlot',slot)
-    console.log(`resp ${resp}`)
-    Swal.fire(
-      {
-        icon:"success",
-        title:"Slot added successfully",
-        text:"The slot has been added successfully"
-
-      }
-    )
-    
+    const resp = await axios.post(
+      "http://localhost:5000/api/doctor/addSlot",
+      slot
+    );
+    console.log(`resp ${resp}`);
+    Swal.fire({
+      icon: "success",
+      title: "Slot added successfully",
+      text: "The slot has been added successfully",
+    });
   } catch (error) {
-    console.log(error)
-    if(error.response.status=="400"){
+    console.log(error);
+    if (error.response.status == "400") {
       Swal.fire({
-        icon:"warning",
-        title:"Timings Overlapping",
-        text:"Times set are overlapping with existing ones"
-      })
+        icon: "warning",
+        title: "Timings Overlapping",
+        text: "Times set are overlapping with existing ones",
+      });
     }
   }
-  
 }
 
 export async function getSetSlots(doctor) {
   try {
-
-    const {_id}=doctor
-    console.log(`_id ${doctor}`)
-    const resp=await axios.post('http://localhost:5000/api/doctor/slots',{_id})
-    console.log(resp)
-    return resp.data.setSlots
-
-    
+    const { _id } = doctor;
+    console.log(`_id ${doctor}`);
+    const resp = await axios.post("http://localhost:5000/api/doctor/slots", {
+      _id,
+    });
+    console.log(resp);
+    return resp.data.setSlots;
   } catch (error) {
-    console.log(error)
-    
+    console.log(error);
   }
-  
+}
+
+export async function getBookedPatients(doctor) {
+  try {
+    const { doctorId } = doctor;
+    const resp = await axios.post(
+      "http://localhost:5000/api/doctor/confirmedSlots",
+      { _id:doctorId }
+    );
+    console.log(resp.data)
+    return resp.data.bookedSlots
+  } catch (error) {
+    console.log(error);
+  }
 }

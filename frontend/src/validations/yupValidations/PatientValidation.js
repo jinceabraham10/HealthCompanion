@@ -1,17 +1,17 @@
 import * as yup from "yup";
 
 export const patientProfileValidationSchema = yup.object().shape({
-  firstName: yup.string().required("Required"),
-  lastName: yup.string().required("Required"),
-  city: yup.string().matches(/^[A-Za-z]+$/, "Last name should not contain numbers or special characters"),
-  state:yup.string().matches(/^[A-Za-z]+$/, "Last name should not contain numbers or special characters"),
-  street: yup.string(),
+  firstName: yup.string().required("Required").matches(/^[A-Za-z]+$/, "Last name should not contain numbers or special characters"),
+  lastName: yup.string().required("Required").matches(/^[A-Za-z]+$/, "Last name should not contain numbers or special characters"),
+  city: yup.string("should be a string").matches(/^[A-Za-z]+$/, "City should not contain numbers or special characters"),
+  state:yup.string("should be a string").matches(/^[A-Za-z]+$/, "State should not contain numbers or special characters"),
+  street: yup.string("should be a string"),
   pincode: yup.number("shoul be a number"),
   profileImage: "",
-  height: "",
-  weight: "",
+  height: yup.number("should be a number"),
+  weight: yup.number("should be a number"),
   gender: "",
-  bloodGroup: "",
+  bloodGroup: yup.string("should be a string"),
   phone: yup.number("shoul be a number"),
   email:yup.string().email()
 });

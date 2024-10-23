@@ -11,7 +11,8 @@ import { useState } from "react";
 import Modal from "react-modal";
 import BookingPage from "../../pages/patient/bookingPage/BookingPage";
 
-function DoctorCardView({ doctor, patient }) {
+function DoctorCardView(props) {
+  const { doctor, patient }=props
   const navigate = useNavigate();
   const [openModal,setOpenModal]=useState(false)
   const closeModal = () => setOpenModal(false);
@@ -62,7 +63,8 @@ function DoctorCardView({ doctor, patient }) {
             //   },
             // });
 
-            setOpenModal(true)
+            props.setOpenBookingSlot(true)
+            props.setSelectedDoctor(doctor)
           }}
         >
           Proceed to Book Slots
@@ -80,7 +82,7 @@ function ModalBox(props) {
     <Modal
       isOpen={props.openModal}
       onRequestClose={props.closeModal}
-      className="flex flex-col jsutify-center w-full h-full ml-10 mr-10 bg-white mt-5 overflow-auto pb-4 "
+      className="flex flex-col jsutify-center w-full h-full ml-10 mr-10 z-50 bg-white mt-5 overflow-auto pb-4 "
       overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center "
       contentLabel="Example Modal"
     >

@@ -26,6 +26,18 @@ const SlotSchema=new mongoose.Schema({
     confirmStatus:{
         type:Boolean,
         default:false
+    },
+    completedStatus:{
+        type:String,
+        default:"0"
+    },
+    patientDescription:{
+        type:String,
+        default:""
+    },
+    doctorPrescription:{
+        type:String,
+        default:""
     }
 })
 

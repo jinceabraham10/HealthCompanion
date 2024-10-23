@@ -26,24 +26,22 @@ exports.getAllDoctors = async (req, res) => {
     if (allDoctors.length == 0) {
       return res.status(404).json({ message: `No Doctors Available` });
     }
-    let profileImageBuffer,profileImagePath,profileImage
-    const updated=allDoctors.map((doctor)=>{
-      const plainDoctor = doctor.toObject(); 
-      profileImagePath=doctor.profileImage
-      profileImageBuffer=fs.readFileSync(profileImagePath)
-      plainDoctor.realProfileImage=profileImageBuffer.toString('base64')
-      return plainDoctor
-      
-  })
-   
+    let profileImageBuffer, profileImagePath, profileImage;
+    const updated = allDoctors.map((doctor) => {
+      const plainDoctor = doctor.toObject();
+      profileImagePath = doctor.profileImage;
+      profileImageBuffer = fs.readFileSync(profileImagePath);
+      plainDoctor.realProfileImage = profileImageBuffer.toString("base64");
+      return plainDoctor;
+    });
+
     // await console.log(updated);
     res
       .status(200)
       .json({ allDoctors: updated, message: "success fetched all doctors" });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(400).json({ message: `error ${error}` });
-    
   }
 };
 
@@ -161,17 +159,15 @@ exports.addSlot = async (req, res) => {
   try {
     console.log(req.body);
     const { _id, date, startTime, endTime } = req.body;
-    const allSlots=await Slot.find({doctorId:_id,date:date})
+    const allSlots = await Slot.find({ doctorId: _id, date: date });
     for (let tempSlot of allSlots) {
       if (startTime >= tempSlot.startTime && startTime <= tempSlot.endTime) {
         return res.status(400).json({ message: "Dates are overlapping" });
-      }
-      else if(endTime>=tempSlot.startTime && endTime<=tempSlot.endTime){
+      } else if (endTime >= tempSlot.startTime && endTime <= tempSlot.endTime) {
         return res.status(400).json({ message: "Times are overlapping" });
-
       }
     }
-    console.log(allSlots)
+    console.log(allSlots);
     const slot = new Slot({ date, startTime, endTime, doctorId: _id });
     const addedSlot = await slot.save();
 
@@ -183,14 +179,47 @@ exports.addSlot = async (req, res) => {
   }
 };
 
-exports.existingSlots=async (req,res)=>{
+exports.existingSlots = async (req, res) => {
   try {
     const { _id } = req.body;
-    const allSlots=await Slot.find({doctorId:_id})
-    allSlots.sort((a,b)=> (new Date(a.date)- new Date(b.date)))
-    res.status(200).json({message:"succesfully fetched already set slots",setSlots:allSlots})
-    
+    const allSlots = await Slot.find({ doctorId: _id }).populate("patientId");
+    allSlots.sort((a, b) => new Date(a.date) - new Date(b.date));
+    res
+      .status(200)
+      .json({
+        message: "succesfully fetched already set slots",
+        setSlots: allSlots,
+      });
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
+
+exports.confirmedSlots = async (req, res) => {
+  try {
+    const { _id } = req.body;
+    const allSlots = await Slot.find({
+      doctorId: _id,
+      confirmStatus: true,
+    }).populate({ path: "patientId", populate: { path: "userId" } });
+    allSlots.sort((a, b) => new Date(a.date) - new Date(b.date));
+    let profileImageBuffer, profileImagePath, profileImage;
+    const updatedSlots = allSlots.map((slot) => {
+      const tempSlot = slot.toObject();
+      if (tempSlot.patientId.profileImage != "") {
+        profileImagePath = slot.patientId.profileImage;
+        profileImageBuffer = fs.readFileSync(profileImagePath);
+        tempSlot.patientId.realProfileImage = profileImageBuffer.toString("base64");
+      }
+      return tempSlot
+    });
+    res
+      .status(200)
+      .json({
+        message: "succesfully fetched already set slots",
+        bookedSlots: updatedSlots,
+      });
+  } catch (error) {
+    console.log(error);
+  }
+};

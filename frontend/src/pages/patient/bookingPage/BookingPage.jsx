@@ -7,8 +7,9 @@ import { bookSlot } from "../../../services/userService";
 import { convertTo12Hour } from "../../doctor/slot/BookingSlots";
 import Swal from "sweetalert2";
 
+
 function BookingPage(props) {
-  const { doctor,patient,closeModal } = props;
+  const { doctor,patient } = props;
   const [slotsAvailable,setSlotsAvailable]=useState([])
   const [slotsDisplayed,setSlotsDisplayed]=useState([])
   const [dates,setDates]=useState(new Set())
@@ -16,7 +17,7 @@ function BookingPage(props) {
   
   
   const todayDate=new Date()
-  // console.log(`patient ${JSON.stringify(patient)}`);
+  console.log(`patient ${JSON.stringify(doctor)}`);
 
 
   const onLoad=async ()=>{
@@ -110,13 +111,13 @@ function BookingPage(props) {
         <h2 className="font-bold">Slots Available for Booking</h2>
         {
           Array.from(datesDisplayed).map((date,index)=>(
-
+            (new Date(date)>= new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate())) &&
             <div key={index} className="flex flex-col gap-8 border rounded-lg shadow-lg p-4">
               <h2 className="font-bold text-emerald-500">{date}</h2>
               <div className="grid grid-cols-3 gap-2">
                 {
                   slotsDisplayed.map((slot,index)=>(
-                    (slot.date==date) ?
+                    (slot.date==date) && (new Date(slot.date)>= new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate()))  ?
                      <div key={index} className={`border p-4 flex flex-col gap-4 rounded shadow-xl ${ (slot.confirmStatus) ? `bg-red-300`:`bg-white`}`}>
                      {(slot.confirmStatus) && <h3 className="font-bold text-white">slot has been booked</h3>} 
                       <div className="flex flex-row justify-between ">
@@ -162,15 +163,43 @@ function BookingPage(props) {
 
           ))
         }
-        <button
+        {/* <button
             className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
             onClick={closeModal}
           >
             Close 
-          </button>
+          </button> */}
       </div>
     </div>
   );
 }
+
+export function formattedDate(date){
+  const CreatedDate = {
+      year: date.getFullYear() + 1,
+      month: date.getMonth() + 1,
+      day: date.getDay() + 1,
+      hour: date.getHours() % 12 ? date.getHours() % 12 : 12,
+      minute:
+        date.getMinutes() % 60
+          ? date.getMinutes() % 60 < 10
+            ? "0" + (date.getMinutes() % 60)
+            : date.getMinutes() % 60
+          : "00",
+      second:
+        date.getSeconds() % 60
+          ? date.getSeconds() % 60 < 10
+            ? "0" + (date.getSeconds() % 60)
+            : date.getSeconds() % 60
+          : "00",
+      milliseconds: date.getMilliseconds(),
+      ampm: date.getHours() > 12 ? "pm" : "am",
+    };
+    const accountCreatedat = `${CreatedDate.year}/${CreatedDate.month}/${CreatedDate.day} ${CreatedDate.hour}:${CreatedDate.minute}:${CreatedDate.second} ${CreatedDate.ampm}`;
+    return accountCreatedat
+}
+
+
+
 
 export default BookingPage;

@@ -20,6 +20,8 @@
     "@mui/icons-material": "^6.1.1",
     "@mui/material": "^6.1.1",
     "axios": "^1.7.3",
+    "datejs": "^1.0.0-rc3",
+    "dayjs": "^1.11.13",
     "dotenv": "^16.4.5",
     "flowbite-react": "^0.10.1",
     "formik": "^2.4.6",

@@ -10,6 +10,8 @@ import BookingSlots from "../slot/BookingSlots";
 import Modal from "react-modal";
 
 import Login from "../../../components/login/Login";
+import BookedPatients from "../bookedPatients/BookedPatients";
+import BookingSlots1 from "../slot/BookingSlots1";
 
 function DoctorDashboard() {
   const navigate = useNavigate();
@@ -57,10 +59,10 @@ function DoctorDashboard() {
   }, [fetchedDoctorDetails]);
 
   return (
-    <div className="h-full">
+    <div className="min-h-full">
       <ModalPopup isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
 
-      <div className="fixed w-screen top-0 z-50 bg-gray-100 p-4 ">
+      <div className="fixed w-screen top-0 z-50 bg-gray-100 p-4 h-[20%] border border-b-green-950 z-50 ">
           {profileImage && (
             <HeaderBar
               fetchedData={fetchedData}
@@ -96,17 +98,31 @@ function DoctorDashboard() {
                   <span>{!isVerified && <LockIcon />}</span>
                 </div>
               </Sidebar.Item>
-              <Sidebar.Item className="font-bold">
+              <Sidebar.Collapse label="Slots" className="font-bold">
+                <Sidebar.Item className="font-bold">
                 <div className="flex flex-row gap-5">
                   <button
                     onClick={() => handleItemClick("slots")}
                     disabled={!isVerified}
                   >
-                    Booking Slot
+                    Set Slot
                   </button>
                   <span>{!isVerified && <LockIcon />}</span>
                 </div>
-              </Sidebar.Item>
+                </Sidebar.Item>
+                <Sidebar.Item className="font-bold">
+                <div className="flex flex-row gap-5">
+                  <button
+                    onClick={() => handleItemClick("bookedPatients")}
+                    disabled={!isVerified}
+                  >
+                    Booked Patients
+                  </button>
+                  <span>{!isVerified && <LockIcon />}</span>
+                </div>
+                </Sidebar.Item>
+                
+              </Sidebar.Collapse>
 
               <Sidebar.Collapse label="Patients" className="font-bold">
                 <Sidebar.Item className="font-bold">
@@ -139,7 +155,7 @@ function DoctorDashboard() {
       </div>
       
 
-      <div className="ml-72 mt-40 pl-4 pt-5">
+      <div className="ml-72 mt-40 pl-4 pt-5 h-[80%]">
         
         {/* {!opened && fetchedData && (
           <h1 className="text-center font-bold text-blue-500 weight-20 text-2xl">
@@ -178,7 +194,12 @@ function DoctorDashboard() {
           {opened == "slots" &&
             fetchedData &&
             fetchedDoctorDetails &&
-            fetchedDoctorDetails.verificationStatus == "0" && <BookingSlots fetchedDoctorDetails={fetchedDoctorDetails} fetchedData={fetchedData} />}
+            fetchedDoctorDetails.verificationStatus == "0" && <BookingSlots1 fetchedDoctorDetails={fetchedDoctorDetails} fetchedData={fetchedData} />}
+          
+          {opened == "bookedPatients" &&
+            fetchedData &&
+            fetchedDoctorDetails &&
+            fetchedDoctorDetails.verificationStatus == "0" && <BookedPatients fetchedDoctorDetails={fetchedDoctorDetails} fetchedData={fetchedData} />}
           {opened == "loginPage" && <Login />}
         </div>
       </div>

@@ -9,7 +9,6 @@
       
       const [doctors,setDoctors]=useState([])
       const [showSlotPage,setShowSlotPage]=useState(false)
-
       useEffect(()=>{
         const onLoad=async ()=>{
           const allDoctors=await getAllDoctors()
@@ -33,11 +32,10 @@
        <div className="grid grid-cols-2 gap-4">
           {
             (doctors) ? doctors.map(doctor=>(
-              <DoctorCardView key={doctor._id} doctor={doctor} patient={props.patient}/>
+              <DoctorCardView key={doctor._id} doctor={doctor} patient={props.patient} setSelectedDoctor={props.setSelectedDoctor} setOpenBookingSlot={props.setOpenBookingSlot}/>
             )): "no doctors"
           }
-          
-
+                   
        </div>
       )
     }

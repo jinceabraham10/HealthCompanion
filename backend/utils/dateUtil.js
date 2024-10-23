@@ -1,3 +1,16 @@
+require('datejs')
+
+exports.nextWeekDays=()=>{
+
+  const today=new Date()
+  console.log(today)
+  today=today.addDays(2)
+  const formattedDate = nextWeek.toString("MMMM dd, yyyy");
+  console.log(formattedDate);
+
+  
+}
+
 exports.formattedDate=(date)=>{
     const CreatedDate = {
         year: date.getFullYear() + 1,

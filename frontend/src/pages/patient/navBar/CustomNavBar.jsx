@@ -3,7 +3,8 @@ import styles from "./CustomNavBarCss.module.css";
 import { useNavigate } from "react-router-dom";
 
 function CustomNavBar(props) {
-  const { setOpened } = props;
+  const { setOpened ,patientData} = props;
+  const [doctorOptionsOpened,setDoctorOptionsOpened]=useState(false)
   const [userOptionsOpened,setUserOptionsOpened]=useState(false)
   const navigate = useNavigate();
 
@@ -19,12 +20,32 @@ function CustomNavBar(props) {
             className={`${styles.navBar} navBar flex flex-row gap-8 font-bold text-emerald-700`}
           >
             <button className={` text-center ${styles.navItem} text-pretty `} 
-            onClick={(e)=>{
-              setOpened({Doctors:true})
-
+            onClick={async (e)=>{
+              await setDoctorOptionsOpened(!doctorOptionsOpened)
+              
             }}>
-              Doctors
+              Doctors     
             </button>
+            <nav
+            id="id_doctorOptions "
+            className={`${styles.userOptions} ${(doctorOptionsOpened?'visible':'invisible')} absolute h-34 top-24  border z-50 w-42 p-4 bg-slate-300 rounded-lg  flex flex-col gap-4`}
+          >
+            <button className={`${styles.userOptionsItem}`} onClick={()=>{
+              setOpened({Doctors:true})
+              setDoctorOptionsOpened(!doctorOptionsOpened)
+              props.setOpenBookingSlot(false)
+            }}>find Doctors</button>
+            <button
+              className={`${styles.userOptionsItem}`}
+              onClick={() => {
+                setOpened({bookedSlots:true})
+              setDoctorOptionsOpened(!doctorOptionsOpened)
+                
+              }}
+            >
+              Show Booked Slots
+            </button>
+          </nav>
             <button className={` text-center ${styles.navItem} text-pretty`}>
               Pharmacy
             </button>
@@ -36,7 +57,7 @@ function CustomNavBar(props) {
 
         <div className="rounded-full">
           <img
-            src="logo/doctor.png"
+            src={`data:image/jpeg;base64,${patientData.realProfileImage}`}
             alt="logo"
             className="relative border shadow-md  bottom-5 rounded-full w-24 h-24"
             onClick={() => {

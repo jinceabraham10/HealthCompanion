@@ -4,6 +4,7 @@ const jwt=require('jsonwebtoken')
 const dotenv=require('dotenv')
 const jwtDecode=require('jwt-decode')
 const { formattedDate } = require('../utils/dateUtil.js')
+const Patient = require('../models/patientModel.js')
 
 dotenv.config()
 
@@ -140,4 +141,5 @@ exports.googleUserPresent=async (req,res)=>{
         console.log(error)
     }
 }
+
 

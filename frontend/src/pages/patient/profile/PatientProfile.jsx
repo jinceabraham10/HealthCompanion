@@ -1,50 +1,120 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Avatar, FileInput, FloatingLabel } from "flowbite-react";
 import { useFormik } from "formik";
 import { patientProfileValidationSchema } from "../../../validations/yupValidations/PatientValidation";
+import axios from "axios";
+import { updatePatientProfile, updatePatientProfileImage } from "../../../services/userService";
 
-function PatientProfile() {
+function PatientProfile(props) {
+  const { patient } = props;
   const [iseditable, setIseditable] = useState(false);
+  const [isProfileEditable, setIsProfileEditable] = useState(false);
+  const [realProfileImage,setRealProfileImage]=useState(undefined)
   const formik = useFormik({
     initialValues: {
+      _id: patient._id,
       firstName: "",
       lastName: "",
       city: "",
       state: "",
       street: "",
       pincode: "",
+      country: "",
       profileImage: "",
       height: "",
       weight: "",
       gender: "",
       bloodGroup: "",
       phone: "",
-      email:""
+      email: "",
+      
     },
     validationSchema: patientProfileValidationSchema,
     onSubmit: async (values, action) => {
-        console.log(formik.values.profileImage)
+      const formData = new FormData();
+      Object.keys(values).forEach(async (key) => {
+        await formData.append(key, values[key]);
+      });
+      const patientData = await updatePatientProfile(values);
+      if (patientData) {
+        await onLoad();
+      }
     },
   });
-  console.log(`values ${JSON.stringify(formik.values.profileImage)}`);
+  // console.log(`values ${JSON.stringify(formik.values.gender)}`);
   console.log(`error ${JSON.stringify(formik.errors)}`);
 
+  const onLoad = async () => {
+    try {
+      const resp = await axios.post(
+        "http://localhost:5000/api/user/loadData/profile/patient",
+        { userId: patient._id }
+      );
+      const fetchedPatientData = resp.data.fetchedPatientData;
+      if (fetchedPatientData) {
+        formik.setFieldValue("firstName", fetchedPatientData.firstName);
+        formik.setFieldValue("lastName", fetchedPatientData.lastName);
+        formik.setFieldValue("email", patient.email);
+        formik.setFieldValue("height", fetchedPatientData.height);
+        formik.setFieldValue("weight", fetchedPatientData.weight);
+        formik.setFieldValue("bloodGroup", fetchedPatientData.bloodGroup);
+        formik.setFieldValue("city", fetchedPatientData.userId.address.city);
+        formik.setFieldValue("state", fetchedPatientData.userId.address.state);
+        formik.setFieldValue("gender", fetchedPatientData.gender);
+        formik.setFieldValue(
+          "country",
+          fetchedPatientData.userId.address.country
+        );
+        formik.setFieldValue(
+          "pincode",
+          fetchedPatientData.userId.address.pincode
+        );
+        formik.setFieldValue("profileImage", fetchedPatientData.profileImage);
+        await setRealProfileImage(fetchedPatientData.realProfileImage)
+        formik.setFieldValue("phone", fetchedPatientData.userId.phone[0]);
+        // await console.log(`gender ${JSON.stringify(fetchedPatientData)}`);
+        document.getElementById(`id_${fetchedPatientData.gender}`).checked =
+          "true";
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    onLoad();
+  }, []);
+
+
+  const handleProfileSave=async ()=>{
+    if(formik.values.profileImage){
+      const fetchedData=await updatePatientProfileImage({
+        _id:formik.values._id,
+        profileImage:formik.values.profileImage
+      })
+      if(fetchedData){
+        onLoad()
+      }
+    }
+
+  }
+
   return (
-    <div className="w-full p-10 mb-10  h-inherit ">
-      <div className={`fixed w-full ml-40  flex flex-row justify-start `}>
+    <div className="w-full scroll-smooth overflow-y p-10 mb-10 flex flex-row items-center justify-center ">
+      <div className={`fixed w-full ml-40 top-40 flex flex-row justify-start `}>
         <button
-          className={`border p-2 w-24 rounded-lg ${
+          className={`border  p-2 w-32 rounded-lg ${
             iseditable ? "bg-green-400" : "bg-red-600"
           }`}
           onClick={(e) => {
-            setIseditable(true);
+            setIseditable(!iseditable);
           }}
         >
-          Edit
+          {iseditable ? "No Changes" : "Edit"}
         </button>
       </div>
       <form
-        className="flex flex-col items-center w-full gap-6 "
+        className="flex flex-col w-1/2 gap-6 "
         onSubmit={formik.handleSubmit}
       >
         <div>
@@ -53,16 +123,36 @@ function PatientProfile() {
           </h1>
         </div>
         <div className="flex flex-row gap-8 items-center ">
-          <Avatar rounded size={`lg`} />
+          <Avatar
+            img={
+              realProfileImage &&
+              `data:image/jpeg;base64,${realProfileImage}`
+            }
+            rounded
+            size={`lg`}
+          />
           <FileInput
             id="id_fileProfile"
             accept=".png"
             className=""
-            required
             onChange={async (e) => {
               await formik.setFieldValue("profileImage", e.target.files[0]);
+              await setIsProfileEditable(true)
             }}
           />
+
+          <button
+            id="id_profileSave"
+            className={`border  p-2 w-50 rounded-lg bg-green-400`}
+            disabled={!isProfileEditable}
+            onClick={async (e) => {
+              await setIsProfileEditable(false)
+              await handleProfileSave()
+              
+            }}
+          >
+            Save Profile Image
+          </button>
         </div>
         <div className="flex flex-row gap-4">
           <FloatingLabel
@@ -105,16 +195,27 @@ function PatientProfile() {
         <div className="flex justify-between w-72">
           <label htmlFor="gender">gender</label>
           <div className="flex flex-row gap-2 items-center">
-            <input type="radio" name="gender" value="male" id="id_male" onChange={(e)=>{
-                formik.setFieldValue('gender',e.target.value)
-            }} />
+            <input
+              type="radio"
+              name="gender"
+              value="male"
+              id="id_male"
+              onChange={(e) => {
+                formik.setFieldValue("gender", e.target.value);
+              }}
+            />
             <label htmlFor="male">male</label>
           </div>
           <div className="flex flex-row gap-2 items-center">
-            <input type="radio" name="gender" value="female" id="id_male"
-            onChange={(e)=>{
-                formik.setFieldValue('gender',e.target.value)
-            }} />
+            <input
+              type="radio"
+              name="gender"
+              value="female"
+              id="id_female"
+              onChange={(e) => {
+                formik.setFieldValue("gender", e.target.value);
+              }}
+            />
             <label htmlFor="female">Female</label>
           </div>
           <span>{formik.errors.gender ? "Choose a gender" : ""}</span>
@@ -222,6 +323,7 @@ function PatientProfile() {
               ? formik.errors.email
               : " "
           }
+          disabled
         />
         <FloatingLabel
           variant="outlined"
@@ -242,7 +344,7 @@ function PatientProfile() {
         <FloatingLabel
           variant="outlined"
           label="Weight"
-          value={formik.values.state}
+          value={formik.values.weight}
           name="weight"
           onBlur={formik.handleBlur}
           onChange={formik.handleChange}
@@ -250,7 +352,7 @@ function PatientProfile() {
             formik.touched.weight && formik.errors.weight ? "error" : "success"
           }
           helperText={
-            formik.touched.state && formik.errors.state
+            formik.touched.weight && formik.errors.weight
               ? formik.errors.weight
               : " "
           }
@@ -258,12 +360,14 @@ function PatientProfile() {
         <FloatingLabel
           variant="outlined"
           label="Blood Group"
-          value={formik.values.state}
+          value={formik.values.bloodGroup}
           name="bloodGroup"
           onBlur={formik.handleBlur}
           onChange={formik.handleChange}
           color={
-            formik.touched.bloodGroup && formik.errors.bloodGroup ? "error" : "success"
+            formik.touched.bloodGroup && formik.errors.bloodGroup
+              ? "error"
+              : "success"
           }
           helperText={
             formik.touched.bloodGroup && formik.errors.bloodGroup
