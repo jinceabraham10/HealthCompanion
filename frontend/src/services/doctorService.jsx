@@ -70,10 +70,10 @@ export async function AddSlot(slot) {
 
 export async function getSetSlots(doctor) {
   try {
-    const { _id } = doctor;
+    const { _id,date } = doctor;
     console.log(`_id ${doctor}`);
     const resp = await axios.post("http://localhost:5000/api/doctor/slots", {
-      _id,
+      _id,date
     });
     console.log(resp);
     return resp.data.setSlots;
@@ -94,4 +94,34 @@ export async function getBookedPatients(doctor) {
   } catch (error) {
     console.log(error);
   }
+}
+
+export async function deleteSlot(slotDetails) {
+  try {
+
+    const resp=await axios.post("http://localhost:5000/api/doctor/deleteSlot",slotDetails)
+    await Swal.fire({
+      icon:"question",
+      title:"Confirm Deletion",
+      text:"Please confirm Deletion of the slot",
+      confirmButtonText:"Delete",
+      showCancelButton:true
+
+    }).then((result)=>{
+      if(result.isConfirmed){
+        Swal.fire("Slot Deleted Successfully","","success")
+      }
+    })
+    
+  } catch (error) {
+    Swal.fire(
+      {
+        icon:"error",
+        title:"A patient has already booked the slot",
+        text:"The slot has been already been booked thus can't be cancelled"
+      }
+    )
+    console.log(error)
+  }
+  
 }

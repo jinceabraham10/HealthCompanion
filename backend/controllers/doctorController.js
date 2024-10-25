@@ -1,6 +1,6 @@
 const { mongoose } = require("mongoose");
 const Doctor = require("../models/doctorModel.js");
-const { updateOne, base } = require("../models/userModel.js");
+const { updateOne, base, populate } = require("../models/userModel.js");
 const fs = require("fs");
 const path = require("path");
 const Slot = require("../models/slotModel.js");
@@ -20,7 +20,7 @@ exports.submitForVerification = async (req, res) => {
 
 exports.getAllDoctors = async (req, res) => {
   try {
-    const allDoctors = await Doctor.find({ verificationStatus: "0" }).populate(
+    const allDoctors = await Doctor.find({ verificationStatus: "0",status:"0" }).populate(
       "userId"
     );
     if (allDoctors.length == 0) {
@@ -181,8 +181,8 @@ exports.addSlot = async (req, res) => {
 
 exports.existingSlots = async (req, res) => {
   try {
-    const { _id } = req.body;
-    const allSlots = await Slot.find({ doctorId: _id }).populate("patientId");
+    const { _id,date } = req.body;
+    const allSlots = await Slot.find({ doctorId: _id ,date:date}).populate({path: "patientId", populate: { path: "userId" }});
     allSlots.sort((a, b) => new Date(a.date) - new Date(b.date));
     res
       .status(200)
@@ -223,3 +223,36 @@ exports.confirmedSlots = async (req, res) => {
     console.log(error);
   }
 };
+
+exports.allSlots = async (req, res) => {
+  try {
+    const { _id } = req.body;
+    const allSlots = await Slot.find({ doctorId: _id }).populate({path: "doctorId", populate: { path: "userId" }});
+    allSlots.sort((a, b) => new Date(a.date) - new Date(b.date));
+    res
+      .status(200)
+      .json({
+        message: "succesfully fetched already set slots",
+        setSlots: allSlots,
+      });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+exports.deleteSlot=async (req,res)=>{
+  try {
+
+    const {date,doctorId,startTime}=req.body
+    const fetchedSlotData=await Slot.findOne({date:date,doctorId:doctorId,startTime:startTime})
+    if(fetchedSlotData.confirmStatus){
+      return res.status(403).json({message:"Aleady booked by a Patient for Consulation"})
+    }
+    const deletedSlot=await Slot.deleteOne({date:date,doctorId:doctorId,startTime:startTime})
+    console.log(`deleted Slot ${deletedSlot}`)
+    res.status(200).json({message:"slot deleted successfully"})
+    
+  } catch (error) {
+    console.log(error)
+  }
+}

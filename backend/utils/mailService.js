@@ -76,3 +76,5 @@ exports.mailWithSlotBookingConfirmation = async (mailDetails) => {
     console.log(error);
   }
 };
+
+

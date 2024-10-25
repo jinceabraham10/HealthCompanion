@@ -38,6 +38,9 @@ const SlotSchema=new mongoose.Schema({
     doctorPrescription:{
         type:String,
         default:""
+    },
+    description:{
+        type:String
     }
 })
 

@@ -11,6 +11,7 @@ import PatientProfile from "./profile/PatientProfile";
 import axios from "axios";
 import BookedSlots from "./bookedSlots/BookedSlots";
 import BookingPage from "./bookingPage/BookingPage";
+import ConsultationSoon from "./consultationSoon/ConsultationSoon";
 
 function PatientDashboard() {
   const navigate = useNavigate();
@@ -52,14 +53,18 @@ function PatientDashboard() {
 
   return (
     <div className="w-full h-full overflow-hidden">
-      <div className="fixed border shadow-lg w-full h-[20%] bg-gray-100 border-b-red-900 z-50">
+      <div className="fixed border shadow-lg w-full h-[15%] bg-gray-100 border-b-red-900 z-50">
         {/* <ResponsiveAppBar  setOpened={setOpened} /> */}
         {patientData && (
-          <CustomNavBar setOpened={setOpened} patientData={patientData} setOpenBookingSlot={setOpenBookingSlot} />
+          <CustomNavBar
+            setOpened={setOpened}
+            patientData={patientData}
+            setOpenBookingSlot={setOpenBookingSlot}
+          />
         )}
       </div>
       <div className="mt-40 overflow-y-auto px-10 py-5 h-[calc(100vh - 80px)]">
-        {Opened.Doctors && userData && (!openBookingSlot)&& (
+        {Opened.Doctors && userData && !openBookingSlot && (
           <PatientDoctorPage
             patient={userData}
             patientData={patientData}
@@ -70,15 +75,20 @@ function PatientDashboard() {
         {Opened.Doctors && userData && openBookingSlot && selectedDoctor && (
           <BookingPage
             doctor={selectedDoctor}
-            patient={userData}
+            patient={patientData}
             setOpenBookingSlot={setOpenBookingSlot}
           />
         )}
         {Opened.Medicines && <MedicinePage />}
         {/* <NavBar/> */}
         {Opened.profile && <PatientProfile patient={userData} />}
+
         {Opened.bookedSlots && userData && (
           <BookedSlots patient={userData} patientData={patientData} />
+        )}
+
+        {Opened.consultationToday && userData && (
+          <ConsultationSoon patient={userData} patientData={patientData} />
         )}
       </div>
     </div>

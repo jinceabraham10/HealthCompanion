@@ -100,8 +100,8 @@ function PatientProfile(props) {
   }
 
   return (
-    <div className="w-full scroll-smooth overflow-y p-10 mb-10 flex flex-row items-center justify-center ">
-      <div className={`fixed w-full ml-40 top-40 flex flex-row justify-start `}>
+    <div className="w-full scroll-smooth overflow-y p-10 mb-10 flex flex-row items-center justify-center border rounded-lg border-blue-700  ">
+      {/* <div className={`fixed w-full ml-40 top-40 flex flex-row justify-start `}>
         <button
           className={`border  p-2 w-32 rounded-lg ${
             iseditable ? "bg-green-400" : "bg-red-600"
@@ -112,7 +112,7 @@ function PatientProfile(props) {
         >
           {iseditable ? "No Changes" : "Edit"}
         </button>
-      </div>
+      </div> */}
       <form
         className="flex flex-col w-1/2 gap-6 "
         onSubmit={formik.handleSubmit}

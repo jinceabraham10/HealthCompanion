@@ -94,18 +94,19 @@ exports.getUserById = async (req, res) => {
 
 exports.bookSlot = async (req, res) => {
   try {
-    const { patientId, slotId } = req.body;
+    const { patientId, slotId,description } = req.body;
+    await console.log(`recieved data ${JSON.stringify(req.body)}`)
     const fetchSlot = await Slot.findOne({ _id: slotId });
     if (fetchSlot.confirmStatus) {
       return res.status(400).json({ message: "slot is already confirmed" });
     }
-    const userBasicData = await Patient.findOne({ userId: patientId }).populate('userId');
+    const userBasicData = await Patient.findOne({ _id: patientId }).populate('userId');
     const doctorData = await Doctor.findOne({
       _id: fetchSlot.doctorId,
     }).populate("userId");
     const confirmedSlot = await Slot.updateOne(
       { _id: slotId },
-      { $set: { confirmStatus: true, patientId: userBasicData._id } },
+      { $set: { confirmStatus: true, patientId: userBasicData._id,patientDescription:description  } },
       { new: true }
     );
     if (!confirmedSlot) {
@@ -314,4 +315,5 @@ exports.updateProfileImage = async (req, res) => {
     console.log(error);
   }
 };
+
 

@@ -3,76 +3,121 @@ import styles from "./CustomNavBarCss.module.css";
 import { useNavigate } from "react-router-dom";
 
 function CustomNavBar(props) {
-  const { setOpened ,patientData} = props;
-  const [doctorOptionsOpened,setDoctorOptionsOpened]=useState(false)
-  const [userOptionsOpened,setUserOptionsOpened]=useState(false)
+  const { setOpened, patientData } = props;
+  const [doctorOptionsOpened, setDoctorOptionsOpened] = useState(false);
+  const [userOptionsOpened, setUserOptionsOpened] = useState(false);
   const navigate = useNavigate();
 
-
   return (
-    <div className="w-full flex flex-row  items-center p-2 ">
+    <div className="w-full flex flex-row  items-center p-2 h-[15vh] border">
       <div className="relative flex flex-row w-full items-center justify-between mr-5">
         <div className="w-52">
-          <img src="logo/LogoPlain.png" alt="logo" className="w-52 h-40" />
+          <img
+            src="logo/LogoPlain.png"
+            alt="logo"
+            className="w-[17vw] h-[18vh]"
+          />
         </div>
         <div className="flex">
           <nav
             className={`${styles.navBar} navBar flex flex-row gap-8 font-bold text-emerald-700`}
           >
-            <button className={` text-center ${styles.navItem} text-pretty `} 
-            onClick={async (e)=>{
-              await setDoctorOptionsOpened(!doctorOptionsOpened)
-              
-            }}>
-              Doctors     
-            </button>
-            <nav
-            id="id_doctorOptions "
-            className={`${styles.userOptions} ${(doctorOptionsOpened?'visible':'invisible')} absolute h-34 top-24  border z-50 w-42 p-4 bg-slate-300 rounded-lg  flex flex-col gap-4`}
-          >
-            <button className={`${styles.userOptionsItem}`} onClick={()=>{
-              setOpened({Doctors:true})
-              setDoctorOptionsOpened(!doctorOptionsOpened)
-              props.setOpenBookingSlot(false)
-            }}>find Doctors</button>
             <button
-              className={`${styles.userOptionsItem}`}
-              onClick={() => {
-                setOpened({bookedSlots:true})
-              setDoctorOptionsOpened(!doctorOptionsOpened)
-                
+              className={` text-center ${styles.navItem} text-pretty `}
+              onClick={async (e) => {
+                await setDoctorOptionsOpened(!doctorOptionsOpened);
               }}
             >
-              Show Booked Slots
+              Doctors
             </button>
-          </nav>
+            <nav
+              id="id_doctorOptions "
+              className={`${styles.userOptions} ${
+                doctorOptionsOpened ? "visible" : "invisible"
+              } absolute h-34 top-24  border z-50 w-42 p-4 bg-slate-300 rounded-lg  flex flex-col gap-4`}
+            >
+              <button
+                className={`${styles.userOptionsItem}`}
+                onClick={() => {
+                  setOpened({ Doctors: true });
+                  setDoctorOptionsOpened(!doctorOptionsOpened);
+                  props.setOpenBookingSlot(false);
+                }}
+              >
+                find Doctors
+              </button>
+              <button
+                className={`${styles.userOptionsItem}`}
+                onClick={() => {
+                  setOpened({ bookedSlots: true });
+                  setDoctorOptionsOpened(!doctorOptionsOpened);
+                }}
+              >
+                Show Booked Slots
+              </button>
+            </nav>
             <button className={` text-center ${styles.navItem} text-pretty`}>
-              Pharmacy
+              Booked Slots
             </button>
             <button className={` text-center ${styles.navItem} text-pretty`}>
-              Laboratory
+              Prescriptions
+            </button>
+            <button className={` text-center ${styles.navItem} text-pretty`} onClick={()=>{
+              setOpened({consultationToday:true})
+            }}>
+              Consultation Today
+            </button>
+            <button
+              className={`${styles.navItem}`}
+              onClick={() => {
+                setOpened({ profile: true });
+                // setUserOptionsOpened(!userOptionsOpened);
+              }}
+            >
+              Profile
             </button>
           </nav>
         </div>
 
-        <div className="rounded-full">
+        <div className="relative flex flex-row gap-4 ">
+          <div className="flex flex-col gap-4 relative  justify-center items-center font-bold ">
+            <pre className="font-bold">
+              {`Hi, ${patientData.firstName} ${patientData.lastName}`}
+            </pre>
+            <button
+              className={`${styles.userOptionsItem} border px-5 py-1 rounded-lg bg-red-500 font-bold`}
+              onClick={() => {
+                localStorage.removeItem("token");
+                navigate("/home");
+              }}
+            >
+              Log out
+            </button>
+          </div>
           <img
             src={`data:image/jpeg;base64,${patientData.realProfileImage}`}
             alt="logo"
-            className="relative border shadow-md  bottom-5 rounded-full w-24 h-24"
+            className="relative border shadow-md  bottom-5 rounded-full -top-1 w-24 h-24"
             onClick={() => {
-              setUserOptionsOpened(!userOptionsOpened)
-
+              setUserOptionsOpened(!userOptionsOpened);
             }}
           />
+
           <nav
             id="id_userOptions "
-            className={`${styles.userOptions} ${(userOptionsOpened?'visible':'invisible')} absolute h-34 right-5 border z-50 w-36 p-4 bg-slate-300 rounded-lg right-20 bottom-0 flex flex-col gap-4`}
+            className={`${styles.userOptions} ${
+              userOptionsOpened ? "visible" : "invisible"
+            } absolute h-34 right-5 border z-50 w-36 p-4 bg-slate-300 rounded-lg right-20 bottom-0 flex flex-col gap-4`}
           >
-            <button className={`${styles.userOptionsItem}`} onClick={()=>{
-              setOpened({profile:true})
-              setUserOptionsOpened(!userOptionsOpened)
-            }}>profile</button>
+            <button
+              className={`${styles.userOptionsItem}`}
+              onClick={() => {
+                setOpened({ profile: true });
+                setUserOptionsOpened(!userOptionsOpened);
+              }}
+            >
+              profile
+            </button>
             <button
               className={`${styles.userOptionsItem}`}
               onClick={() => {

@@ -152,3 +152,17 @@ export async function updatePatientProfileImage(patientData) {
   }
   
 }
+
+export async function getSlots(doctor) {
+  try {
+    const { _id } = doctor;
+    console.log(`_id ${doctor}`);
+    const resp = await axios.post("http://localhost:5000/api/doctor/availableSlots", {
+      _id
+    });
+    console.log(resp);
+    return resp.data.setSlots;
+  } catch (error) {
+    console.log(error);
+  }
+}
