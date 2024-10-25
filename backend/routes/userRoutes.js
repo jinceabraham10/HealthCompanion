@@ -4,7 +4,7 @@ const multer=require('multer')
 const fs=require('fs')
 const path=require('path')
 const {sessionSetUp}=require('../config/sessionSetup.js')
-const {getAllUsers ,createUser,getUserById, bookSlot, createGoogleUser, OnLoadPatientData, updatePatientProfile, getAllBookedSlots, updateProfileImage}= require('../controllers/userController.js')
+const {getAllUsers ,createUser,getUserById, bookSlot, createGoogleUser, OnLoadPatientData, updatePatientProfile, getAllBookedSlots, updateProfileImage, getBookedSlotsForToday}= require('../controllers/userController.js')
 const {generateOTPForRegisteration,verifyOtpForRegisteration}=require('../middlewares/otpServiceMiddleware.js')
 const { formattedDate } = require('../utils/dateUtil.js')
 
@@ -55,6 +55,7 @@ router.post('/bookSlot',bookSlot )
 router.get('/:city',getUserById)
 router.post('/loadData/profile/patient',OnLoadPatientData);
 router.post('/getAllBookedSlots',getAllBookedSlots);
+router.post('/getBookedSlotsToday',getBookedSlotsForToday);
 router.post('/updateProfileImage/patient',upload.fields([
     {name:"profileImage",maxCount:1}
 ]),updateProfileImage);

@@ -1,12 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./CustomNavBarCss.module.css";
 import { useNavigate } from "react-router-dom";
 
 function CustomNavBar(props) {
-  const { setOpened, patientData } = props;
+  const { setOpened, patientData,setConsultationIn30 ,consultationIn30,checkConsultationIn30} = props;
   const [doctorOptionsOpened, setDoctorOptionsOpened] = useState(false);
   const [userOptionsOpened, setUserOptionsOpened] = useState(false);
+ 
   const navigate = useNavigate();
+
+  // const checkConsultationIn30 = async () => {
+  //   const ws = new WebSocket("http://localhost:5000");
+  //   ws.onopen = () => {
+  //     console.log("Started connecting to the backend");
+  //     ws.send(JSON.stringify({ type: "register", _id: props.patientData._id }));
+  //   };
+
+  //   ws.onmessage = async (event) => {
+  //     const dataReceived = JSON.parse(event.data);
+  //     await console.log(`data receieved ${JSON.stringify(dataReceived)}`);
+  //     await setConsultationIn30(dataReceived.slots);
+  //   };
+  // };
+
+  // useEffect(() => {
+  //   checkConsultationIn30();
+  // }, []);
+
+  useEffect(()=>{
+    console.log(`consultationIn30 ${JSON.stringify(consultationIn30)}`)
+
+  },[consultationIn30])
 
   return (
     <div className="w-full flex flex-row  items-center p-2 h-[15vh] border">
@@ -25,12 +49,15 @@ function CustomNavBar(props) {
             <button
               className={` text-center ${styles.navItem} text-pretty `}
               onClick={async (e) => {
-                await setDoctorOptionsOpened(!doctorOptionsOpened);
+                // await setDoctorOptionsOpened(!doctorOptionsOpened);
+                setOpened({ Doctors: true });
+                // setDoctorOptionsOpened(!doctorOptionsOpened);
+                props.setOpenBookingSlot(false);
               }}
             >
               Doctors
             </button>
-            <nav
+            {/* <nav
               id="id_doctorOptions "
               className={`${styles.userOptions} ${
                 doctorOptionsOpened ? "visible" : "invisible"
@@ -55,18 +82,36 @@ function CustomNavBar(props) {
               >
                 Show Booked Slots
               </button>
-            </nav>
-            <button className={` text-center ${styles.navItem} text-pretty`}>
+            </nav> */}
+            {/* <button className={` text-center ${styles.navItem} text-pretty`}>
               Booked Slots
+            </button> */}
+            <button
+              className={` text-center ${styles.navItem} text-pretty`}
+              onClick={() => {
+                setOpened({ bookedSlots: true });
+                setDoctorOptionsOpened(!doctorOptionsOpened);
+              }}
+            >
+              Booked Slots
+            </button>
+            <button className={` text-center ${styles.navItem} text-pretty`}>
+              Completed Consultations
             </button>
             <button className={` text-center ${styles.navItem} text-pretty`}>
               Prescriptions
             </button>
-            <button className={` text-center ${styles.navItem} text-pretty`} onClick={()=>{
-              setOpened({consultationToday:true})
-            }}>
-              Consultation Today
-            </button>
+
+              <button
+                className={` text-center ${styles.navItem} text-pretty border bg-blue-600 text-white rounded-lg p-2 `}
+                onClick={() => {
+                  setOpened({ consultationToday: true });
+                }}
+              >
+                Consultations For Today
+              </button>
+          
+
             <button
               className={`${styles.navItem}`}
               onClick={() => {
@@ -103,7 +148,7 @@ function CustomNavBar(props) {
             }}
           />
 
-          <nav
+          {/* <nav
             id="id_userOptions "
             className={`${styles.userOptions} ${
               userOptionsOpened ? "visible" : "invisible"
@@ -127,7 +172,7 @@ function CustomNavBar(props) {
             >
               Log out
             </button>
-          </nav>
+          </nav> */}
         </div>
       </div>
     </div>

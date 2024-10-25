@@ -166,3 +166,17 @@ export async function getSlots(doctor) {
     console.log(error);
   }
 }
+
+export async function getBookedSlotsForToday(userData) {
+  try {
+    const {patientId}=userData
+    console.log(userData)
+    const resp=await axios.post('http://localhost:5000/api/user/getBookedSlotsToday',{patientId:patientId})
+    return resp.data.bookedSlots
+    
+  } catch (error) {
+    console.log(error)
+    return false 
+  }
+  
+}

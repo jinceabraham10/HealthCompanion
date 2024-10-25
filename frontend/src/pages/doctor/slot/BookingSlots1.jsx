@@ -97,9 +97,7 @@ function BookingSlots1(props) {
             <div className=" grid grid-cols-2 gap-4 p-4  ">
               {tempTimeSlots.map((time, index) => (
                 <button
-                  className={`p-4 border border-black rounded font-bold ${
-                    selectedTime && selectedTime == time && "bg-red-600"
-                  }
+                  className={`p-4 border border-black rounded font-bold 
 
                   ${
                     slotsSetAtDate.length > 0 &&
@@ -110,8 +108,24 @@ function BookingSlots1(props) {
                         slot.date == selectedDate.format("YYYY-MM-DD")
                     ) &&
                     "bg-slate-400"
+                  
                   }
+
+                  ${
+                    selectedTime && selectedTime == time && "bg-red-600"
+                  }
+
                 `}
+
+                disabled={
+                  dayjs().format("YYYY-MM-DD")==selectedDate.format("YYYY-MM-DD")&&
+                  dayjs().format("HH:mm")>=dayjs(time,"H:mm A").format("HH:mm")
+                  ? true:false
+
+                }
+
+
+
                   key={index}
                   onClick={() => {
                     setSelectedTime(time);

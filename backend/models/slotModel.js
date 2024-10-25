@@ -41,6 +41,10 @@ const SlotSchema=new mongoose.Schema({
     },
     description:{
         type:String
+    },
+    meetingLink:{
+        type:String,
+        default:"https://meet.google.com/dan-kqgi-oqv"
     }
 })
 

@@ -13,6 +13,9 @@ const jwt = require("jsonwebtoken");
 const { formattedDate } = require("../utils/dateUtil.js");
 const Patient = require("../models/patientModel.js");
 const fs = require("fs");
+const dayjs =require('dayjs')
+const customParseFormat =require("dayjs/plugin/customParseFormat")
+dayjs.extend(customParseFormat)
 
 //get all users
 exports.getAllUsers = async (req, res) => {
@@ -315,5 +318,34 @@ exports.updateProfileImage = async (req, res) => {
     console.log(error);
   }
 };
+
+exports.getBookedSlotsForToday = async (req, res) => {
+  try {
+    const { patientId } = req.body;
+    const today=dayjs()
+    const allSlotsBooked = await Slot.find({ patientId: patientId ,date:today.format("YYYY-MM-DD"),startTime:{
+      $gt:today.format("HH:mm")
+    }}).populate(
+      "doctorId patientId"
+    ).sort({startTime:1});
+
+    let profileImageBuffer, profileImagePath, profileImage;
+    const updated = allSlotsBooked.map((slot) => {
+      const plainSlot = slot.toObject();
+      profileImagePath = slot.doctorId.profileImage;
+      profileImageBuffer = fs.readFileSync(profileImagePath);
+      plainSlot.doctorId.realProfileImage =
+        profileImageBuffer.toString("base64");
+      return plainSlot;
+    });
+    console.log(updated);
+    res
+      .status(200)
+      .json({ message: "slots fetched Successfully", bookedSlots: updated });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 
 

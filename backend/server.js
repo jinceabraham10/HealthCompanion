@@ -69,7 +69,7 @@ wss.on("connection", (ws) => {
 
 setInterval(() => {
   notifyClient(clients);
-}, 1 * 60 * 1000);
+}, 10 * 60 * 1000);
 
 startEmailOn30Min()
 
