@@ -5,6 +5,7 @@ import styles from "./PatientDoctorPage.module.css";
 import BookingPage from "../bookingPage/BookingPage";
 import ReactModal from "react-modal";
 import DoctorCard from "../doctorCard/DoctorCard";
+import DoctorReviews from "../doctorReview/DoctorReviews";
 
 function PatientDoctorPage(props) {
   const [doctors, setDoctors] = useState([]);
@@ -70,9 +71,9 @@ function PatientDoctorPage(props) {
             </div>
           } */}
 
-      {openReview && (
-        <div className=" grow w-[90%] flex flex-col gap-4 border p-4 ">
-          <h1>Jince</h1>
+      {openReview && (props.selectedDoctor)  && (
+        <div className=" fixed w-[50%] top-[18vh] right-10 flex flex-col gap-4 border p-4 h-[75vh] shadow-lg overflow-y-auto">
+          <DoctorReviews selectedDoctor={props.selectedDoctor}/>
         </div>
       )}
     </div>

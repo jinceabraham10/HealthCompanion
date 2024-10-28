@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getAllSlotsBooked, bookSlot } from "../../../services/userService";
+import { getAllSlotsBooked, bookSlot, cancelSlot } from "../../../services/userService";
 import { convertTo12Hour } from "../../doctor/slot/BookingSlots";
 import { Datepicker, Modal } from "flowbite-react";
 import Swal from "sweetalert2"; // For confirmation dialogs
@@ -16,9 +16,12 @@ function BookedSlots(props) {
   const todayDate = new Date();
 
   const onLoad = async () => {
-    const slots = await getAllSlotsBooked({ patientId: patientData._id });
-    setSlotsAvailable(slots);
-    setSlotsDisplayed(slots);
+    let slots = await getAllSlotsBooked({ patientId: patientData._id });
+    if(slots.length>0){
+      slots=slots.sort((a,b)=>a.startTime-b.startTime)
+    }
+    await setSlotsAvailable(slots);
+    await setSlotsDisplayed(slots);
   };
 
   useEffect(() => {
@@ -48,24 +51,25 @@ function BookedSlots(props) {
     setDatesDisplayed(new Set([formattedDate]));
   };
 
-  const handleConfirmBooking = async (e, slot) => {
-    e.stopPropagation();
+  const handleCancel = async (e, slot) => {
+    // e.stopPropagation();
     const result = await Swal.fire({
       icon: "question",
       showCancelButton: true,
-      confirmButtonText: "Confirm",
+      confirmButtonText: "Ok",
       title: "Confirmation",
-      text: "Can we proceed to confirm the slot?",
+      text: "Can we proceed to Cancel the slot...?",
     });
 
     if (result.isConfirmed) {
-      await bookSlot({ patientId: patient._id, slotId: slot._id });
+      await cancelSlot({  id: slot._id });
       await onLoad();
     }
   };
 
   return (
-    <div className="h-full flex flex-col gap-4 m-10">
+    <div className="h-[100vh] flex flex-col flex-1">
+      <div className="h-[20%] grow flex flex-col gap-4 m-10">
       <div className="flex flex-row gap-40 justify-center items-center">
         <div className="flex flex-row gap-4">
           <label className="font-bold" htmlFor="searchDate">Search</label>
@@ -98,8 +102,8 @@ function BookedSlots(props) {
                 slot.date === date && (
                   <div
                     key={index}
-                    className={`border p-4 flex flex-col gap-4 rounded shadow-xl ${slot.confirmStatus ? `bg-red-300` : `bg-white`}`}
-                    onClick={() => handleDoctorDetails(slot.doctorId)}
+                    className={`border p-4 flex flex-col gap-4 rounded shadow-xl bg-yellow-300`}
+                    
                   >
                     {slot.confirmStatus && <h3 className="font-bold text-white">Slot Confirmed</h3>}
                     
@@ -131,11 +135,17 @@ function BookedSlots(props) {
 
                     <div className="flex flex-row gap-4">
                       <button
-                        disabled={slot.confirmStatus}
-                        className={`p-4 text-center rounded font-bold bg-green-400`}
-                        onClick={(e) => handleConfirmBooking(e, slot)}
+                        className={`p-4 text-center rounded font-bold bg-red-500`}
+                        onClick={(e) => handleCancel(e, slot)}
                       >
-                        Book
+                       Cancel
+                      </button>
+                      <button
+                        className={`p-4 text-center rounded font-bold bg-white`}
+                        onClick={() => handleDoctorDetails(slot.doctorId)}
+                        
+                      >
+                       view Details
                       </button>
                     </div>
                   </div>
@@ -172,6 +182,7 @@ function BookedSlots(props) {
     </Modal>
     
       )}
+    </div>
     </div>
   );
 }

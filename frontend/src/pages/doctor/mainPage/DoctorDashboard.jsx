@@ -31,8 +31,11 @@ function DoctorDashboard() {
   let userName;
 
   const load = async () => {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     const fet = await DataOnPageLoad(token, 1);
+    if(!fet){
+      navigate('/home')
+    }
     await setFetchedData(fet);
     const doctorFet = await loadDoctorData({ userId: fet._id });
     // console.log(`doctor fet ${JSON.stringify(doctorFet.profileImage)}`)

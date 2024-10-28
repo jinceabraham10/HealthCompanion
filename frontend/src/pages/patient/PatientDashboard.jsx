@@ -13,6 +13,8 @@ import BookedSlots from "./bookedSlots/BookedSlots";
 import BookingPage from "./bookingPage/BookingPage";
 import ConsultationSoon from "./consultationSoon/ConsultationSoon";
 import { convertTo12Hour } from "../doctor/slot/BookingSlots";
+import CompletedSlots from "./completedSlots/CompletedSlots";
+import FooterPatient from "./footer/FooterPatient";
 
 function PatientDashboard() {
   const navigate = useNavigate();
@@ -21,15 +23,15 @@ function PatientDashboard() {
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [openBookingSlot, setOpenBookingSlot] = useState(false);
   const [consultationIn30, setConsultationIn30] = useState(null);
-  
+
   const [Opened, setOpened] = useState({
     Doctors: true,
   });
 
   const load = async () => {
-    const user = await DataOnPageLoad(localStorage.getItem("token"), 0);
+    const user = await DataOnPageLoad(sessionStorage.getItem("token"), 0);
     if (!user) {
-      navigate("/login");
+      navigate("/home");
     }
     const resp = await axios.post(
       "http://localhost:5000/api/user/loadData/profile/patient",
@@ -38,15 +40,13 @@ function PatientDashboard() {
     const fetchedPatientData = resp.data.fetchedPatientData;
     await setPatientData(fetchedPatientData);
     await setUserData(user);
-    
   };
 
- 
   const checkConsultationIn30 = async () => {
     const ws = new WebSocket("http://localhost:5000");
     ws.onopen = () => {
       console.log("Started connecting to the backend");
-      ws.send(JSON.stringify({ type: "register", _id:patientData._id }));
+      ws.send(JSON.stringify({ type: "register", _id: patientData._id }));
     };
 
     ws.onmessage = async (event) => {
@@ -54,43 +54,37 @@ function PatientDashboard() {
       await console.log(`data receieved ${JSON.stringify(dataReceived)}`);
       await setConsultationIn30(dataReceived.slots);
     };
-  };  
+  };
 
-  
-  useEffect(()=>{
-    if(patientData){
-      checkConsultationIn30()
+  useEffect(() => {
+    if (patientData) {
+      checkConsultationIn30();
     }
-  },[patientData])
-
+  }, [patientData]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       load();
-      
     } else {
-      navigate("/login");
+      navigate("/home");
       swal.fire({
         icon: "error",
         title: "Please  Login",
         text: "Please Login to use the services offered",
       });
     }
-
-
   }, []);
 
-  useEffect(()=>{
-    if(consultationIn30){
+  useEffect(() => {
+    if (consultationIn30) {
       swal.fire({
-        icon:"warning",
-        text:`Meeting with Dr ${consultationIn30.doctorId.firstName} ${consultationIn30.doctorId.lastName} in 30 min`,
-        title:"Meeting in 30 min"
-      })
+        icon: "warning",
+        text: `Meeting with Dr ${consultationIn30.doctorId.firstName} ${consultationIn30.doctorId.lastName} in 30 min`,
+        title: "Meeting in 30 min",
+      });
     }
-
-  },[consultationIn30])
+  }, [consultationIn30]);
 
   return (
     <div className="w-full h-full overflow-hidden">
@@ -104,6 +98,7 @@ function PatientDashboard() {
             setConsultationIn30={setConsultationIn30}
             consultationIn30={consultationIn30}
             checkConsultationIn30={checkConsultationIn30}
+            Opened={Opened}
           />
         )}
       </div>
@@ -114,6 +109,7 @@ function PatientDashboard() {
             patientData={patientData}
             setSelectedDoctor={setSelectedDoctor}
             setOpenBookingSlot={setOpenBookingSlot}
+            selectedDoctor={selectedDoctor}
           />
         )}
         {Opened.Doctors && userData && openBookingSlot && selectedDoctor && (
@@ -132,9 +128,24 @@ function PatientDashboard() {
         )}
 
         {Opened.consultationToday && userData && (
-          <ConsultationSoon patient={userData} patientData={patientData} consultationIn30={consultationIn30}/>
+          <ConsultationSoon
+            patient={userData}
+            patientData={patientData}
+            consultationIn30={consultationIn30}
+          />
         )}
+
+        {Opened.CompletedSlot && userData && (
+          <CompletedSlots
+            patient={userData}
+            patientData={patientData}
+            consultationIn30={consultationIn30}
+          />
+        )}
+        
+        
       </div>
+      {/* <FooterPatient/> */}
     </div>
   );
 }

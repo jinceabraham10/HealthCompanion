@@ -17,8 +17,8 @@ function BookingSlots1(props) {
   const [selectedTime, setSelectedTime] = useState(null);
   const tempTimeSlots = [
     
-    "10:00 AM",
-    "12:00 PM",
+    "9:00 AM",
+    "11:00 AM",
     "1:00 PM",
     "3:00 PM",
     "5:00 PM",

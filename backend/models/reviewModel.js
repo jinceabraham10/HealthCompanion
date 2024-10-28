@@ -8,6 +8,9 @@ const ReviewSchema=new mongoose.Schema({
     },
     patientComment:{
         type:String
+    },
+    rating:{
+        type:Number
     }
 })
 

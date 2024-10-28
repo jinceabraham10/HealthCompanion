@@ -4,6 +4,8 @@ const { updateOne, base, populate } = require("../models/userModel.js");
 const fs = require("fs");
 const path = require("path");
 const Slot = require("../models/slotModel.js");
+const Review = require("../models/reviewModel.js");
+const { match } = require("assert");
 
 exports.submitForVerification = async (req, res) => {
   try {
@@ -251,6 +253,33 @@ exports.deleteSlot=async (req,res)=>{
     const deletedSlot=await Slot.deleteOne({date:date,doctorId:doctorId,startTime:startTime})
     console.log(`deleted Slot ${deletedSlot}`)
     res.status(200).json({message:"slot deleted successfully"})
+    
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+exports.getAllReviewsForADoctor=async (req,res)=>{
+  try {
+    const {doctorId}=req.body
+    console.log(req.body)
+    const fetchedAllReviews=await Review.find({}).populate({path:"slotId",match:{
+      doctorId:doctorId
+    },populate:{
+      path:"patientId"
+    }})
+    const filteredReviews = fetchedAllReviews.filter(review => review.slotId !== null);
+    //  console.log(filteredReviews)
+    let profilePatientImageBuffer
+    const updatedFetchedAllReviews=filteredReviews.map((review)=>{
+      review=review.toObject()
+      if(review.slotId.patientId.profileImage){
+        profilePatientImageBuffer=fs.readFileSync(review.slotId.patientId.profileImage)
+        review.slotId.patientId.realProfileImage=`data:image/jpeg;base64,${profilePatientImageBuffer.toString('base64')}`
+      }
+      return review
+    })
+    res.status(200).json({message:"All reviews for the doctor",allReviews:updatedFetchedAllReviews  })
     
   } catch (error) {
     console.log(error)

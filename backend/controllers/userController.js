@@ -14,7 +14,9 @@ const { formattedDate } = require("../utils/dateUtil.js");
 const Patient = require("../models/patientModel.js");
 const fs = require("fs");
 const dayjs =require('dayjs')
-const customParseFormat =require("dayjs/plugin/customParseFormat")
+const customParseFormat =require("dayjs/plugin/customParseFormat");
+const Review = require("../models/reviewModel.js");
+const { start } = require("repl");
 dayjs.extend(customParseFormat)
 
 //get all users
@@ -274,9 +276,12 @@ exports.updatePatientProfile = async (req, res) => {
 exports.getAllBookedSlots = async (req, res) => {
   try {
     const { patientId } = req.body;
-    const allSlotsBooked = await Slot.find({ patientId: patientId }).populate(
+    const today=dayjs()
+    const allSlotsBooked = await Slot.find({ patientId: patientId,
+      startTime:{$gte:today.format("HH:mm")}
+     }).populate(
       "doctorId patientId"
-    );
+    ).sort({startTime:1});
 
     let profileImageBuffer, profileImagePath, profileImage;
     const updated = allSlotsBooked.map((slot) => {
@@ -346,6 +351,97 @@ exports.getBookedSlotsForToday = async (req, res) => {
     console.log(error);
   }
 };
+
+exports.cancelBookedSlot=async (req,res)=>{
+  try {
+    const {_id}= req.body
+    const cancelledSlot=await Slot.updateOne({_id},{$set:{patientId:null,confirmStatus:false,patientDescription:""}},{new:true})
+    console.log(cancelledSlot)
+    res.status(200).json({message:"Successfully cancelled"})  
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+exports.addReview=async (req,res)=>{
+  try {
+     
+    const {patientComment,slotId}=req.body
+    await console.log(req.body)
+    const review=new Review(req.body)
+    const addedReview= await review.save()
+    console.log(addedReview)
+    if(addedReview){
+      res.status(200).json({message:"Review Added"})
+    }   
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({error:error})
+  }
+}
+
+exports.editReview=async (req,res)=>{
+  try {
+     
+    const {patientComment,slotId}=req.body
+    await console.log(req.body)
+    const editedReview= await Review.updateOne({slotId},{patientComment:patientComment,rating:req.body.rating},{new:true})
+    console.log(editedReview)
+    res.status(200).json({message:"Review Edited"})  
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({error:error})
+  }
+}
+
+exports.getReview=async (req,res)=>{
+  try {
+     
+    const {slotId}=req.body
+    await console.log(req.body)
+    const fetchedReview=await Review.findOne({slotId})
+    console.log(fetchedReview)
+    res.status(200).json({message:"Review Added",fetchedReview})
+       
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({error:error})
+  }
+}
+
+
+exports.getAllCompletedConsultations=async (req,res)=>{
+  try {
+    const {patientId}=req.body
+    const fetchedAllCompletedSlots=await Slot.find({patientId:patientId,completedStatus:"1"}).populate({path:"doctorId",populate:{
+      path:"userId"
+    }}).populate({path:"patientId",populate:{
+      path:"userId"
+    }}).sort({startTime:1})
+    await console.log(fetchedAllCompletedSlots)
+    let profileImagePath,profileImageBuffer
+    let updatedFetchedAllCompletedSlots;
+    if(fetchedAllCompletedSlots.length>0){
+      
+     updatedFetchedAllCompletedSlots =fetchedAllCompletedSlots.map((slot)=>{
+        slot=slot.toObject()
+        if(slot.doctorId.profileImage!=" "){
+          // profileImagePath=fs.readFileSync(Slot.doctorId.profileImage)
+          profileImageBuffer=fs.readFileSync(slot.doctorId.profileImage)
+          slot.doctorId.realProfileImage=`data:image/jpeg;base64,${profileImageBuffer.toString('base64')}`
+
+        }
+        return slot
+      })
+    }
+    console.log(updatedFetchedAllCompletedSlots)
+    res.status(200).json({message:"fetched all completed consultations",allCompletedConsultations:updatedFetchedAllCompletedSlots})
+    
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 
 
 

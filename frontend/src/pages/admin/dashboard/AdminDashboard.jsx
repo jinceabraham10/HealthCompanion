@@ -26,7 +26,7 @@ function AdminDashboard() {
   const [opened,setOpened]=useState(null)
 
   const load=async ()=>{
-    const tempdata=await DataOnPageLoad(localStorage.getItem('token'),4);
+    const tempdata=await DataOnPageLoad(sessionStorage.getItem('token'),4);
     if(tempdata==null){
       navigate('/login')
     }
@@ -61,7 +61,7 @@ function SidenavBar(props) {
   const [showMoreOptions, setShowMoreOptions] = useState(false);
 
   return (
-    <div className="min-h-screen fixed bg-gray-800">
+    <div className="min-h-screen fixed bg-gray-800" id="id_adminDashboard">
     <CSidebar className="w-64 text-white shadow-lg">
       <CSidebarNav className="space-y-3 mt-20 ml-6">
         <CNavItem >

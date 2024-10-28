@@ -13,7 +13,7 @@ async function LoginUser(loginData) {
       text:"Credentials have been verified and welcoming you to HealthCompanion"
     })
 
-    localStorage.setItem('token',resp.data.token)
+    sessionStorage.setItem('token',resp.data.token)
 
     return resp.data.userData
 
@@ -147,11 +147,11 @@ export async function GoogleSignIN(token) {
           text:"Succesfully Siged in using Google Account"
         })
       }
-      await localStorage.setItem('token',resp2.data.token)
+      await sessionStorage.setItem('token',resp2.data.token)
       await console.log(`recieved jwt toke ${resp2.data.token}`)
       return resp2.data.userData  
         }
-    await localStorage.setItem('token',resp.data.token)
+    await sessionStorage.setItem('token',resp.data.token)
     await console.log(resp.data.userData)
     return resp.data.userData
     

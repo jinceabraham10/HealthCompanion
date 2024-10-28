@@ -21,8 +21,10 @@ function DoctorCard(props) {
               <RatingStar />
               <RatingStar />
             </Rating>
-            <button className="p-2 bg-red-500 text-white rounded text-sm text-center" onClick={()=>{
-              props.setOpenReview(!props.openReview)
+            <button className="p-2 bg-red-500 text-white rounded text-sm text-center" onClick={async ()=>{
+              await setSelectedDoctor(doctor)
+              await props.setOpenReview(!props.openReview)
+              
             }}>
               View Review
             </button>

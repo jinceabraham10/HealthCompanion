@@ -15,3 +15,8 @@ export const patientProfileValidationSchema = yup.object().shape({
   phone: yup.number("shoul be a number"),
   email:yup.string().email()
 });
+
+export const reviewValidationSchema=yup.object().shape({
+  patientComment:yup.string().required(),
+  rating:yup.number().required()
+})

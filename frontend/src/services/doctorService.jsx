@@ -125,3 +125,13 @@ export async function deleteSlot(slotDetails) {
   }
   
 }
+
+export async function getAllReviewsForADoctor({doctorId}){
+  try {
+    const resp=await axios.post("http://localhost:5000/api/doctor/getAllReviewsForADoctor",{doctorId})
+    console.log(resp.data)
+    return resp.data.allReviews
+  } catch (error) {
+    console.log(error)
+  }
+}

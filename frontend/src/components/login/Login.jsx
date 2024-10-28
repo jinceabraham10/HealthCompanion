@@ -67,6 +67,8 @@ const handleCredentialResponse = async(response) => {
       password: ref_password.current.value.trim(),
     };
 
+    await console.log("heloooo")
+
     const userData = await LoginUser(user);
     console.log(userData);
     if (userData) {
@@ -153,7 +155,7 @@ function LoginInputBlock({
         )}
 
         <div className="flex flex-row gap-8 justify-center w-full text-white">
-          <button type="button" className="btnlogin" onClick={handleClick}>
+          <button type="button" className="btnlogin" onClick={handleClick} id="id_login1">
             Log In
           </button>
           <a href="http://">forgot Password</a>
@@ -165,6 +167,8 @@ function LoginInputBlock({
             onClick={() => {
               setOpened("register");
             }}
+
+            id="id_register"
           >
             Register
           </button>

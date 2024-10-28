@@ -13,7 +13,7 @@ function HomePage() {
                 <li><button>About</button></li>
                 <li><button onClick={()=>{
                     setOpened('login')
-                }}>Login</button></li>
+                }} id='id_login'>Login</button></li>
             </ul>
         </div>
         <div className='relative mt-10 min-w-full min-h-full'>

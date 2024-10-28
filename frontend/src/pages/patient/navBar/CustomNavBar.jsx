@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styles from "./CustomNavBarCss.module.css";
 import { useNavigate } from "react-router-dom";
+import CompletedSlots from "../completedSlots/CompletedSlots";
 
 function CustomNavBar(props) {
-  const { setOpened, patientData,setConsultationIn30 ,consultationIn30,checkConsultationIn30} = props;
+  const { setOpened, patientData,setConsultationIn30 ,consultationIn30,checkConsultationIn30,Opened} = props;
   const [doctorOptionsOpened, setDoctorOptionsOpened] = useState(false);
   const [userOptionsOpened, setUserOptionsOpened] = useState(false);
  
@@ -47,7 +48,7 @@ function CustomNavBar(props) {
             className={`${styles.navBar} navBar flex flex-row gap-8 font-bold text-emerald-700`}
           >
             <button
-              className={` text-center ${styles.navItem} text-pretty `}
+              className={` text-center ${styles.navItem} text-pretty px-4 py-2 ${(Opened.Doctors) && "bg-red-500 rounded text-white"} `}
               onClick={async (e) => {
                 // await setDoctorOptionsOpened(!doctorOptionsOpened);
                 setOpened({ Doctors: true });
@@ -87,23 +88,25 @@ function CustomNavBar(props) {
               Booked Slots
             </button> */}
             <button
-              className={` text-center ${styles.navItem} text-pretty`}
+              className={` text-center ${styles.navItem} text-pretty px-4 py-2 ${(Opened.bookedSlots) && "bg-red-500 rounded text-white"} `}
               onClick={() => {
                 setOpened({ bookedSlots: true });
                 setDoctorOptionsOpened(!doctorOptionsOpened);
               }}
             >
-              Booked Slots
+              Booked
             </button>
-            <button className={` text-center ${styles.navItem} text-pretty`}>
-              Completed Consultations
+            <button className={` px-4 py-2 text-center ${styles.navItem} text-pretty ${(Opened.CompletedSlot) && "bg-red-500 rounded text-white"}`} onClick={()=>{
+              setOpened({CompletedSlot:true}) 
+            }}>
+              Completed
             </button>
             <button className={` text-center ${styles.navItem} text-pretty`}>
               Prescriptions
             </button>
 
               <button
-                className={` text-center ${styles.navItem} text-pretty border bg-blue-600 text-white rounded-lg p-2 `}
+                className={` text-center ${styles.navItem} text-pretty border bg-blue-600 text-white rounded-lg p-2 } `}
                 onClick={() => {
                   setOpened({ consultationToday: true });
                 }}
@@ -132,7 +135,7 @@ function CustomNavBar(props) {
             <button
               className={`${styles.userOptionsItem} border px-5 py-1 rounded-lg bg-red-500 font-bold`}
               onClick={() => {
-                localStorage.removeItem("token");
+                sessionStorage.removeItem("token");
                 navigate("/home");
               }}
             >

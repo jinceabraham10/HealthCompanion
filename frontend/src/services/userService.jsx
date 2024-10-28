@@ -180,3 +180,82 @@ export async function getBookedSlotsForToday(userData) {
   }
   
 }
+
+export async function cancelSlot({id}){
+  try {
+    // console.log(bookDetails)
+    const resp=await axios.post('http://localhost:5000/api/user/cancelSlot',{_id:id})
+    
+    await console.log(`resp ${resp}`)
+    await swal.fire({
+      icon:"success",
+      title:"Canceled",
+      text:"Slot has been Canceled"
+    })
+    
+  } catch (error) {
+    console.log(error)
+    // if(error.response.status==400 && error.response.data.message=="slot is already confirmed"){
+    //   swal.fire({
+    //     icon:"Error",
+    //     title:"Server Error",
+    //     text:"Some Interruption has occured"
+    //   })
+    // }
+  }
+}
+
+export async function getAllCompletedSlot({patientId}){
+  try {
+    const allCompletedConsultations=await axios.post("http://localhost:5000/api/user/getAllCompletedConsultations",{patientId})
+    // console.log(allCompletedConsultations.data.allCompletedConsultations)
+    return allCompletedConsultations.data.allCompletedConsultations
+    
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export async function addReview(reviewDetails) {
+  try {
+    const resp=await axios.post("http://localhost:5000/api/user/addReview",reviewDetails)
+    console.log(resp.data)
+    swal.fire({
+      icon:"success",
+      text:"Your review has been added",
+      title:"Review"
+    })
+    
+  } catch (error) {
+    console.log(error)
+  }
+  
+}
+
+export async function getReview({slotId}) {
+  try {
+    const resp=await axios.post("http://localhost:5000/api/user/slot/getReview",{slotId})
+    console.log(resp.data)
+    return resp.data.fetchedReview
+    
+  } catch (error) {
+    console.log(error)
+  }
+  
+}
+
+export async function editReview(reviewDetails) {
+  try {
+    const resp=await axios.post("http://localhost:5000/api/user/editReview",reviewDetails)
+    console.log(resp.data)
+    swal.fire({
+      icon:"success",
+      text:"Your review has been Edited Successfully",
+      title:"Review"
+    })
+    
+  } catch (error) {
+    console.log(error)
+  }
+  
+}
