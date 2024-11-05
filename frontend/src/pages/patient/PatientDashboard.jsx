@@ -33,6 +33,7 @@ function PatientDashboard() {
     if (!user) {
       navigate("/home");
     }
+    await console.log(`user ${JSON.stringify(user)}`)
     const resp = await axios.post(
       "http://localhost:5000/api/user/loadData/profile/patient",
       { userId: user._id }

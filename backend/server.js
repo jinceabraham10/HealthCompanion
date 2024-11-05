@@ -22,9 +22,20 @@ dotenv.config({ path: path.resolve(__dirname, "config/config.env") });
 
 const app = express();
 app.use(sessionSetUp);
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://healthcompanion.onrender.com",
+];
+
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, origin); // Allow the request
+      } else {
+        callback(new Error("Not allowed by CORS")); // Reject the request
+      }
+    },
     credentials: true,
   })
 );
@@ -33,10 +44,6 @@ port = process.env.PORT;
 connectToMongoDB();
 
 
-app.use(express.static(path.join(__dirname, '../frontend/dist')));
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
-});
 
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
@@ -78,6 +85,13 @@ setInterval(() => {
 }, 10 * 60 * 1000);
 
 startEmailOn30Min()
+
+const distPath = path.join(__dirname, '../frontend/dist/', 'index.html');
+console.log('Serving static files from:', distPath);
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/dist/', 'index.html'));
+});
 
 server.listen(port, () => {
   console.log("server is running at ", port);
