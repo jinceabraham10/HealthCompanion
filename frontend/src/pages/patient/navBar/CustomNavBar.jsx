@@ -48,6 +48,7 @@ function CustomNavBar(props) {
             className={`${styles.navBar} navBar flex flex-row gap-8 font-bold text-emerald-700`}
           >
             <button
+            id={`id_btnNavDoctors`}
               className={` text-center ${styles.navItem} text-pretty px-4 py-2 ${(Opened.Doctors) && "bg-red-500 rounded text-white"} `}
               onClick={async (e) => {
                 // await setDoctorOptionsOpened(!doctorOptionsOpened);

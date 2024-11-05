@@ -26,6 +26,8 @@ function BookingPage(props) {
   const [openModal, setOpenModal] = useState();
   const closeModal = () => setOpenModal(false);
 
+  let dateIndex
+
   const todayDate = new Date();
   console.log(`patient ${JSON.stringify(doctor)}`);
 
@@ -199,6 +201,7 @@ function BookingPage(props) {
 
                         <div className="flex flex-row gap-4">
                           <button
+                            id={`id_btnBookSlot${index}`}
                             disabled={slot.confirmStatus ? true : false}
                             className={`p-4 text-center rounded font-bold bg-green-400`}
                             onClick={async (e) => {
@@ -318,6 +321,7 @@ function ModalSetDescription(props) {
         </button> */}
           <input
             type="submit"
+            id="id_btnNext"
             value="next"
             className="p-4 bg-red-400 rounded-lg font-bold"
           />

@@ -2,7 +2,7 @@ import { Rating, RatingStar } from "flowbite-react";
 import React from "react";
 
 function DoctorCard(props) {
-  const { doctor, patient, setSelectedDoctor, setOpenBookingSlot } = props;
+  const { doctor, patient, setSelectedDoctor, setOpenBookingSlot,index } = props;
   return (
     <div className="h-[10vh] flex flex-col gap-4 w-full">
       <div className="border w-full p-4 rounded shadow-lg flex flex-row gap-4">
@@ -42,6 +42,7 @@ function DoctorCard(props) {
       </div>
       <button
         className="px-4 py-2 bg-green-400 font-bold"
+        id={`id_btnProceedToBook${index}`}
         onClick={() => {
           setSelectedDoctor(doctor);
           setOpenBookingSlot(true);

@@ -63,7 +63,7 @@ function PatientDashboard() {
   }, [patientData]);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     if (token) {
       load();
     } else {

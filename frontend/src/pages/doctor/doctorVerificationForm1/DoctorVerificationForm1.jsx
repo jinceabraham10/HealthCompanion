@@ -163,9 +163,9 @@ function DoctorVerificationForm1(props) {
       </div>
 
       <h1 className="text-2xl text-zinc-500">Educational Details</h1>
-      <EducationDetails level={"Ten"} formik={formik} />
-      <EducationDetails level={"Twelth"} formik={formik} />
-      <EducationDetails level={"Mbbs"} formik={formik} />
+      <EducationDetails level={"Ten"} formik={formik} handleFileChange={handleFileChange} />
+      <EducationDetails level={"Twelth"} formik={formik} handleFileChange={handleFileChange}/>
+      <EducationDetails level={"Mbbs"} formik={formik} handleFileChange={handleFileChange}/>
 
       <CustomButton
         type="submit"

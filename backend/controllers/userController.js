@@ -61,9 +61,9 @@ exports.createUser = async (req, res) => {
 
     if (role == 0) {
       let validId = new mongoose.Types.ObjectId(fetchedData._id);
-      const patient = new Patient({
-        userId: createdUser._id,
-        createdAt: formattedDate(date),
+      const patient = new Patient({ 
+        userId: validId._id,
+        createdAt,
       });
       const fetchedPatientData = await patient.save();
       console.log(`patient data ${fetchedPatientData}`);

@@ -70,6 +70,7 @@ function BookingSlots1(props) {
         {nextWeekDay.length > 0 &&
           nextWeekDay.map((date, index) => (
             <button
+            id={`id_option${index}`}
               className={`border border-black w-[10%] h-[100%] p-2 flex flex-col gap-2 flex-wrap items-center justify-center rounded-lg shadow-lg hover:bg-green-400 text-sm font-bold ${
                 selectedDate && selectedDate == date
                   ? "bg-blue-500"
@@ -97,6 +98,8 @@ function BookingSlots1(props) {
             <div className=" grid grid-cols-2 gap-4 p-4  ">
               {tempTimeSlots.map((time, index) => (
                 <button
+
+                id={`id_btnSelectTime${index}`}
                   className={`p-4 border border-black rounded font-bold 
 
                   ${
@@ -163,6 +166,7 @@ function BookingSlots1(props) {
                   // slot.completedStatus != "1";
               ) ? (
                 <button
+                id={`id_btnDeleteSlot`}
                   className="px-2 py-4 border text-center bg-red-400 rounded font-bold"
                   onClick={async () => {
                     await deleteSlot({
@@ -179,6 +183,7 @@ function BookingSlots1(props) {
                 <button
                   className="px-2 py-4 border text-center bg-green-400 rounded font-bold"
                   onClick={formik.handleSubmit}
+                  id={`id_btnSelectAsAvailable`}
                 >
                   Set as Available
                 </button>

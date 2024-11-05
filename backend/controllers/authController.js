@@ -143,3 +143,16 @@ exports.googleUserPresent=async (req,res)=>{
 }
 
 
+exports.generateOtpForPassword=async (req,res)=>{
+    try {
+
+        const checkUser=await User.findOne({email})
+        if(checkUser){
+            
+        }
+        
+    } catch (error) {
+        console.log(error)
+    }
+}
+

@@ -36,7 +36,7 @@ function PatientDoctorPage(props) {
         }`}
       >
         {doctors
-          ? doctors.map((doctor) => (
+          ? doctors.map((doctor,index) => (
               <DoctorCard
                 key={doctor._id}
                 doctor={doctor}
@@ -45,6 +45,7 @@ function PatientDoctorPage(props) {
                 setOpenBookingSlot={props.setOpenBookingSlot}
                 setOpenReview={setOpenReview}
                 openReview={openReview}
+                index={index}
               />
             ))
           : "no doctors"}

@@ -101,12 +101,13 @@ function DoctorDashboard() {
                   <span>{!isVerified && <LockIcon />}</span>
                 </div>
               </Sidebar.Item>
-              <Sidebar.Collapse label="Slots" className="font-bold">
+              <Sidebar.Collapse label="Slots" id="id_btnSlotOption" className="font-bold">
                 <Sidebar.Item className="font-bold">
                 <div className="flex flex-row gap-5">
                   <button
                     onClick={() => handleItemClick("slots")}
                     disabled={!isVerified}
+                    id="id_btnSetSlot"
                   >
                     Set Slot
                   </button>
