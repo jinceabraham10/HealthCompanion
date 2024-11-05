@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 async function LoginUser(loginData) {
   try {
-    const resp=await axios.post('https://healthcompanion.onrender.com/api/auth/login',loginData)
+    const resp=await axios.post('http://localhost:5000/api/auth/login',loginData)
     console.log(resp)
     await  swal.fire({
       icon:"success",
