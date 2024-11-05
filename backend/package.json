@@ -17,5 +17,10 @@
     "nodemailer": "^6.9.15",
     "redis": "^4.7.0",
     "ws": "^8.18.0"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "build": "echo 'No build step required'",
+    "test": "echo \"Error: no test specified\" && exit 1"
   }
 }
