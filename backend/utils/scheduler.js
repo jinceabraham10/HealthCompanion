@@ -20,7 +20,7 @@ exports.notifyClient = async (clients) => {
     // console.log(todayDate.add(0.5,'hour').format('H:mm'))
     fetchedSlots.forEach((slot) => {
       const startTime=dayjs(slot.startTime,"HH:mm").format("HH:mm")
-      const checkTime = todayDate.add(0.5, "hour").format("HH:mm");
+      const checkTime = todayDate.add(3, "hour").format("HH:mm");
       
       if (startTime <= checkTime && startTime>todayDate.format("HH:mm")) {
         const client = clients.filter(

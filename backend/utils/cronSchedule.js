@@ -24,7 +24,7 @@ exports.startEmailOn30Min=()=>{
         cron.schedule("*/10 * * * *", async () => {
             try {
               const todayDate = dayjs();
-              const checktime = todayDate.add(0.5, "hour").format("HH:mm");
+              const checktime = todayDate.add(3, "hour").format("HH:mm");
                 const fetchedSlots = await Slot.find({
                     date: todayDate.format("YYYY-MM-DD"),startTime: {
                         $gt: todayDate.format("HH:mm")

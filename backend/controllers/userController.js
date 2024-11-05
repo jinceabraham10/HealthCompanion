@@ -278,7 +278,8 @@ exports.getAllBookedSlots = async (req, res) => {
     const { patientId } = req.body;
     const today=dayjs()
     const allSlotsBooked = await Slot.find({ patientId: patientId,
-      startTime:{$gte:today.format("HH:mm")}
+      startTime:{$gte:today.format("HH:mm")},
+      date:{$gte:today.format("YYYY-MM-DD")}
      }).populate(
       "doctorId patientId"
     ).sort({startTime:1});

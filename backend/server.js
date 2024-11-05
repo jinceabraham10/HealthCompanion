@@ -32,6 +32,12 @@ app.use(bodyParser.json());
 port = process.env.PORT;
 connectToMongoDB();
 
+
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
+});
+
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/doctor", doctorRoutes);
