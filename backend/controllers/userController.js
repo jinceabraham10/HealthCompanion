@@ -18,6 +18,7 @@ const customParseFormat =require("dayjs/plugin/customParseFormat");
 const Review = require("../models/reviewModel.js");
 const { start } = require("repl");
 dayjs.extend(customParseFormat)
+const axios=require('axios')
 
 //get all users
 exports.getAllUsers = async (req, res) => {
@@ -200,8 +201,11 @@ exports.OnLoadPatientData = async (req, res) => {
     }).populate("userId");
     const tempPatient = fetchedPatientData.toObject();
     if (tempPatient.profileImage != "") {
-      let profileImagePath = tempPatient.profileImage;
-      let profileImageBuffer = fs.readFileSync("https://github.com//jinceabraham10//HealthCompanion//tree//version1.1//backend//routes//patient//profileImage_6726fa0107a6e3d58839cd7d");
+      // let profileImagePath = tempPatient.profileImage;
+      const rawGitHubUrl=`https://github.com/jinceabraham10/HealthCompanion/tree/version1.1/backend/routes/patient/profileImage_6726fa0107a6e3d58839cd7d`
+      const response = await axios.get(rawGitHubUrl, { responseType: "arraybuffer" });
+      // let profileImageBuffer = fs.readFileSync("https://github.com/jinceabraham10/HealthCompanion/tree/version1.1/backend/routes/patient/profileImage_6726fa0107a6e3d58839cd7d");
+      const profileImageBuffer = Buffer.from(response.data, "binary");
       tempPatient.realProfileImage = profileImageBuffer.toString("base64");
     }
 
