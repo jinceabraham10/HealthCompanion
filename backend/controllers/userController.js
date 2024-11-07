@@ -201,7 +201,7 @@ exports.OnLoadPatientData = async (req, res) => {
     const tempPatient = fetchedPatientData.toObject();
     if (tempPatient.profileImage != "") {
       let profileImagePath = tempPatient.profileImage;
-      let profileImageBuffer = fs.readFileSync("https://github.com/jinceabraham10/HealthCompanion/tree/version1.1/backend/routes/patient/profileImage_6726fa0107a6e3d58839cd7d");
+      let profileImageBuffer = fs.readFileSync("https://github.com//jinceabraham10//HealthCompanion//tree//version1.1//backend//routes//patient//profileImage_6726fa0107a6e3d58839cd7d");
       tempPatient.realProfileImage = profileImageBuffer.toString("base64");
     }
 
