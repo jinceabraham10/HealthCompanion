@@ -11,7 +11,7 @@ function CustomNavBar(props) {
   const navigate = useNavigate();
 
   // const checkConsultationIn30 = async () => {
-  //   const ws = new WebSocket("http://localhost:5000");
+  //   const ws = new WebSocket("https://healthcompanion.onrender.com:5000");
   //   ws.onopen = () => {
   //     console.log("Started connecting to the backend");
   //     ws.send(JSON.stringify({ type: "register", _id: props.patientData._id }));

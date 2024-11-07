@@ -47,7 +47,7 @@ function PatientProfile(props) {
   const onLoad = async () => {
     try {
       const resp = await axios.post(
-        "http://localhost:5000/api/user/loadData/profile/patient",
+        "https://healthcompanion.onrender.com:5000/api/user/loadData/profile/patient",
         { userId: patient._id }
       );
       const fetchedPatientData = resp.data.fetchedPatientData;
