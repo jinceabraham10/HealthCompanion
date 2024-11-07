@@ -35,7 +35,7 @@ function PatientDashboard() {
     }
     await console.log(`user ${JSON.stringify(user)}`)
     const resp = await axios.post(
-      "https://healthcompanion.onrender.com:5000/api/user/loadData/profile/patient",
+      "https://healthcompanion.onrender.com/api/user/loadData/profile/patient",
       { userId: user._id }
     );
     const fetchedPatientData = resp.data.fetchedPatientData;
@@ -44,7 +44,7 @@ function PatientDashboard() {
   };
 
   const checkConsultationIn30 = async () => {
-    const ws = new WebSocket("https://healthcompanion.onrender.com:5000");
+    const ws = new WebSocket("https://healthcompanion.onrender.com");
     ws.onopen = () => {
       console.log("Started connecting to the backend");
       ws.send(JSON.stringify({ type: "register", _id: patientData._id }));
