@@ -35,7 +35,7 @@ function PatientDashboard() {
     }
     await console.log(`user ${JSON.stringify(user)}`)
     const resp = await axios.post(
-      "https://healthcompanion.onrender.com:5000/api/user/loadData/profile/patient",
+      "https://healthcompanion.onrender.com/api/user/loadData/profile/patient",
       { userId: user._id }
     );
     const fetchedPatientData = resp.data.fetchedPatientData;
