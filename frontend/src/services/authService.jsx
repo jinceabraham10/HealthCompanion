@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 async function LoginUser(loginData) {
   try {
-    const resp=await axios.post('http://localhost:5000/api/auth/login',loginData)
+    const resp=await axios.post('https://healthcompanion.onrender.com/api/auth/login',loginData)
     console.log(resp)
     await  swal.fire({
       icon:"success",
@@ -48,21 +48,21 @@ async function DataOnPageLoad(token,role) {
   try {
     let resp=''
     if(role==0){
-      resp=await axios.get("http://localhost:5000/api/auth/loadData/patient",{
+      resp=await axios.get("https://healthcompanion.onrender.com/api/auth/loadData/patient",{
         headers:{
           'authorization':`${token}`
         }
       })
     }
     else if(role==1){
-      resp=await axios.get("http://localhost:5000/api/auth/loadData/doctor",{
+      resp=await axios.get("https://healthcompanion.onrender.com/api/auth/loadData/doctor",{
         headers:{
           'authorization':`${token}`
         }
       })
     }
     else if(role==4){
-      resp=await axios.get("http://localhost:5000/api/auth/loadData/admin",{
+      resp=await axios.get("https://healthcompanion.onrender.com/api/auth/loadData/admin",{
         headers:{
           'authorization':`${token}`
         }
@@ -95,7 +95,7 @@ async function DataOnPageLoad(token,role) {
 async function CheckUserPresent(data) {
   try {
     console.log(data)
-    const resp=await axios.post('http://localhost:5000/api/auth/checkUserPresent',data)
+    const resp=await axios.post('https://healthcompanion.onrender.com/api/auth/checkUserPresent',data)
     console.log(resp)
     if(resp.data.isPresent){
       swal.fire({
@@ -119,7 +119,7 @@ export async function GoogleSignIN(token) {
   try {
     console.log(token)
     // const resp=null
-    const resp=await axios.post('http://localhost:5000/api/auth/google/checkUserPresent',{token: token})
+    const resp=await axios.post('https://healthcompanion.onrender.com/api/auth/google/checkUserPresent',{token: token})
     if(!resp.data.userData){
       await console.log("Reached Google Sign in")
       const role=await swal.fire(
@@ -138,7 +138,7 @@ export async function GoogleSignIN(token) {
         }
       )
       // console.log(`role ${JSON.stringify(role.value)}`)
-      const resp2=await axios.post("http://localhost:5000/api/user/google/createUser",{token:token,role:role.value})
+      const resp2=await axios.post("https://healthcompanion.onrender.com/api/user/google/createUser",{token:token,role:role.value})
       console.log(`response after creating the user ${resp2}`)
       if(resp2.data.userData){
         swal.fire({
