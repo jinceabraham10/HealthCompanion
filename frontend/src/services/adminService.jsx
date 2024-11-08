@@ -4,7 +4,7 @@ import swal from "sweetalert2";
 export async function getAdminDetails(adminData){
 
     try {
-        const resp= await axios.post('https://healthcompanion.onrender.com/api/admin/checkAdmin',userData)
+        const resp= await axios.post('http://localhost:5000/api/admin/checkAdmin',userData)
         console.log(resp.data)
 
         
@@ -16,7 +16,7 @@ export async function getAdminDetails(adminData){
 
 export async function ApproveDoctor(toBeApprovedData) {
     try {
-        const resp=await axios.post('https://healthcompanion.onrender.com/api/admin/approveDoctor',toBeApprovedData)
+        const resp=await axios.post('http://localhost:5000/api/admin/approveDoctor',toBeApprovedData)
         console.log(resp.data)
         
     } catch (error) {
@@ -27,7 +27,7 @@ export async function ApproveDoctor(toBeApprovedData) {
 
 export async function rejectDoctor(toBeApprovedData) {
     try {
-        const resp=await axios.post('https://healthcompanion.onrender.com/api/admin/rejectDoctor',toBeApprovedData)
+        const resp=await axios.post('http://localhost:5000/api/admin/rejectDoctor',toBeApprovedData)
         console.log(resp.data)
         
     } catch (error) {
@@ -39,7 +39,7 @@ export async function rejectDoctor(toBeApprovedData) {
 export  async function getAllToBeApprovedDoctorsList() {
     try {
 
-        const resp=await axios.get('https://healthcompanion.onrender.com/api/admin/getAllToBeApprovedDoctors')
+        const resp=await axios.get('http://localhost:5000/api/admin/getAllToBeApprovedDoctors')
         // console.log(resp.data)
         return resp.data
         

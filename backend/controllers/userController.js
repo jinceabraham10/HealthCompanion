@@ -201,11 +201,11 @@ exports.OnLoadPatientData = async (req, res) => {
     }).populate("userId");
     const tempPatient = fetchedPatientData.toObject();
     if (tempPatient.profileImage != "") {
-      // let profileImagePath = tempPatient.profileImage;
-      const rawGitHubUrl=`https://github.com/jinceabraham10/HealthCompanion/tree/version1.1/backend/routes/patient/6714ca4e86d88711cfd8bdff_syrup1.png`
-      const response = await axios.get(rawGitHubUrl, { responseType: "arraybuffer" });
-      // let profileImageBuffer = fs.readFileSync("https://github.com/jinceabraham10/HealthCompanion/tree/version1.1/backend/routes/patient/profileImage_6726fa0107a6e3d58839cd7d");
-      const profileImageBuffer = Buffer.from(response.data, "binary");
+      let profileImagePath = tempPatient.profileImage;
+      // const rawGitHubUrl=`https://github.com/jinceabraham10/HealthCompanion/tree/version1.1/backend/routes/patient/6714ca4e86d88711cfd8bdff_syrup1.png`
+      // const response = await axios.get(rawGitHubUrl, { responseType: "arraybuffer" });
+      let profileImageBuffer = fs.readFileSync(profileImagePath);
+      // const profileImageBuffer = Buffer.from(response.data, "binary");
       tempPatient.realProfileImage = profileImageBuffer.toString("base64");
     }
 

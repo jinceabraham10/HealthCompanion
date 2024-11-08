@@ -14,7 +14,7 @@ export async function createUser(userData) {
   try {
     // console.log("recieved from RegisterationPage",userData)
     const response = await axios.post(
-      "https://healthcompanion.onrender.com/api/user/verifyOtp",
+      "http://localhost:5000/api/user/verifyOtp",
       userData,
       {
         withCredentials: true,
@@ -56,7 +56,7 @@ export async function createUser(userData) {
 export async function generateOtp(email) {
   try {
     const response = await axios.post(
-      "https://healthcompanion.onrender.com/api/user/generateOtp",
+      "http://localhost:5000/api/user/generateOtp",
       { email },
       {
         withCredentials: true,
@@ -79,7 +79,7 @@ export async function bookSlot(bookDetails){
   try {
 
     // console.log(bookDetails)
-    const resp=await axios.post('https://healthcompanion.onrender.com/api/user/bookSlot',bookDetails)
+    const resp=await axios.post('http://localhost:5000/api/user/bookSlot',bookDetails)
     console.log(resp)
     swal.fire({
       icon:"success",
@@ -102,7 +102,7 @@ export async function bookSlot(bookDetails){
 export async function updatePatientProfile(patientData) {
   try {
     await console.log(patientData)
-    const resp=await axios.post("https://healthcompanion.onrender.com/api/user/updateProfile/patient",patientData)
+    const resp=await axios.post("http://localhost:5000/api/user/updateProfile/patient",patientData)
     // console.log(resp.data)
     await swal.fire({
       icon:"success",
@@ -121,7 +121,7 @@ export async function getAllSlotsBooked(userData) {
   try {
     const {patientId}=userData
     console.log(userData)
-    const resp=await axios.post('https://healthcompanion.onrender.com/api/user/getAllBookedSlots',{patientId:patientId})
+    const resp=await axios.post('http://localhost:5000/api/user/getAllBookedSlots',{patientId:patientId})
     return resp.data.bookedSlots
     
   } catch (error) {
@@ -134,7 +134,7 @@ export async function getAllSlotsBooked(userData) {
 export async function updatePatientProfileImage(patientData) {
   try {
     await console.log(patientData)
-    const resp=await axios.post("https://healthcompanion.onrender.com/api/user/updateProfileImage/patient",patientData,{
+    const resp=await axios.post("http://localhost:5000/api/user/updateProfileImage/patient",patientData,{
       headers:{
         'Content-Type':"multipart/form-data"
       }
@@ -157,7 +157,7 @@ export async function getSlots(doctor) {
   try {
     const { _id } = doctor;
     console.log(`_id ${doctor}`);
-    const resp = await axios.post("https://healthcompanion.onrender.com/api/doctor/availableSlots", {
+    const resp = await axios.post("http://localhost:5000/api/doctor/availableSlots", {
       _id
     });
     console.log(resp);
@@ -171,7 +171,7 @@ export async function getBookedSlotsForToday(userData) {
   try {
     const {patientId}=userData
     console.log(userData)
-    const resp=await axios.post('https://healthcompanion.onrender.com/api/user/getBookedSlotsToday',{patientId:patientId})
+    const resp=await axios.post('http://localhost:5000/api/user/getBookedSlotsToday',{patientId:patientId})
     return resp.data.bookedSlots
     
   } catch (error) {
@@ -184,7 +184,7 @@ export async function getBookedSlotsForToday(userData) {
 export async function cancelSlot({id}){
   try {
     // console.log(bookDetails)
-    const resp=await axios.post('https://healthcompanion.onrender.com/api/user/cancelSlot',{_id:id})
+    const resp=await axios.post('http://localhost:5000/api/user/cancelSlot',{_id:id})
     
     await console.log(`resp ${resp}`)
     await swal.fire({
@@ -207,7 +207,7 @@ export async function cancelSlot({id}){
 
 export async function getAllCompletedSlot({patientId}){
   try {
-    const allCompletedConsultations=await axios.post("https://healthcompanion.onrender.com/api/user/getAllCompletedConsultations",{patientId})
+    const allCompletedConsultations=await axios.post("http://localhost:5000/api/user/getAllCompletedConsultations",{patientId})
     // console.log(allCompletedConsultations.data.allCompletedConsultations)
     return allCompletedConsultations.data.allCompletedConsultations
     
@@ -218,7 +218,7 @@ export async function getAllCompletedSlot({patientId}){
 
 export async function addReview(reviewDetails) {
   try {
-    const resp=await axios.post("https://healthcompanion.onrender.com/api/user/addReview",reviewDetails)
+    const resp=await axios.post("http://localhost:5000/api/user/addReview",reviewDetails)
     console.log(resp.data)
     swal.fire({
       icon:"success",
@@ -234,7 +234,7 @@ export async function addReview(reviewDetails) {
 
 export async function getReview({slotId}) {
   try {
-    const resp=await axios.post("https://healthcompanion.onrender.com/api/user/slot/getReview",{slotId})
+    const resp=await axios.post("http://localhost:5000/api/user/slot/getReview",{slotId})
     console.log(resp.data)
     return resp.data.fetchedReview
     
@@ -246,7 +246,7 @@ export async function getReview({slotId}) {
 
 export async function editReview(reviewDetails) {
   try {
-    const resp=await axios.post("https://healthcompanion.onrender.com/api/user/editReview",reviewDetails)
+    const resp=await axios.post("http://localhost:5000/api/user/editReview",reviewDetails)
     console.log(resp.data)
     swal.fire({
       icon:"success",
