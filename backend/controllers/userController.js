@@ -204,7 +204,7 @@ exports.OnLoadPatientData = async (req, res) => {
       let profileImagePath = tempPatient.profileImage;
       // const rawGitHubUrl=`https://github.com/jinceabraham10/HealthCompanion/tree/version1.1/backend/routes/patient/6714ca4e86d88711cfd8bdff_syrup1.png`
       // const response = await axios.get(rawGitHubUrl, { responseType: "arraybuffer" });
-      let profileImageBuffer = fs.readFileSync("http:localhost:5000/"+profileImagePath);
+      let profileImageBuffer = fs.readFileSync("http://localhost:5000/"+profileImagePath);
       // const profileImageBuffer = Buffer.from(response.data, "binary");
       tempPatient.realProfileImage = profileImageBuffer.toString("base64");
     }
